@@ -1,46 +1,52 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 const mapStyles = {
     map: {
         position: 'absolute',
-        width: '100%',
-        heigth: '100%'
+        width: '520.75px',
+        height: '495.27px',
+        left: '159.5px',
+        top: '163.98px',
+        border: '3px solid #000000',
+        border: '3px solid #000000',
+        'box-sizing': 'border-box',
+        'border-radius': '20px',
     }
-}
+};
 
 export class CurrentLocation extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
 
-        const { lat, lng } = this.props.initialCenter
+        const { lat, lng } = this.props.initialCenter;
 
         this.state = {
             currentLocation: {
                 lat: lat,
                 lng: lng
             }
-        }
+        };
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.google !== this.props.google) {
-            this.loadMap()
+            this.loadMap();
         }
         if (prevState.currentLocation !== this.state.currentLocation) {
-            this.recenterMap()
+            this.recenterMap();
         }
     }
 
     recenterMap() {
-        const map = this.map
-        const current = this.state.currentLocation
-        const google = this.props.google
-        const maps = google.maps
+        const map = this.map;
+        const current = this.state.currentLocation;
+        const google = this.props.google;
+        const maps = google.maps;
 
         if (map) {
-            let center = new maps.LatLng(current.lat, current.lng)
-            map.panTo(center)
+            let center = new maps.LatLng(current.lat, current.lng);
+            map.panTo(center);
         }
     }
 
@@ -48,33 +54,34 @@ export class CurrentLocation extends React.Component {
         if (this.props.centerAroundCurrentLocation) {
             if (navigator && navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
-                    const coords = pos.coords
+                    const coords = pos.coords;
                     this.setState({
                         currentLocation: {
                             lat: coords.latitude,
                             lng: coords.longitude
                         }
-                    })
-                })
+                    });
+                });
             }
         }
-        this.loadMap()
+        this.loadMap();
     }
+
 
     loadMap() {
         if (this.props && this.props.google) {
-            // Check if google is available
-            const { google } = this.props
-            const maps = google.maps
+            // checks if google is available
+            const { google } = this.props;
+            const maps = google.maps;
 
-            const mapRef = this.refs.map
+            const mapRef = this.refs.map;
 
-            // Reference to the actual DOM element
-            const node = ReactDOM.findDOMNode(mapRef)
+            // reference to the actual DOM element
+            const node = ReactDOM.findDOMNode(mapRef);
 
-            let { zoom } = this.props
-            const { lat, lng } = this.state.currentLocation
-            const center = new maps.LatLng(lat, lng)
+            let { zoom } = this.props;
+            const { lat, lng } = this.state.currentLocation;
+            const center = new maps.LatLng(lat, lng);
 
             const mapConfig = Object.assign(
                 {},
@@ -82,25 +89,27 @@ export class CurrentLocation extends React.Component {
                     center: center,
                     zoom: zoom
                 }
-            )
+            );
 
             // maps.Map() is constructor that instantiates the map
-            this.map = new maps.Map(node, mapConfig)
+            this.map = new maps.Map(node, mapConfig);
         }
     }
 
     renderChildren() {
-        const { children } = this.props
-        if (!children) return
+        const { children } = this.props;
+
+        if (!children) return;
+
         return React.Children.map(children, c => {
-            if (!c) return
+            if (!c) return;
 
             return React.cloneElement(c, {
                 map: this.map,
                 google: this.props.google,
                 mapCenter: this.state.currentLocation
-            })
-        })
+            });
+        });
     }
 
     render() {
@@ -115,10 +124,9 @@ export class CurrentLocation extends React.Component {
             </div>
         );
     }
+
+
 }
-
-
-export default CurrentLocation
 
 
 CurrentLocation.defaultProps = {
@@ -131,3 +139,4 @@ CurrentLocation.defaultProps = {
     visible: true
 };
 
+export default CurrentLocation;
