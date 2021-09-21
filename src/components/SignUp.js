@@ -1,6 +1,7 @@
 //import { render } from "@testing-library/react";
 import React from "react";
 import axios from 'axios'
+import API from "../services/config";
 
 
 
@@ -167,9 +168,9 @@ export default class SignUp extends React.Component {
     }
 
 
-    submitHandler = (event) => {
-        event.preventDefault()
-        alert('Everythin os')
+    submitHandler = async (event) => {
+        //event.preventDefault()
+        //alert('Everythin os')
 
         /*
         let password = this.state.password
@@ -190,9 +191,15 @@ export default class SignUp extends React.Component {
             }
         }
         const API_URL = 'http://localhost:4036/api/users'
-        axios.post(API_URL, newUser)
-            .then(response => response.data)
-            .catch(err => err)
+        return await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify(newUser),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => console.log(json));
     }
 
     changeHandler = (event) => {
@@ -277,17 +284,16 @@ export default class SignUp extends React.Component {
                         style={inputConfirmPassword}
                         onChange={this.validateSamePassword}
                     />
-                    <input
+                    <button
                         type="submit"
                         className="sub"
-                        value="Sign Up"
-                    />
+                    >Sign Up</button>
                     <h1 id="res"></h1>
                 </form>
 
                 <style jsx>{`
                 
-                    input[type=submit] {
+                    button[type=submit] {
                         background: none;
                         padding: 16px 32px;
                         text-decoration: none;
