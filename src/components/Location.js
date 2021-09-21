@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+//import { useSelector, useDispatch } from 'react-redux';
+//import { location } from '../actions';
 
 const mapStyles = {
     map: {
@@ -9,17 +11,18 @@ const mapStyles = {
         left: '159.5px',
         top: '163.98px',
         border: '3px solid #000000',
-        border: '3px solid #000000',
         'box-sizing': 'border-box',
         'border-radius': '20px',
     }
 };
 
-export class CurrentLocation extends React.Component {
+
+class CurrentLocation extends React.Component {
     constructor(props) {
         super(props);
 
         const { lat, lng } = this.props.initialCenter;
+
 
         this.state = {
             currentLocation: {
@@ -112,6 +115,19 @@ export class CurrentLocation extends React.Component {
         });
     }
 
+
+    getCurrentLocation = (show) => {
+        const loc = this.state.currentLocation
+        const element = document.createElement('h1')
+        const content = document.createTextNode(
+            `Your current location is
+            ${loc.lat} and ${loc.lng}`)
+        element.appendChild(content)
+        document.body.appendChild(element)
+        
+        
+    }
+
     render() {
         const style = Object.assign({}, mapStyles.map);
 
@@ -140,3 +156,6 @@ CurrentLocation.defaultProps = {
 };
 
 export default CurrentLocation;
+
+
+/*<h1 style={locStyle} ref="currentLocation">{this.getCurrentLocation()}</h1> */

@@ -1,85 +1,62 @@
-import React, { Component } from 'react';
-import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
+import React from "react"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+  useLocation,
+  useParams
+} from 'react-router-dom'
 
-import CurrentLocation from './Map';
+import Home from './components/Home'
+import SignUp from './components/SignUp'
+import SignIn from './components/SignIn'
 
-/*
-const mapStyles = {
-  position: 'relative',
-  width: '520.75px',
-  height: '495.27px',
-  left: '7rem',
-  top: '163.98px',
-  border: '3px solid #000000',
-  'border-radius': '20px'
-};
+//import { useSelector, useDispatch } from 'react-redux'
+//import { startAction } from './actions'
 
-const latLng = { lat: -1.2884, lng: 36.8233 }
+//import { ExampleForm } from "./components/Form"
 
-*/
-export class MapContainer extends Component {
-  state = {
-    showingInfoWindow: false,
-    activeMarker: {},
-    selectedPlace: {}
-  };
 
-  onMarkerClick = (props, marker, e) =>
-    this.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
-    });
 
-  onClose = props => {
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      });
-    }
-  };
+function ModalSwitch() {
+  let location = useLocation()
+  let background = location.state && location.state.background
 
-  render() {
-    return (
-      <CurrentLocation
-        centerAroundCurrentLocation
-        google={this.props.google}
-      >
-        <Marker onClick={this.onMarkerClick} name={'Current Location'} />
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
-        >
-          <div>
-            <h4>{this.state.selectedPlace.name}</h4>
-          </div>
-        </InfoWindow>
-      </CurrentLocation>
-    );
-  }
+  return (
+    <Switch location={background || location}>
+      <Route exact path="/" children={<Home />} />
+      <Route exact path="/signup" children={<SignUp />} />
+      <Route exact path="/signin" children={<SignIn />} />
+    </Switch>
+  )
 }
 
-export default GoogleApiWrapper({
-  apiKey: 'AIzaSyAwj8eqXdqSkReYEi8GWDvnCXYFmBY4H_I'
-})(MapContainer);
+
+
+function App() {
+  //const events = useSelector(state => state.events)
+  //const rotate = useSelector(state => state.rotate)
+  //const getLocation = useSelector(state => state.location)
+  //const dispath = useDispatch()
+  
+
+  return (
+    <Router>
+      <ModalSwitch />
+    </Router>
+  )
+}
+
+export default App
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
+// <button onClick={() => dispath(startAction(1))}>Location</button>
 
 
 /*
