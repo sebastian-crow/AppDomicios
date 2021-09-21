@@ -1,5 +1,6 @@
 import React from "react";
 import '../styles/Home.css'
+import { Link } from "react-router-dom";
 
 const homeStyles = {
     main: {
@@ -101,12 +102,15 @@ export default function Home() {
     return (
         <div style={main}>
             <h1 style={title}>Addresses App</h1>
-            <a href="/signin" style={signin}>
+            <Link to={"/signin"} style={signin}>
                 <h1 style={textSignin}>Sign In</h1>
-            </a>
+            </Link>
             <a href="/signup" style={signup}>
                 <h1 style={textSignup}>Sign Up</h1>
             </a>
+            <Link to={"/signup"} style={signup}>
+                <h1 style={textSignup}>Sign Up</h1>
+            </Link>
         </div>
     )
 }

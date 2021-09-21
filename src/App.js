@@ -12,6 +12,8 @@ import {
 import Home from './components/Home'
 import SignUp from './components/SignUp'
 import SignIn from './components/SignIn'
+import Users from './components/Users'
+import User from './components/User'
 
 //import { useSelector, useDispatch } from 'react-redux'
 //import { startAction } from './actions'
@@ -29,6 +31,8 @@ function ModalSwitch() {
       <Route exact path="/" children={<Home />} />
       <Route exact path="/signup" children={<SignUp />} />
       <Route exact path="/signin" children={<SignIn />} />
+      <Route exact path="/users" children={<Users />} />
+      <Route exact path="/users/:id" children={<User />} />
     </Switch>
   )
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-import '../styles/SignIn.css'
+//import '../styles/SignIn.css'
 
 
 const SignInStyles = {
@@ -95,7 +95,7 @@ const SignInStyles = {
 }
 
 
-export default class SignUp extends React.Component {
+export default class SignIn extends React.Component {
 
     constructor(props) {
         super(props)
@@ -103,8 +103,49 @@ export default class SignUp extends React.Component {
         this.state = {
             userName: '',
             password: '',
+            validateName: '',
+            validatePassword: '',
+            authenticated: false
         }
     }
+
+    getUser = async (event) => {
+        event.preventDefault()
+        alert(`Your name is "${this.state.userName}" and your password is "${this.state.password}"`)
+
+        const validateUser = {
+            username: this.state.userName,
+            password: this.state.password
+        }
+
+        setTimeout(async () => {
+            await fetch('http://localhost:4036/api/auth', {
+                method: 'POST',
+                body: JSON.stringify(validateUser),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then((response) => response.json())
+                .then((json) => {
+                    //console.log(json)
+                    //const validateUser = json.message[0]
+                    this.setState({
+                        authenticated: true
+                    })
+                })
+                .catch(e => console.log(e))
+        }, 1000)
+
+       
+    }
+
+    compareUserInfo = (event) => {
+        event.preventDefault()
+        // Consultar en la base de datos la existencia del usuario
+        // Hacer validación en el API y traer los datos al front filtrando solo la información necesaria
+        // Si existe y dependiendo el rol mostrare una vista diferente
+    }
+
 
 
     submitHandler = (event) => {
@@ -113,7 +154,7 @@ export default class SignUp extends React.Component {
         // Primero veamos que si se almacena la info del usuario en el state del componente antes de hacer la peticion para validar la información y permitir el ingreso
         event.preventDefault()
         let password = this.state.password
-        if(password.length <= 8) {
+        if (password.length <= 8) {
             alert(`Your password is ""${password}"", and it need to have more than 8 characters`)
         } else {
             alert('Your password have more than 8 characters')
@@ -124,7 +165,7 @@ export default class SignUp extends React.Component {
     changeHandler = (event) => {
         let nam = event.target.name
         let val = event.target.value
-        this.setState({[nam]: val})
+        this.setState({ [nam]: val })
     }
 
 
@@ -139,31 +180,58 @@ export default class SignUp extends React.Component {
         return (
             <div style={main}>
                 <h1 style={title}>Addresses App</h1>
-                <form onSubmit={this.submitHandler}>
-                    <label style={textName}>
-                        Name
-                    </label>
-                    <input
-                        type="text"
-                        name="userName"
-                        style={inputName}
-                        onChange={this.changeHandler}
-                    />
-                    <label style={textPassword}>
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        name="password"
-                        style={inputPassword}
-                        onChange={this.changeHandler}
-                    />
-                    <input 
-                        type="submit"
-                        value="Sign In"
-                    />
-                </form>
+                <label style={textName}>
+                    Name
+                </label>
+                <input
+                    type="text"
+                    name="userName"
+                    style={inputName}
+                    onChange={this.changeHandler}
+                />
+                <label style={textPassword}>
+                    Password
+                </label>
+                <input
+                    type="password"
+                    name="password"
+                    style={inputPassword}
+                    onChange={this.changeHandler}
+                />
+                <h1 id="validation"></h1>
+                <button
+                    onClick={this.getUser}
+                    className="sub"
+                >
+                    Sign In
+                </button>
+                <style jsx>{`
+                .sub {
+                    background: none;
+                    padding: 16px 32px;
+                    text-decoration: none;
+                    margin: 4px 2px;
+                    cursor: pointer;
 
+                    position: absolute;
+                    width: 403.99px;
+                    height: 72.22px;
+                    left: 10rem;
+                    top: 21rem;
+                    border: 2px solid #000000;
+                    box-sizing: border-box;
+                    border-radius: 14px;
+
+                    font-family: 'Oswald', sans-serif;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 2rem;
+                    letter-spacing: 3px;
+                    line-height: 30px;
+                    color: #000000;
+                }
+                
+                `}</style>
             </div>
 
         )
