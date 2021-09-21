@@ -1,11 +1,5 @@
 //import { render } from "@testing-library/react";
 import React from "react";
-<<<<<<< HEAD
-import axios from 'axios'
-import API from "../services/config";
-
-=======
->>>>>>> mvp
 
 
 const SignUpStyles = {
@@ -205,15 +199,9 @@ export default class SignUp extends React.Component {
     }
 
 
-<<<<<<< HEAD
     submitHandler = async (event) => {
         //event.preventDefault()
         //alert('Everythin os')
-=======
-    submitHandler = (event) => {
-        //event.preventDefault()
-        console.log('Todomelo')
->>>>>>> mvp
 
         /*
         let password = this.state.password
@@ -321,59 +309,6 @@ export default class SignUp extends React.Component {
         return (
             <div style={main}>
                 <h1 style={title}>Addresses App</h1>
-<<<<<<< HEAD
-                <form onSubmit={this.submitHandler}>
-
-                    <label style={textName}>
-                        Name
-                    </label>
-                    <input
-                        type="text"
-                        name="userName"
-                        style={inputName}
-                        onChange={this.changeHandler}
-                    />
-
-                    <label style={textAddress}>
-                        Address
-                    </label>
-                    <input
-                        type="text"
-                        name="address"
-                        style={inputAddress}
-                        onChange={this.changeHandler}
-                    />
-
-                    <label style={textPassword}>
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        name="password"
-                        style={inputPassword}
-                        onChange={this.changeHandler}
-                    />
-
-                    <label style={textConfirmPassword}>
-                        Confirm Password
-                    </label>
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        style={inputConfirmPassword}
-                        onChange={this.validateSamePassword}
-                    />
-                    <button
-                        type="submit"
-                        className="sub"
-                    >Sign Up</button>
-                    <h1 id="res"></h1>
-                </form>
-
-                <style jsx>{`
-                
-                    button[type=submit] {
-=======
                 <label style={textName}>
                     Name
                 </label>
@@ -433,7 +368,6 @@ export default class SignUp extends React.Component {
                 <style jsx>{`
                 
                     .sub {
->>>>>>> mvp
                         background: none;
                         padding: 16px 32px;
                         text-decoration: none;
