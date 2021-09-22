@@ -1,32 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-//import configureStore from "store";
-import reportWebVitals from './reportWebVitals';
-import { createStore } from 'redux'
-import allReducers from './reducers'
-import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom';
-
-const store = createStore(
-  allReducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-)
-
-//const events = createStore(eventsReducer)
-
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min";
+import { store, history } from "./store/configureStore";
+import { Provider } from "react-redux";
+import { Router } from "react-router-dom";
+require("dotenv").config();
 
 ReactDOM.render(
-
-  <Provider store={store}>
-    <BrowserRouter>
-      <React.StrictMode>
+  <>
+    <Provider store={store}>
+      <Router history={history}>
         <App />
-      </React.StrictMode>
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('root')
+      </Router>
+    </Provider>
+  </>,
+  document.getElementById("root"),
 );
 
 // If you want to start measuring performance in your app, pass a function

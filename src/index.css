@@ -1,13 +1,209 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.elementos {
+  position: absolute;
+  top: 30%;
+  left: 15%;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+}
+
+body {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  color: #5a5a5a;
+}
+
+
+
+.carousel-item {
+  height: 32rem;
+}
+
+.carousel-item>img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+
+.servicios {
+  margin-top: 50px;
+}
+
+#slider>a.carousel-control-next>span.carousel-control-next-icon,
+#slider>a.carousel-control-prev>span.carousel-control-prev-icon {
+  margin-top: -100px;
+}
+
+.featurette-divider {
+  margin: 5rem 0;
+}
+
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.05rem;
+}
+
+
+/* RESPONSIVE CSS */
+
+@media (min-width: 300px) {
+
+  .featurette-heading {
+    font-size: 2vw;
+  }
+
+  .carousel-item>img {
+    height: initial;
+  }
+
+  .elementos {
+    display: none;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .featurette-heading {
+    margin-top: 7rem;
+  }
+
+  .carousel-item>img {
+    height: initial;
+  }
+
+  .elementos {
+    display: block;
+  }
+
+}
+
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+
+}
+
+body {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  color: #5a5a5a;
+}
+
+
+
+.carousel-item {
+  height: 32rem;
+}
+
+.carousel-item>img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+
+.servicios {
+  margin-top: 50px;
+}
+
+#slider>a.carousel-control-next>span.carousel-control-next-icon,
+#slider>a.carousel-control-prev>span.carousel-control-prev-icon {
+  margin-top: -100px;
+}
+
+.featurette-divider {
+  margin: 5rem 0;
+}
+
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.05rem;
+}
+
+
+/* RESPONSIVE CSS */
+
+@media (min-width: 300px) {
+
+  .featurette-heading {
+    font-size: 2vw;
+  }
+
+  .carousel-item>img {
+    height: initial;
+  }
+
+  .elementos {
+    display: none;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .featurette-heading {
+    margin-top: 7rem;
+  }
+
+  .carousel-item>img {
+    height: initial;
+  }
+
+  .elementos {
+    display: block;
+  }
+
+}
+
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+
+}
+
+.deleteList {
+  position: relative;
+  left: -50;
 }
