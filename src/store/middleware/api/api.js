@@ -70,7 +70,7 @@ export function editarUsuario(params) {
   });
 }
 
-export function restaurantes(params) {
+export function createPosition(params) {
   return callAPI({
     method: "POST",
     url: `/restaurantes`,
@@ -78,9 +78,17 @@ export function restaurantes(params) {
   });
 }
 
-export function listarHistorial() {
+export function getPositionFromUser(id) {
   return callAPI({
     method: "GET",
-    url: `/restaurantes`,
+    url: `/position/user/${id}`,
+  });
+}
+
+export function updatePosition(params) {
+  return callAPI({
+    method: "PUT",
+    url: `/position/${params.positionId}`,
+    data: { position: JSON.stringify({ lat: params.lat, lng: params.lng }) },
   });
 }

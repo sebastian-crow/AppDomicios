@@ -4,16 +4,18 @@ import { api } from "./api";
 import {
   loginAction,
   loginDoneAction,
-  buscarRestaurantesAction,
-  buscarRestaurantesDoneAction,
   saveSessionStateAction,
   registerAction,
   registerDoneAction,
   errorRegistro,
   actualizarUsuarioAction,
   actualizarUsuarioDoneAction,
-  listarHistorialBusquedasAction,
-  listarHistorialBusquedasDoneAction,
+  updatePositionAction,
+  updatePositionDoneAction,
+  createPositionAction,
+  createPositionDoneAction,
+  getFromUserPositionAction,
+  getFromUserPositionDoneAction,
   loginError,
 } from "../reducer";
 import { LOCATION_CHANGE } from "redux-first-history";
@@ -45,25 +47,6 @@ function* loginDoneSaga() {
   }
 }
 
-function* buscarRestaurantesSagas(action) {
-  try {
-    if (action.payload.value) {
-      const { data } = yield call(api.restaurantes, action.payload);
-      //console.log(data);
-      let cacheMarkers = [];
-      data.data.results.forEach((restaurante) => {
-        cacheMarkers.push(restaurante.geometry.location);
-      });
-      yield put(buscarRestaurantesDoneAction(cacheMarkers));
-    }
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
 function* registerSaga(action) {
   try {
     const { data } = yield call(api.register, action.payload);
@@ -85,10 +68,59 @@ function* locationChangeSaga() {
   yield put(saveSessionStateAction());
 }
 
-function* listarHistorialBusquedasSaga() {
+
+function* actualizarUsuarioSaga(action) {
   try {
-    const { data } = yield call(api.listarHistorial);
-    yield put(listarHistorialBusquedasDoneAction(data));
+    const { data } = yield call(api.editarUsuario, action.payload);
+    yield put(actualizarUsuarioDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* createPositionSaga(action) {
+  try {
+    const { data } = yield call(api.createPosition, action.payload);
+    if (data.status === 200) {
+      yield put(createPositionDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* updatePositionSaga(action) {
+  try {
+    const { data } = yield call(api.updatePosition, action.payload);
+    if (data.status === 200) {
+      yield put(updatePositionDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* getFromUserPositionSaga(action) {
+  try {
+    const { data } = yield call(api.getPositionFromUser, action.payload);
+    if (data.status === "200") {
+      yield put(getFromUserPositionDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -100,11 +132,10 @@ function* listarHistorialBusquedasSaga() {
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
   yield takeLatest(loginDoneAction.type, loginDoneSaga);
-  yield takeLatest(buscarRestaurantesAction.type, buscarRestaurantesSagas);
+  yield takeLatest(actualizarUsuarioAction.type, actualizarUsuarioSaga);
   yield takeLatest(registerAction.type, registerSaga);
+  yield takeLatest(createPositionAction.type, createPositionSaga);
+  yield takeLatest(updatePositionAction.type, updatePositionSaga);
+  yield takeLatest(getFromUserPositionAction.type, getFromUserPositionSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
-  yield takeLatest(
-    listarHistorialBusquedasAction.type,
-    listarHistorialBusquedasSaga,
-  );
 }

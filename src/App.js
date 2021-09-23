@@ -7,6 +7,7 @@ import Inicio from "./components/vistas/Inicio";
 //Servicios de authenticacion
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import EditarUsuario from "./components/auth/EditarUsuario";
 
 //Elementos de rutas
 import PrivateRoute from "./utils/PrivateRoute";
@@ -36,6 +37,7 @@ function App() {
             path="/register"
             component={Register}
           />
+          <PrivateRoute path="/editarusuario" component={EditarUsuario} />
         </Switch>
       </div>
       <Footer />

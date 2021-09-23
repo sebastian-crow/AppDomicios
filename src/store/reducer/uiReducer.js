@@ -1,41 +1,47 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
 // Handle exeption
-export const buscarRestaurantesAction = createAction(
-  "BUSCAR_RESTAURANTES_ACTION",
+export const createPositionAction = createAction(
+  "CREATE_POSITION_ACTION",
 );
-export const buscarRestaurantesDoneAction = createAction(
-  "BUSCAR_RESTAURANTES_DONE_ACTION",
-);
-
-export const listarHistorialBusquedasAction = createAction(
-  "LISTAR_HISTORIAL_BUSQUEDAS_ACTION",
+export const createPositionDoneAction = createAction(
+  "CREATE_POSITION_DONE_ACTION",
 );
 
-export const listarHistorialBusquedasDoneAction = createAction(
-  "LISTAR_HISTORIAL_BUSQUEDAS_DONE_ACTION",
+export const updatePositionAction = createAction(
+  "UPDATE_POSITION_ACTION",
+);
+
+export const updatePositionDoneAction = createAction(
+  "UPDATE_POSITION_DONE_ACTION",
+);
+
+export const getFromUserPositionAction = createAction(
+  "GET_FROM_USER_POSITION_ACTION",
+);
+
+export const getFromUserPositionDoneAction = createAction(
+  "GET_FROM_USER_POSITION_DONE_ACTION",
 );
 
 // UI state reducers
 const initialState = {
-  ubicacionesRestaurantes: [],
-  ciudad: "",
-  historial: [],
+  position: '{ "lat": 6.208376299999999, "lng": -75.5658174 }',
+  positionId: null,
 };
 
 const uiReducer = createReducer(initialState, {
-  [buscarRestaurantesAction]: (state, action) => {
-    if (action.payload.value) {
-      state.ciudad = action.payload;
-    } else {
-      state.ubicacionesRestaurantes = [];
-    }
+  [createPositionDoneAction]: (state, action) => {
+    state.position = action.payload.data[0].position;
+    state.positionId = action.payload.data[0]._id;
   },
-  [buscarRestaurantesDoneAction]: (state, action) => {
-    state.ubicacionesRestaurantes = action.payload;
+  [updatePositionDoneAction]: (state, action) => {
+    state.position = action.payload.data[0].position;
+    state.positionId = action.payload.data[0]._id;
   },
-  [listarHistorialBusquedasDoneAction]: (state, action) => {
-    state.historial = action.payload.data.busquedas;
+  [getFromUserPositionDoneAction]: (state, action) => {
+    state.position = action.payload.data[0].position;
+    state.positionId = action.payload.data[0]._id;
   },
 });
 
