@@ -8,6 +8,7 @@ import { push } from "redux-first-history";
 const MenuBar = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.login.usuario.token);
+  const user = useSelector((state) => state.login.usuario.user);
   const handleLogout = () => {
     dispatch(logoutAction());
     dispatch(push("/login"));
@@ -31,10 +32,29 @@ const MenuBar = () => {
           Menu
         </button>
         <div className="collapse navbar-collapse" id="navbarResponsive">
-          <div style={{ display: "flex", marginLeft: "auto"}}>
+          {user && (
+            <>
+              {user.nombre} {user.apellido}
+            </>
+          )}
+          <div style={{ display: "flex", marginLeft: "auto" }}>
             &nbsp;&nbsp;
             {token ? (
               <>
+                &nbsp;&nbsp;
+                <Link
+                  to="/"
+                  className="btn btn-outline-secondary my-2 my-sm-0"
+                >
+                  Inicio{" "}
+                </Link>
+                &nbsp;&nbsp;
+                <Link
+                  to="/listusers"
+                  className="btn btn-outline-secondary my-2 my-sm-0"
+                >
+                  Listar usuario{" "}
+                </Link>
                 &nbsp;&nbsp;
                 <Link
                   to="/editarusuario"

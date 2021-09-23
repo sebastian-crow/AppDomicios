@@ -7,27 +7,30 @@ export const createPositionAction = createAction(
 export const createPositionDoneAction = createAction(
   "CREATE_POSITION_DONE_ACTION",
 );
-
 export const updatePositionAction = createAction(
   "UPDATE_POSITION_ACTION",
 );
-
 export const updatePositionDoneAction = createAction(
   "UPDATE_POSITION_DONE_ACTION",
 );
-
 export const getFromUserPositionAction = createAction(
   "GET_FROM_USER_POSITION_ACTION",
 );
-
 export const getFromUserPositionDoneAction = createAction(
   "GET_FROM_USER_POSITION_DONE_ACTION",
+);
+export const getAllUserAction = createAction(
+  "GET_ALL_USER_ACTION",
+);
+export const getAllUserDoneAction = createAction(
+  "GET_ALL_USER_DONE_ACTION",
 );
 
 // UI state reducers
 const initialState = {
   position: '{ "lat": 6.208376299999999, "lng": -75.5658174 }',
   positionId: null,
+  users: [],
 };
 
 const uiReducer = createReducer(initialState, {
@@ -42,6 +45,9 @@ const uiReducer = createReducer(initialState, {
   [getFromUserPositionDoneAction]: (state, action) => {
     state.position = action.payload.data[0].position;
     state.positionId = action.payload.data[0]._id;
+  },
+  [getAllUserDoneAction]: (state, action) => {
+    state.users = action.payload.data.Users;
   },
 });
 

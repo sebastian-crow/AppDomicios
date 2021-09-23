@@ -73,8 +73,8 @@ export function editarUsuario(params) {
 export function createPosition(params) {
   return callAPI({
     method: "POST",
-    url: `/restaurantes`,
-    data: { ciudad: params.value },
+    url: `/position`,
+    data: params,
   });
 }
 
@@ -90,5 +90,12 @@ export function updatePosition(params) {
     method: "PUT",
     url: `/position/${params.positionId}`,
     data: { position: JSON.stringify({ lat: params.lat, lng: params.lng }) },
+  });
+}
+
+export function getAllUsers() {
+  return callAPI({
+    method: "GET",
+    url: `/users`,
   });
 }

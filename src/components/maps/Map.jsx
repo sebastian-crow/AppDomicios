@@ -21,15 +21,15 @@ const MyMapComponent = compose(
   <GoogleMap
     zoom={props.zoom}
     defaultZoom={13}
-    defaultCenter={{ lat: 6.208376299999999, lng: -75.5658174 }}
-    center={{ lat: 6.208376299999999, lng: -75.5658174 }}>
+    defaultCenter={props.position}
+    center={props.position}>
     <Marker position={props.position} />
   </GoogleMap>
 );
 
 const MapLocal = (props) => {
   return (
-    <MyMapComponent zoom={8} position={props.position} />
+    <MyMapComponent zoom={16} position={props.position} />
   )
 }
 

@@ -16,6 +16,8 @@ import {
   createPositionDoneAction,
   getFromUserPositionAction,
   getFromUserPositionDoneAction,
+  getAllUserAction,
+  getAllUserDoneAction,
   loginError,
 } from "../reducer";
 import { LOCATION_CHANGE } from "redux-first-history";
@@ -129,6 +131,22 @@ function* getFromUserPositionSaga(action) {
   }
 }
 
+function* getAllUserSaga() {
+  try {
+    const { data } = yield call(api.getAllUsers);
+    if (data.status === "200") {
+      yield put(getAllUserDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
   yield takeLatest(loginDoneAction.type, loginDoneSaga);
@@ -137,5 +155,6 @@ export function* rootSaga() {
   yield takeLatest(createPositionAction.type, createPositionSaga);
   yield takeLatest(updatePositionAction.type, updatePositionSaga);
   yield takeLatest(getFromUserPositionAction.type, getFromUserPositionSaga);
+  yield takeLatest(getAllUserAction.type, getAllUserSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
 }
