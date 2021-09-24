@@ -12,6 +12,16 @@ import EditarUsuario from "./components/auth/EditarUsuario";
 
 // Users
 import ListUsers from "./components/listUsers/ListUsers";
+import TomarPedido from './components/pedidos/TomarPedido'
+import Pedidos from './components/pedidos/Pedidos'
+
+// Products
+import Product from "./components/products/Product"
+import CreateProduct from "./components/products/CreateProduct"
+import EditProduct from "./components/products/EditProduct"
+import ListProducts from "./components/products/ListProducts"
+
+
 
 //Elementos de rutas
 import PrivateRoute from "./utils/PrivateRoute";
@@ -36,6 +46,10 @@ function App() {
         <Switch>
           <PrivateRoute exact path="/" component={Inicio} />
           <PrivateRoute path="/listusers" component={ListUsers} />
+          <PrivateRoute path="/listproducts" component={ListProducts} />
+          <PrivateRoute path="/createproduct" component={CreateProduct} />
+          <PrivateRoute path="/tomarpedido" component={TomarPedido} />
+          <PrivateRoute path="/pedidos" component={Pedidos} />
           <PrivateRoute path="/mapuser/:id" component={UserMap} />
           <PublicRoute restricted={true} path="/login" component={Login} />
           <PublicRoute
@@ -44,6 +58,7 @@ function App() {
             component={Register}
           />
           <PrivateRoute path="/editarusuario" component={EditarUsuario} />
+          <PrivateRoute path="/editarproducto/:id" component={EditProduct} />
         </Switch>
       </div>
       <Footer />

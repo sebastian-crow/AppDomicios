@@ -6,6 +6,7 @@ import { sessionStateReducer } from "./sessionReducer";
 export * from "./uiReducer";
 export * from "./loginReducer";
 export * from "./sessionReducer";
+export * from "./createProductReducer"
 
 export const createRootReducer = (routerReducer) => {
   // create root roducer

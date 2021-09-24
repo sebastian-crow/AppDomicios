@@ -34,7 +34,7 @@ const MenuBar = () => {
         <div className="collapse navbar-collapse" id="navbarResponsive">
           {user && (
             <>
-              {user.nombre} {user.apellido}
+              {user.nombre} {user.apellido} {user.rol}
             </>
           )}
           <div style={{ display: "flex", marginLeft: "auto" }}>
@@ -49,12 +49,46 @@ const MenuBar = () => {
                   Inicio{" "}
                 </Link>
                 &nbsp;&nbsp;
-                <Link
-                  to="/listusers"
-                  className="btn btn-outline-secondary my-2 my-sm-0"
-                >
-                  Listar usuario{" "}
-                </Link>
+                {user.rol == "admin" && (
+                  <>
+                    <Link
+                      to="/listusers"
+                      className="btn btn-outline-secondary my-2 my-sm-0"
+                    >
+                      Listar usuarios{" "}
+                    </Link>
+                    &nbsp;&nbsp;&nbsp;
+                    <Link
+                      to="/listproducts"
+                      className="btn btn-outline-secondary my-2 my-sm-0"
+                    >
+                      Listar Productos{" "}
+                    </Link>
+                  </>
+                )}
+                &nbsp;&nbsp;
+                {user.rol == "cliente" && (
+                  <>
+                    <Link
+                      to="/tomarpedido"
+                      className="btn btn-outline-secondary my-2 my-sm-0"
+                    >
+                      Tomar pedido{" "}
+                    </Link>
+                  </>
+                )}
+                &nbsp;&nbsp;
+                {user.rol == "domiciliario" && (
+                  <>
+                    <Link
+                      to="/pedidos"
+                      className="btn btn-outline-secondary my-2 my-sm-0"
+                    >
+                      Pedidos{" "}
+                    </Link>
+                  </>
+                )}
+                
                 &nbsp;&nbsp;
                 <Link
                   to="/editarusuario"

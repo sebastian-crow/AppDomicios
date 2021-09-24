@@ -22,15 +22,24 @@ export const getFromUserPositionDoneAction = createAction(
 export const getAllUserAction = createAction(
   "GET_ALL_USER_ACTION",
 );
+
 export const getAllUserDoneAction = createAction(
   "GET_ALL_USER_DONE_ACTION",
 );
+export const getAllProductAction = createAction(
+  "GET_ALL_PRODUCT_ACTION",
+);
+export const getAllProductDoneAction = createAction(
+  "GET_ALL_PRODUCT_DONE_ACTION",
+);
+
 
 // UI state reducers
 const initialState = {
   position: '{ "lat": 6.208376299999999, "lng": -75.5658174 }',
   positionId: null,
   users: [],
+  products: [],
 };
 
 const uiReducer = createReducer(initialState, {
@@ -49,6 +58,10 @@ const uiReducer = createReducer(initialState, {
   [getAllUserDoneAction]: (state, action) => {
     state.users = action.payload.data.Users;
   },
+  [getAllProductDoneAction]: (state, action) => {
+    state.products = action.payload.data.Products;
+  },
+  
 });
 
 export default uiReducer;

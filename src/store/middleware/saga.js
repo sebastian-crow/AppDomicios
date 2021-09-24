@@ -18,6 +18,20 @@ import {
   getFromUserPositionDoneAction,
   getAllUserAction,
   getAllUserDoneAction,
+
+  errorGetProducts,
+  getAllProductAction,
+  getAllProductDoneAction,
+  createProductAction,
+  createProductDoneAction,
+  errorCreateProduct,
+  updateProductAction,
+  updateProductDoneAction,
+  errorUpdateProduct,
+  deleteProductAction,
+  deleteProductDoneAction,
+  errorDeleteProduct,
+
   loginError,
 } from "../reducer";
 import { LOCATION_CHANGE } from "redux-first-history";
@@ -147,6 +161,77 @@ function* getAllUserSaga() {
   }
 }
 
+// Products
+
+function* getAllProductSaga() {
+  try {
+    const { data } = yield call(api.getAllProducts);
+    if (data.status === "200") {
+      yield put(getAllProductDoneAction(data));
+    } else {
+      alert('No products')
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+function* createProductSaga(action) {
+  try {
+    const { data } = yield call(api.createProduct, action.payload);
+    if (data.status === 200) {
+      yield put(createProductDoneAction(data));
+    } else {
+      yield put(errorCreateProduct(data.status));
+    }
+  } catch (error) {
+    yield put(errorCreateProduct("Error inesperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* updateProductSaga(action) {
+  try {
+    const { data } = yield call(api.updateProduct, action.payload);
+    yield put(updateProductDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+
+
+
+function* deleteProductSaga(action) {
+  try {
+    const { data } = yield call(api.deleteProduct, action.payload);
+    if (data.status === 200) {
+      yield put(deleteProductDoneAction(data));
+    } else {
+      yield put(errorDeleteProduct(data.status));
+    }
+  } catch (error) {
+    yield put(errorDeleteProduct("Error inesperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
   yield takeLatest(loginDoneAction.type, loginDoneSaga);
@@ -157,4 +242,10 @@ export function* rootSaga() {
   yield takeLatest(getFromUserPositionAction.type, getFromUserPositionSaga);
   yield takeLatest(getAllUserAction.type, getAllUserSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
+
+
+  yield takeLatest(getAllProductAction.type, getAllProductSaga);
+  yield takeLatest(createProductAction.type, createProductSaga);
+  yield takeLatest(updateProductAction.type, updateProductSaga);
+  yield takeLatest(deleteProductAction.type, deleteProductSaga);
 }

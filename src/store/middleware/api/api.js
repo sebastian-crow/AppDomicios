@@ -99,3 +99,39 @@ export function getAllUsers() {
     url: `/users`,
   });
 }
+
+
+// Products
+
+export function getAllProducts() {
+  return callAPI({
+    method: "GET",
+    url: `/products`,
+  });
+}
+
+
+export function createProduct(params) {
+  return callAPI({
+    method: "POST",
+    url: `/products/create`,
+    data: params,
+  });
+}
+
+
+export function updateProduct(params) {
+  return callAPI({
+    method: "PUT",
+    url: `/products/update/` + params.id,
+    data: params.data,
+  });
+}
+
+export function deleteProduct(params) {
+  return callAPI({
+    method: "DELETE",
+    url: `/products/delete/` + params.id,
+    data: params.data,
+  });
+}
