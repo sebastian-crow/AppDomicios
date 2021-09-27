@@ -101,6 +101,22 @@ export function getAllUsers() {
 }
 
 
+export function getAllClients() {
+  return callAPI({
+    method: "GET",
+    url: `/users/clients`
+  })
+}
+
+export function getAllDomiciliarios() {
+  return callAPI({
+    method: "GET",
+    url: `/users/domiciliarios`
+  })
+}
+
+
+
 // Products
 
 export function getAllProducts() {
@@ -132,6 +148,42 @@ export function deleteProduct(params) {
   return callAPI({
     method: "DELETE",
     url: `/products/delete/` + params.id,
+    data: params.data,
+  });
+}
+
+
+// Orders
+
+export function getAllOrders() {
+  return callAPI({
+    method: "GET",
+    url: `/orders`,
+  });
+}
+
+
+export function createOrder(params) {
+  return callAPI({
+    method: "POST",
+    url: `/orders/create`,
+    data: params,
+  });
+}
+
+
+export function updateOrder(params) {
+  return callAPI({
+    method: "PUT",
+    url: `/orders/update/` + params.id,
+    data: params.data,
+  });
+}
+
+export function deleteOrder(params) {
+  return callAPI({
+    method: "DELETE",
+    url: `/orders/delete/` + params.id,
     data: params.data,
   });
 }

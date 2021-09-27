@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { getAllUserAction, getFromUserPositionAction } from "../../store/reducer";
+import { getAllDomiciliarioAction, getFromUserPositionAction } from "../../store/reducer";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { push } from "redux-first-history";
@@ -13,10 +13,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ListUsers = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.ui.users);
+  const users = useSelector((state) => state.ui.domiciliarios);
   // Actualizar la lista
   React.useEffect(() => {
-    dispatch(getAllUserAction());
+    dispatch(getAllDomiciliarioAction());
   }, [dispatch]);
   const classes = useStyles();
   const viewMap = (id) => {

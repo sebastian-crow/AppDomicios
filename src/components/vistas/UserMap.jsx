@@ -10,6 +10,7 @@ const UserMap = (props) => {
   const userID = props.match.params.id;
   const position = useSelector((state) => state.ui.position);
 
+
   useEffect(() => {
     const timer = setInterval(() => {
       dispatch(getFromUserPositionAction(userID));
@@ -27,3 +28,4 @@ const UserMap = (props) => {
 }
 
 export default UserMap;
+

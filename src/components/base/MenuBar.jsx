@@ -49,13 +49,20 @@ const MenuBar = () => {
                   Inicio{" "}
                 </Link>
                 &nbsp;&nbsp;
-                {user.rol == "admin" && (
+                {user.rol === "admin" && (
                   <>
                     <Link
-                      to="/listusers"
+                      to="/listclientes"
                       className="btn btn-outline-secondary my-2 my-sm-0"
                     >
-                      Listar usuarios{" "}
+                      Listar Clientes{" "}
+                    </Link>
+                    &nbsp;&nbsp;&nbsp;
+                    <Link
+                      to="/listdomiciliarios"
+                      className="btn btn-outline-secondary my-2 my-sm-0"
+                    >
+                      Listar Domiciliarios{" "}
                     </Link>
                     &nbsp;&nbsp;&nbsp;
                     <Link
@@ -64,27 +71,47 @@ const MenuBar = () => {
                     >
                       Listar Productos{" "}
                     </Link>
-                  </>
-                )}
-                &nbsp;&nbsp;
-                {user.rol == "cliente" && (
-                  <>
+                    &nbsp;&nbsp;&nbsp;
                     <Link
-                      to="/tomarpedido"
+                      to="/orders"
                       className="btn btn-outline-secondary my-2 my-sm-0"
                     >
-                      Tomar pedido{" "}
+                      Listar Ordenes{" "}
                     </Link>
+                    &nbsp;&nbsp;
                   </>
+                  
                 )}
-                &nbsp;&nbsp;
-                {user.rol == "domiciliario" && (
+                {user.rol === "cliente" && (
                   <>
+                  &nbsp;&nbsp;
                     <Link
-                      to="/pedidos"
+                      to="/orders"
                       className="btn btn-outline-secondary my-2 my-sm-0"
                     >
                       Pedidos{" "}
+                      &nbsp;&nbsp;
+                    </Link>
+                    &nbsp;&nbsp;
+                    <Link
+                      to="/listproducts"
+                      className="btn btn-outline-secondary my-2 my-sm-0"
+                    >
+                       Productos{" "}
+                    </Link>
+                    &nbsp;&nbsp;
+                    
+
+                  </>
+                )}
+                &nbsp;&nbsp;
+                {user.rol === "domiciliario" && (
+                  <>
+                    <Link
+                      to="/orders"
+                      className="btn btn-outline-secondary my-2 my-sm-0"
+                    >
+                      Pedidos(a donde tiene que ir y que tiene que entregar){" "}
                     </Link>
                   </>
                 )}

@@ -11,9 +11,9 @@ import Register from "./components/auth/Register";
 import EditarUsuario from "./components/auth/EditarUsuario";
 
 // Users
-import ListUsers from "./components/listUsers/ListUsers";
-import TomarPedido from './components/pedidos/TomarPedido'
-import Pedidos from './components/pedidos/Pedidos'
+import ListClientes from "./components/listUsers/ListClientes";
+import ListDomiciliarios from "./components/listUsers/ListDomiciliarios"
+
 
 // Products
 import Product from "./components/products/Product"
@@ -21,6 +21,12 @@ import CreateProduct from "./components/products/CreateProduct"
 import EditProduct from "./components/products/EditProduct"
 import ListProducts from "./components/products/ListProducts"
 
+// Orders
+import Orders from './components/orders/Orders'
+import TakeOrder from './components/orders/TakeOrder'
+import CreateOrder from './components/orders/CreateOrder'
+import EditOrder from './components/orders/EditOrder'
+import OrderList from './components/orders/OrderList'
 
 
 //Elementos de rutas
@@ -45,11 +51,20 @@ function App() {
       <div>
         <Switch>
           <PrivateRoute exact path="/" component={Inicio} />
-          <PrivateRoute path="/listusers" component={ListUsers} />
+          <PrivateRoute path="/listclientes" component={ListClientes} />
+          <PrivateRoute path="/listdomiciliarios" component={ListDomiciliarios} />
           <PrivateRoute path="/listproducts" component={ListProducts} />
           <PrivateRoute path="/createproduct" component={CreateProduct} />
-          <PrivateRoute path="/tomarpedido" component={TomarPedido} />
-          <PrivateRoute path="/pedidos" component={Pedidos} />
+
+
+          <PrivateRoute path="/orders" component={Orders} />
+          <PrivateRoute path="/takeorder" component={TakeOrder} />
+          <PrivateRoute path="/orders" component={Orders} />
+          <PrivateRoute path="/orderlist" component={OrderList} />
+
+          <PrivateRoute path="/createOrder" component={CreateOrder} />
+          <PrivateRoute path="/editOrder/:id" component={EditOrder} />
+
           <PrivateRoute path="/mapuser/:id" component={UserMap} />
           <PublicRoute restricted={true} path="/login" component={Login} />
           <PublicRoute

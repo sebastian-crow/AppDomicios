@@ -15,20 +15,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 const ListProducts = () => {
+    
     const dispatch = useDispatch();
+    
     const products = useSelector((state) => state.ui.products);
-    console.log(products)
-    //const products = useSelector((state) => state.ui.products)
+    
     // Actualizar la lista
     React.useEffect(() => {
         dispatch(getAllProductAction());
     }, [dispatch]);
     const classes = useStyles();
-    /*const viewMap = (id) => {
-      dispatch(getFromUserPositionAction(id));
-      dispatch(push(`/mapuser/${id}`));
-    }
-  */
+    
+    const user = useSelector((state) => state.login.usuario.user)
+
     const handleDelete = (event) => {
         event.preventDefault();
         const data = {}
@@ -51,6 +50,7 @@ const ListProducts = () => {
                         <tr>
                             <th scope="col">Nombre</th>
                             <th scope="col">Descripción</th>
+                            <th scope="col">Propietario</th>
                             <th scope="col">Caracteristicas</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">ValorCU</th>
@@ -63,6 +63,7 @@ const ListProducts = () => {
                             <tr key={product._id}>
                                 <td>{product.nombre}</td>
                                 <td>{product.descripcion}</td>
+                                <td>{product.user.name}</td>
                                 <td>{product.caracteristicas}</td>
                                 <td>{product.empresa}</td>
                                 <td>{product.valorCU}</td>

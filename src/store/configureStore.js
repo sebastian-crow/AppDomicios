@@ -6,6 +6,7 @@ import { createReduxHistoryContext } from "redux-first-history";
 import { createRootReducer } from "./reducer";
 import { rootSaga } from "./middleware/saga";
 
+
 const { createReduxHistory, routerMiddleware, routerReducer } =
   createReduxHistoryContext({
     history: createBrowserHistory(),

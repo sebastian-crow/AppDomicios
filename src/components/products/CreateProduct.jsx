@@ -12,6 +12,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Select, MenuItem, InputLabel } from "@material-ui/core";
 import { createProductAction } from "../../store/reducer";
+import { push } from "redux-first-history";
+import { browserHistory } from 'react-router'
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CreateProduct(props) {
+    const user = useSelector((state) => state.login.usuario.user)
     const error = useSelector((state) => state.login.errorCreateProduct);
     const nombre = useFormInput("");
     const descripcion = useFormInput("");
@@ -50,8 +54,13 @@ function CreateProduct(props) {
             caracteristicas: caracteristicas.value,
             empresa: empresa.value,
             valorCU: valorCU.value,
+            user: {
+                name: user.nombre,
+                id:user._id
+            }
         };
         dispatch(createProductAction(data));
+        dispatch(push("/listproducts"));
     };
 
     return (

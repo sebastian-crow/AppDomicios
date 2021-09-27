@@ -19,6 +19,7 @@ import {
   getAllUserAction,
   getAllUserDoneAction,
 
+  // Products
   errorGetProducts,
   getAllProductAction,
   getAllProductDoneAction,
@@ -31,6 +32,34 @@ import {
   deleteProductAction,
   deleteProductDoneAction,
   errorDeleteProduct,
+
+
+  // Orders
+  errorGetOrders,
+  getAllOrderAction,
+  getAllOrderDoneAction,
+  createOrderAction,
+  createOrderDoneAction,
+  errorCreateOrder,
+  updateOrderAction,
+  updateOrderDoneAction,
+  errorUpdateOrder,
+  deleteOrderAction,
+  deleteOrderDoneAction,
+  errorDeleteOrder,
+
+
+  // Clients
+  getAllClientAction,
+  getAllClientDoneAction,
+  getFromClientPositionAction,
+  getFromClientPositionDoneAction,
+
+  // Dealers
+  getAllDomiciliarioAction,
+  getAllDomiciliarioDoneAction,
+  getFromDomiciliarioPositionAction,
+  getFromDomiciliarioPositionDoneAction,
 
   loginError,
 } from "../reducer";
@@ -97,6 +126,7 @@ function* actualizarUsuarioSaga(action) {
   }
 }
 
+// All users position
 function* createPositionSaga(action) {
   try {
     const { data } = yield call(api.createPosition, action.payload);
@@ -145,6 +175,45 @@ function* getFromUserPositionSaga(action) {
   }
 }
 
+
+// Domiciliarios position
+function* getFromDomiciliarioPositionSaga(action) {
+  try {
+    const { data } = yield call(api.getPositionFromUser, action.payload);
+    if (data.status === "200") {
+      yield put(getFromDomiciliarioPositionDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+// Clients position
+function* getFromClientPositionSaga(action) {
+  try {
+    const { data } = yield call(api.getPositionFromUser, action.payload);
+    if (data.status === "200") {
+      yield put(getFromClientPositionDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+
+
+// All users registred
 function* getAllUserSaga() {
   try {
     const { data } = yield call(api.getAllUsers);
@@ -161,6 +230,46 @@ function* getAllUserSaga() {
   }
 }
 
+
+// All clients registred
+function* getAllClientSaga() {
+  try {
+    const { data } = yield call(api.getAllClients);
+    if (data.status === "200") {
+      yield put(getAllClientDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+// All dealers registred
+function* getAllDomiciliarioSaga() {
+  try {
+    const { data } = yield call(api.getAllDomiciliarios);
+    if (data.status === "200") {
+      yield put(getAllDomiciliarioDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+
+
+
+
 // Products
 
 function* getAllProductSaga() {
@@ -169,7 +278,7 @@ function* getAllProductSaga() {
     if (data.status === "200") {
       yield put(getAllProductDoneAction(data));
     } else {
-      alert('No products')
+      console.log('No products')
     }
   } catch (error) {
   } finally {
@@ -231,6 +340,77 @@ function* deleteProductSaga(action) {
 }
 
 
+// Orders
+
+function* getAllOrderSaga() {
+  try {
+    const { data } = yield call(api.getAllOrders);
+    if (data.status === "200") {
+      yield put(getAllOrderDoneAction(data));
+    } else {
+      console.log('No products')
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+function* createOrderSaga(action) {
+  try {
+    const { data } = yield call(api.createOrder, action.payload);
+    if (data.status === 200) {
+      yield put(createOrderDoneAction(data));
+    } else {
+      yield put(errorCreateOrder(data.status));
+    }
+  } catch (error) {
+    yield put(errorCreateOrder("Error inesperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* updateOrderSaga(action) {
+  try {
+    const { data } = yield call(api.updateOrder, action.payload);
+    yield put(updateOrderDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+
+
+
+function* deleteOrderSaga(action) {
+  try {
+    const { data } = yield call(api.deleteOrder, action.payload);
+    if (data.status === 200) {
+      yield put(deleteOrderDoneAction(data));
+    } else {
+      yield put(errorDeleteOrder(data.status));
+    }
+  } catch (error) {
+    yield put(errorDeleteOrder("Error inesperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+
 
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
@@ -240,12 +420,33 @@ export function* rootSaga() {
   yield takeLatest(createPositionAction.type, createPositionSaga);
   yield takeLatest(updatePositionAction.type, updatePositionSaga);
   yield takeLatest(getFromUserPositionAction.type, getFromUserPositionSaga);
-  yield takeLatest(getAllUserAction.type, getAllUserSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
 
-
+  // Products
   yield takeLatest(getAllProductAction.type, getAllProductSaga);
   yield takeLatest(createProductAction.type, createProductSaga);
   yield takeLatest(updateProductAction.type, updateProductSaga);
   yield takeLatest(deleteProductAction.type, deleteProductSaga);
+
+  // Users
+  yield takeLatest(getAllUserAction.type, getAllUserSaga);
+  yield takeLatest(getAllClientAction.type, getAllClientSaga);
+  yield takeLatest(getAllDomiciliarioAction.type, getAllDomiciliarioSaga);
+  
+  // Dealers location
+  yield takeLatest(getFromDomiciliarioPositionAction.type, getFromDomiciliarioPositionSaga);
+  yield takeLatest(getFromClientPositionAction.type, getFromClientPositionSaga);
+
+
+  // Orders
+  yield takeLatest(getAllOrderAction.type, getAllOrderSaga);
+  yield takeLatest(createOrderAction.type, createOrderSaga);
+  yield takeLatest(updateOrderAction.type, updateOrderSaga);
+  yield takeLatest(deleteOrderAction.type, deleteOrderSaga);
+
+
 }
+
+
+
+

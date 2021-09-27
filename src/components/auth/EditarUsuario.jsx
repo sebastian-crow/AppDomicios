@@ -14,6 +14,7 @@ import { Select, MenuItem, InputLabel } from "@material-ui/core";
 import { actualizarUsuarioAction } from "../../store/reducer";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { push } from "redux-first-history";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -58,8 +59,11 @@ function EditarUsuario() {
       documentoIdentidad: documentoIdentidad.value,
       password: password.value,
       fechaNacimiento: fechaNacimiento.value,
+      rol: "cliente"
     };
     dispatch(actualizarUsuarioAction({data, id: usuario._id}));
+    dispatch(push("/"));
+
   };
 
   return (
