@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { getAllClientAction, getFromUserPositionAction } from '../../store/reducer'
+import { getAllClientAction, getFromUserPositionAction, getAllProductAction } from '../../store/reducer'
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { push } from "redux-first-history";
@@ -14,11 +14,19 @@ const useStyles = makeStyles((theme) => ({
 const ListUsers = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.ui.clients);
-  console.log(users)
+  const products = useSelector((state) => state.ui.products)
+
   // Actualizar la lista
   React.useEffect(() => {
     dispatch(getAllClientAction());
   }, [dispatch]);
+
+
+  React.useEffect(() => {
+    dispatch(getAllProductAction());
+  }, [dispatch]);
+
+  
   const classes = useStyles();
   const viewMap = (id) => {
     dispatch(getFromUserPositionAction(id));
@@ -33,7 +41,7 @@ const ListUsers = () => {
             <tr>
               <th scope="col">Nombre</th>
               <th scope="col">Identificacion</th>
-              <th scope="col">Acciones</th>
+              <th scope="col">Productos</th>
             </tr>
           </thead>
           <tbody>
@@ -41,17 +49,7 @@ const ListUsers = () => {
               <tr key={user.rol === 'cliente' ? user._id : ''}>
                 <td>{user.rol === 'cliente' ? user.nombre : ''} {user.rol === 'cliente' ? user.apellido : ''}</td>
                 <td>{user.documentoIdentidad}</td>
-                <td>
-                  <Button
-                    onClick={() => viewMap(user._id)}
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                  >
-                    Ver posicion
-                  </Button>
-                </td>
+                <td>{'En proceso...'}</td>
               </tr>
             ))}
           </tbody>

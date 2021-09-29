@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {Counter} from '../counter/counter'
+import { Counter } from '../counter/counter'
 import { useEffect } from "react";
 import { push } from "redux-first-history";
 import { api } from '../../store/middleware/api'
@@ -30,12 +30,14 @@ import Chip from '@mui/material/Chip';
 
 // Actions
 import {
-  createOrderAction,
-  getAllDomiciliarioAction,
-  getAllProductAction,
-  getFromDomiciliarioPositionAction
-} from "../../store/reducer";
+  createOrderAction,  // Create order
+  getAllDomiciliarioAction, // Get Domiciliarios
+  getAllProductAction, // Get products
 
+  getFromUserPositionAction,  // Get Position
+  updatePositionAction, // Update position
+  createPositionAction, // Create position for one user, in this case we gonna save the delevery man locations
+} from "../../store/reducer";
 
 
 
@@ -88,8 +90,30 @@ const useStyles = makeStyles((theme) => ({
 
 function CreateOrder({ props, increment, onClickFunction }) {
 
+
+
+  // Getting Real Time Location
+
+  //  const dispatch = useDispatch();
+  //const userID = useSelector((state) => state.login.usuario.user._id);
+  const position = useSelector((state) => state.ui.position);
+  const positionId = useSelector((state) => state.ui.positionId);
+  const users = useSelector((state) => state.ui.domiciliarios);
+  const domiciliarioList = [...users]
+  const domiciliarios = useSelector((state) => state.ui.domiciliarios)
+
+  //const domiciliarios = useSelector((state) => state.ui.domiciliarios)
+
+
+  //console.log('Domiciliarios', users) // comparar cual es el domiciliario de mi pedido
+
+
+
+
+
   const theme = useTheme();
   const [productName, setProductName] = React.useState([]);
+  const [domiciliarioName, setDomiciliarioName] = React.useState([])
   const [count, setCount] = useState(0)
 
   const handleClick = () => {
@@ -111,17 +135,26 @@ function CreateOrder({ props, increment, onClickFunction }) {
     )
   }
 
+  const handleDomiciliarioChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setDomiciliarioName(
+      // On autofill we get a the stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    )
+  }
+
   // Declarate dealers array for then find a random dealer inside this aray and finally add this dealer to the order collection
-  const domiciliarios = useSelector((state) => state.ui.domiciliarios)
-  const domiciliario = [...domiciliarios]
+  //const domiciliarios = useSelector((state) => state.ui.domiciliarios)
+  //const domiciliario = [...domiciliarios]
 
   // Generate a random domiciliario for to save the order
-  let randomDomiciliario = domiciliario[Math.floor(Math.random() * domiciliario.length)];
-  console.log(randomDomiciliario)
+  //let randomDomiciliario = domiciliario[Math.floor(Math.random() * domiciliario.length)];
 
   // Get Client and Domiciliario Location
-  const clientLocation = useSelector((state) => state.ui.position)
-  const domiciliarioLocation = useSelector((state) => state.ui.positionDomiciliario)
+  //const clientLocation = useSelector((state) => state.ui.position)
+  //const domiciliarioLocation = useSelector((state) => state.ui.positionDomiciliario)
 
   // Get products from the global state
   const products = useSelector((state) => state.ui.products)
@@ -138,38 +171,94 @@ function CreateOrder({ props, increment, onClickFunction }) {
   // Fields por send the query to the API
   const productos = useFormInput("Selector");
   const direccion = useFormInput("");
+  const orderName = useFormInput("");
+  //const domiciliarioInput = useFormInput("");
+  const remaining = 180000
+  const domiciliario = useFormInput("")
+  //console.log('ORDERNAME', orderName)
+  //console.log('DEALER', domiciliario)
   const classes = useStyles();
   const dispatch = useDispatch();
   // Hanlde that send information to the API and then these datas will save into the database
   const handleCreate = (event) => {
     event.preventDefault();
     let data = {
+      orderName: orderName.value,
       fecha: Date.now(),
       cliente: {
         id: user._id,
         name: user.nombre,
-        location: clientLocation,
+        //location: clientLocation,
       },
       domiciliario: {
-        id: randomDomiciliario._id,
-        nombre: randomDomiciliario.nombre,
-        location: domiciliarioLocation,
+        id: domiciliarioName[0],
       },
       productos: ContactProduct(), // Function that contents Name of the product, amount of products and their own ID
       direccion: direccion.value,
+      remaining
     };
     dispatch(createOrderAction(data));
     dispatch(push("/orderlist"));
+    console.log('ORDER CREATED', data)
   };
 
   // Excecute actions
+
+  // Get all user's rol 'domiciliario'
   React.useEffect(() => {
     dispatch(getAllDomiciliarioAction());
   }, [dispatch]);
 
+
+  // Get Products Array
   React.useEffect(() => {
     dispatch(getAllProductAction());
   }, [dispatch]);
+
+  /*
+  let randomDomiciliario = domiciliarioList[Math.floor(Math.random() * domiciliarioList.length)];
+  let userID //domiciliarioId 
+  users.map((user) => {
+    if (user._id === randomDomiciliario._id) {
+      userID = user._id
+    }
+  })
+  //console.log('FINAL ID', userID)
+
+
+  */
+
+  const userID = domiciliarioName[0]
+  
+  // Create / Update position
+  useEffect(() => {
+    const timer = setInterval(() => {
+      dispatch(getFromUserPositionAction(userID));
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+      dispatch(getAllDomiciliarioAction());
+
+      function success(pos) {
+        var crd = pos.coords;
+        if (positionId) {
+          dispatch(updatePositionAction({ lat: crd.latitude, lng: crd.longitude, positionId: positionId }));
+        } else {
+          dispatch(createPositionAction({ position: JSON.stringify({ lat: crd.latitude, lng: crd.longitude }), usuario: userID }));
+        }
+      };
+
+      function error(err) {
+        console.warn('ERROR(' + err.code + '): ' + err.message);
+      };
+
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [dispatch, position, positionId, userID]);
 
 
   // Counter for give the amount of the products
@@ -180,7 +269,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
   const ContactProduct = () => {
 
     let productoFinal, id, nombre;
-    
+
     for (let i = 0; i < productName.length; i++) {
       nombre = productName[i]
     }
@@ -199,7 +288,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
     })
   }
 
-  
+
 
   return (
     <>
@@ -215,7 +304,51 @@ function CreateOrder({ props, increment, onClickFunction }) {
             onSubmit={handleCreate}
           >
 
-            <FormControl sx={{ m: 1, width: 300 }}>
+            <Grid container spacing={2}>
+
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="orderName"
+                  name="orderName"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="orderName"
+                  label="Nombre de la orden"
+                  autoFocus
+                  {...orderName}
+                />
+              </Grid>
+            </Grid>
+
+
+            <FormControl id="menuDomiciliario" sx={{ m: 1, width: 395 }}>
+              <InputLabel id="demo-multiple-name-label">Domiciliario</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={domiciliarioName}
+                onChange={handleDomiciliarioChange}
+                input={<OutlinedInput label="Domiciliario" />}
+                MenuProps={MenuProps}
+              >
+                {domiciliarios.map((domiciliario) => (
+                  <MenuItem
+                    key={domiciliario._id}
+                    value={domiciliario._id}
+                  //style={getStyles(domiciliario, domiciliarioName, theme)}
+                  >
+                    {domiciliario.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+
+
+
+            <FormControl id="menuMultij" sx={{ m: 1, width: 395 }}>
               <InputLabel id="demo-multiple-chip-label">Products</InputLabel>
               <Select
                 labelId="demo-multiple-chip-label"
@@ -225,7 +358,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
                 onChange={handleChange}
                 input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                 renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4 }}>
                     {selected.map((value) => (
                       <Chip key={value} label={value} />
                     ))}
@@ -235,30 +368,18 @@ function CreateOrder({ props, increment, onClickFunction }) {
               >
                 {product.map((prod) => (
                   <MenuItem
-                    key={prod.nombre && prod._id1}
+                    key={prod.nombre && prod._id}
                     value={prod.nombre}
                     style={getStyles(prod.nombre, productName, theme)}
+
                   >
                     {prod.nombre}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            
-            
+
             <Counter />
-
-
-
-
-
-
-
-
-
-
-
-
 
             <Grid item xs={12}>
               <TextField
@@ -266,7 +387,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
                 required
                 fullWidth
                 name="direccion"
-                label="direccion"
+                label="Dirección"
                 type="text"
                 id="direccion"
                 autoComplete="direccion"
@@ -281,7 +402,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
               className={classes.submit}
             >
               {" "}
-                            Create Order{" "}
+              Create Order{" "}
             </Button>
             <Grid item>
               {error && (
@@ -295,6 +416,20 @@ function CreateOrder({ props, increment, onClickFunction }) {
           </form>
         </div>
       </Container>
+      <style jsx>{`
+                #menuMultij {
+                  postiion: absolute;
+                  left: -0.4rem;
+                  top: 0.5rem;
+                }
+
+                #menuDomiciliario {
+                  postiion: absolute;
+                  left: -0.4rem;
+                  top: 0.5rem;
+                }
+                `}</style>
+
     </>
   );
 }

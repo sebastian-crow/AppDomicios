@@ -32,6 +32,11 @@ export default function StickyFooter() {
 
 	return (
 		<>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
 			<footer className={classes.footer}>
 				<Container maxWidth="sm">
 					<Copyright />

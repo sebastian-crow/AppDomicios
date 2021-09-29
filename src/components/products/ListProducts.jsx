@@ -15,17 +15,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 const ListProducts = () => {
-    
+
     const dispatch = useDispatch();
-    
+
     const products = useSelector((state) => state.ui.products);
-    
+
     // Actualizar la lista
     React.useEffect(() => {
         dispatch(getAllProductAction());
     }, [dispatch]);
     const classes = useStyles();
-    
+
     const user = useSelector((state) => state.login.usuario.user)
 
     const handleDelete = (event) => {
@@ -39,12 +39,15 @@ const ListProducts = () => {
                 <table class="table">
                     <thead>
                         <br />
-                        <Link
-                            to="/createproduct"
-                            className="btn btn-outline-primary my-2 my-sm-0"
-                        >
-                            Create Product{" "}
-                        </Link>
+                        {user.rol === 'admin' && (
+                            <Link
+                                to="/createproduct"
+                                className="btn btn-outline-primary my-2 my-sm-0"
+                            >
+                                Create Product{" "}
+                            </Link>
+                        )}
+
                         <br />
                         <br />
                         <tr>
@@ -54,8 +57,13 @@ const ListProducts = () => {
                             <th scope="col">Caracteristicas</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">ValorCU</th>
-                            <th scope="col">Edit</th>
-                            <th scope="col">Delete</th>
+                            {user.rol === 'admin' && (
+                                <>
+                                    <th scope="col">Edit</th>
+                                    <th scope="col">Delete</th>
+                                </>
+                            )}
+
                         </tr>
                     </thead>
                     <tbody>
@@ -67,20 +75,24 @@ const ListProducts = () => {
                                 <td>{product.caracteristicas}</td>
                                 <td>{product.empresa}</td>
                                 <td>{product.valorCU}</td>
-                                <td> <Link
-                                    to={`/editarproducto/${product._id}`}
-                                    className="btn btn-outline-primary my-2 my-sm-0"
-                                >
-                                    Edit {" "}
-                                </Link></td>
-                                <td> <Button
-                                    onClick={api.deleteProduct}
-                                    variant="contained"
-                                    color="secondary"
-                                    className="btn btn-outline-danger my-2 my-sm-0"
-                                >
-                                    Delete
-                                </Button></td>
+                                {user.rol === 'admin' && (
+                                    <>
+                                        <td> <Link
+                                            to={`/editarproducto/${product._id}`}
+                                            className="btn btn-outline-primary my-2 my-sm-0"
+                                        >
+                                            Edit {" "}
+                                        </Link></td>
+                                        <td> <Button
+                                            onClick={api.deleteProduct}
+                                            variant="contained"
+                                            color="secondary"
+                                            className="btn btn-outline-danger my-2 my-sm-0"
+                                        >
+                                            Delete
+                                        </Button></td>
+                                    </>
+                                )}
 
                             </tr>
                         ))}

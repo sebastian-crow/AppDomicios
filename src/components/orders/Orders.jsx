@@ -77,7 +77,6 @@ const ListOrders = () => {
                   <td>{order.fecha}</td>
                   <td>{order.cliente.nombre}</td>
                   <td>{order.domiciliario.nombre}</td>
-                  <td>{order.productos}</td>
                   <td>{order.direccion}</td>
                   <td>{order.valorCU}</td>
                   <td> <Link

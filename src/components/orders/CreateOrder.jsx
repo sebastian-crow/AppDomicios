@@ -17,6 +17,7 @@ import { Select, MenuItem, InputLabel } from "@material-ui/core";
 
 // Actions
 import { createOrderAction, getAllDomiciliarioAction, getAllProductAction } from "../../store/reducer";
+import { formControlClasses } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -44,9 +45,11 @@ function CreateOrder(props) {
     const products = useSelector((state) => state.ui.products)
 
     const error = useSelector((state) => state.login.errorCreateOrder);
+    const orderName = useFormInput("");
     const fecha = useFormInput("");
     const cliente = useFormInput("");
     const domiciliario = useFormInput("");
+    console.log('Domi', domiciliario)
     const productos = useFormInput("");
     const direccion = useFormInput("");
     const classes = useStyles();
@@ -54,6 +57,7 @@ function CreateOrder(props) {
     const handleCreate = (event) => {
         event.preventDefault();
         let data = {
+            orderName: orderName.value,
             fecha: Date.now(),
             cliente: cliente.value,
             domiciliario: domiciliario.value,
@@ -86,7 +90,23 @@ function CreateOrder(props) {
                         autoComplete="off"
                         onSubmit={handleCreate}
                     >
+                    
                         <Grid container spacing={2}>
+
+                        <Grid item xs={12}>
+                                <TextField
+                                    autoComplete="orderName"
+                                    name="orderName"
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="orderName"
+                                    label="orderName"
+                                    autoFocus
+                                    {...orderName}
+                                />
+                            </Grid>
+                        
                             <Grid item xs={12}>
                                 <TextField
                                     autoComplete="cliente"
@@ -106,7 +126,7 @@ function CreateOrder(props) {
                                 </InputLabel>
                                 <Select required labelId="tipo" {...domiciliarios}>
                                     {domiciliarios.map((domiciliario) => (
-                                        <MenuItem value={domiciliario.nombre}>
+                                        <MenuItem value={domiciliario}>
                                             {domiciliario.nombre}
                                         </MenuItem>
                                     ))}
@@ -116,7 +136,7 @@ function CreateOrder(props) {
                                 <InputLabel name="tipo" id="tipo">
                                     Productos
                                 </InputLabel>
-                                <Select required labelId="tipo" {...products}>
+                                <Select required labelId="tipo" {...products} id="">
                                     {products.map((product) => (
                                         <MenuItem value={product.nombre}>
                                             {product.nombre}

@@ -88,7 +88,7 @@ function EditProduct() {
                                     variant="outlined"
                                     fullWidth
                                     id="nombre"
-                                    label="Nombres"
+                                    label="Nombre"
                                     autoFocus
                                     defaultValue={product.nombre}
                                     {...nombre}

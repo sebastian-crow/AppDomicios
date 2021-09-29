@@ -20,6 +20,7 @@ function getClient() {
   return client;
 }
 
+
 // helper method to invoke ajax call via axios, and set up a cancel token to cancel
 // pending requests if needed.
 const callAPI = (options) => {

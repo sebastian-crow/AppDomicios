@@ -48,73 +48,7 @@ const MenuBar = () => {
                 >
                   Inicio{" "}
                 </Link>
-                &nbsp;&nbsp;
-                {user.rol === "admin" && (
-                  <>
-                    <Link
-                      to="/listclientes"
-                      className="btn btn-outline-secondary my-2 my-sm-0"
-                    >
-                      Listar Clientes{" "}
-                    </Link>
-                    &nbsp;&nbsp;&nbsp;
-                    <Link
-                      to="/listdomiciliarios"
-                      className="btn btn-outline-secondary my-2 my-sm-0"
-                    >
-                      Listar Domiciliarios{" "}
-                    </Link>
-                    &nbsp;&nbsp;&nbsp;
-                    <Link
-                      to="/listproducts"
-                      className="btn btn-outline-secondary my-2 my-sm-0"
-                    >
-                      Listar Productos{" "}
-                    </Link>
-                    &nbsp;&nbsp;&nbsp;
-                    <Link
-                      to="/orders"
-                      className="btn btn-outline-secondary my-2 my-sm-0"
-                    >
-                      Listar Ordenes{" "}
-                    </Link>
-                    &nbsp;&nbsp;
-                  </>
-                  
-                )}
-                {user.rol === "cliente" && (
-                  <>
-                  &nbsp;&nbsp;
-                    <Link
-                      to="/orders"
-                      className="btn btn-outline-secondary my-2 my-sm-0"
-                    >
-                      Pedidos{" "}
-                      &nbsp;&nbsp;
-                    </Link>
-                    &nbsp;&nbsp;
-                    <Link
-                      to="/listproducts"
-                      className="btn btn-outline-secondary my-2 my-sm-0"
-                    >
-                       Productos{" "}
-                    </Link>
-                    &nbsp;&nbsp;
-                    
-
-                  </>
-                )}
-                &nbsp;&nbsp;
-                {user.rol === "domiciliario" && (
-                  <>
-                    <Link
-                      to="/orders"
-                      className="btn btn-outline-secondary my-2 my-sm-0"
-                    >
-                      Pedidos(a donde tiene que ir y que tiene que entregar){" "}
-                    </Link>
-                  </>
-                )}
+                
                 
                 &nbsp;&nbsp;
                 <Link

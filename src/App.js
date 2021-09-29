@@ -13,6 +13,7 @@ import EditarUsuario from "./components/auth/EditarUsuario";
 // Users
 import ListClientes from "./components/listUsers/ListClientes";
 import ListDomiciliarios from "./components/listUsers/ListDomiciliarios"
+import userProductList from "./components/products/UserProductList"
 
 
 // Products
@@ -27,6 +28,7 @@ import TakeOrder from './components/orders/TakeOrder'
 import CreateOrder from './components/orders/CreateOrder'
 import EditOrder from './components/orders/EditOrder'
 import OrderList from './components/orders/OrderList'
+import UserOrderList from "./components/orders/UserOrderList";
 
 
 //Elementos de rutas
@@ -54,6 +56,8 @@ function App() {
           <PrivateRoute path="/listclientes" component={ListClientes} />
           <PrivateRoute path="/listdomiciliarios" component={ListDomiciliarios} />
           <PrivateRoute path="/listproducts" component={ListProducts} />
+          <PrivateRoute path="/userproductlist" component={userProductList} />
+          <PrivateRoute path="/userorderlist" component={UserOrderList} />
           <PrivateRoute path="/createproduct" component={CreateProduct} />
 
 

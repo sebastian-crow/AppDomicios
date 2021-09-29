@@ -2,10 +2,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { getAllOrderAction, deleteOrderAction, getFromUserPositionAction } from "../../store/reducer";
+import { getAllDomiciliarioAction, getAllOrderAction, deleteOrderAction, getFromUserPositionAction } from "../../store/reducer";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { push } from "redux-first-history";
+import { ReverseCounter } from "./UserOrderList";
 
 import { api } from "../../store/middleware/api";
 
@@ -14,20 +15,28 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
+
+
+// List Users Component
+
 const ListOrders = () => {
+
+
     const dispatch = useDispatch();
     const orders = useSelector((state) => state.ui.orders);
-    console.log(orders)
-    const user = useSelector((state) => state.login.usuario.user)
 
-    const userOrders = orders.map((order) => order.domiciliario.id === user._id ? order : '')
-    //const previousOrders = [...userOrders]
-    //console.log('array', previousOrders)
+    const user = useSelector((state) => state.login.usuario.user)
+    const domiciliarios = useSelector((state) => state.ui.domiciliarios);
 
 
     // Actualizar la lista
     React.useEffect(() => {
         dispatch(getAllOrderAction());
+    }, [dispatch]);
+
+    // Traer domiciliarios
+    React.useEffect(() => {
+        dispatch(getAllDomiciliarioAction());
     }, [dispatch]);
 
     const classes = useStyles();
@@ -37,26 +46,40 @@ const ListOrders = () => {
         dispatch(push(`/mapuser/${id}`));
     }
 
+
     const handleDelete = (event) => {
         event.preventDefault()
         const data = {}
         dispatch(deleteOrderAction(data))
         dispatch(push("/orderlist"))
     }
+
+
+
+    //When the state of this order changed as Done, this field will change and being render like "Total Time
+
     return (
         <>
+            <br />
+            <br />
+            <br />
             <div style={{ height: "800px", overflowY: "scroll" }}>
-                {user.rol === 'cliente' && (
+                {user.rol === 'cliente'  && (
                     <table class="table">
                         <thead>
-                            <br />
-                            <br />
-                            <br />
+
                             <tr>
                                 <th scope="col">Fecha</th>
+                                <th scope="col">Nombre</th>
                                 <th scope="col">Domiciliario</th>
+                                {user.rol === 'admin' && (
+                                    <th scope="col">Cliente</th>
+                                )}
                                 <th scope="col">Productos / Cantidad</th>
                                 <th scope="col">Dirección</th>
+                                <th scope="col">Time Remaining</th>
+                                <th scope="col">Ubication</th>
+                                <th scope="col">State</th>
                                 <th scope="col">Edit</th>
                                 <th scope="col">Delete</th>
                             </tr>
@@ -65,9 +88,24 @@ const ListOrders = () => {
                             {orders.map((order) => (
                                 <tr key={order._id}>
                                     <td>{order.fecha}</td>
-                                    <td>{order.domiciliario.nombre}</td>
+                                    <td>{order.orderName}</td>
+                                    <td>{order.domiciliario.name}</td>
                                     <td>{order.productos.map((producto) => `${producto.nombre} (${producto.cantidad}) `)}</td>
                                     <td>{order.direccion}</td>
+                                    <td><ReverseCounter /></td>
+                                    
+                                    <td>
+                                        <Button
+                                            onClick={() => viewMap(order.domiciliario.id)}
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary1"
+                                            className={classes.submit}
+                                        >
+                                            Ver Mapa
+                                        </Button>
+                                    </td>
+                                    <td>{`In process / Done`}</td>
                                     <td> <Link
                                         to={`/editOrder/${order._id}`}
                                         className="btn btn-outline-primary my-2 my-sm-0"
@@ -75,22 +113,82 @@ const ListOrders = () => {
                                         Edit {" "}
                                     </Link></td>
                                     <td> <Button
-                                        onClick={ () => {
-                                                        api.deleteOrder(order._id)
-                                                        dispatch(push("/orderlist"))
-                                                    }}
+                                        onClick={handleDelete}
                                         variant="contained"
                                         color="secondary"
                                         className="btn btn-outline-danger my-2 my-sm-0"
                                     >
                                         Delete
-                                </Button></td>
+                                    </Button></td>
 
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 )}
+                {user.rol === 'admin'  && (
+                    <table class="table">
+                        <thead>
+
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Domiciliario</th>
+                                {user.rol === 'admin' && (
+                                    <th scope="col">Cliente</th>
+                                )}
+                                <th scope="col">Productos / Cantidad</th>
+                                <th scope="col">Dirección</th>
+                                <th scope="col">Time Remaining</th>
+                                <th scope="col">Ubication</th>
+                                <th scope="col">State</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders.map((order) => (
+                                <tr key={order._id}>
+                                    <td>{order.fecha}</td>
+                                    <td>{order.orderName}</td>
+                                    <td>{order.domiciliario.name}</td>
+                                    <td>{order.cliente.name}</td>
+                                    <td>{order.productos.map((producto) => `${producto.nombre} (${producto.cantidad}) `)}</td>
+                                    <td>{order.direccion}</td>
+                                    <td><ReverseCounter /></td>
+                                    <td>
+                                        <Button
+                                            onClick={() => viewMap(order.domiciliario.id)}
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary1"
+                                            className={classes.submit}
+                                        >
+                                            Ver Mapa
+                                        </Button>
+                                    </td>
+                                    <td>{`In process / Done`}</td>
+                                    <td> <Link
+                                        to={`/editOrder/${order._id}`}
+                                        className="btn btn-outline-primary my-2 my-sm-0"
+                                    >
+                                        Edit {" "}
+                                    </Link></td>
+                                    <td> <Button
+                                        onClick={handleDelete}
+                                        variant="contained"
+                                        color="secondary"
+                                        className="btn btn-outline-danger my-2 my-sm-0"
+                                    >
+                                        Delete
+                                    </Button></td>
+
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+
                 {user.rol == 'domiciliario' && (
                     <>
                         <table class="table">
@@ -103,21 +201,21 @@ const ListOrders = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {userOrders.map((order) => (
+                                {orders.map((order) => (
                                     <tr key={order._id}>
-                                        <td>{order.cliente.nombre}</td>
-                                        <td>{order.productos}</td>
+                                        <td>{order.cliente.name}</td>
+                                        <td>{order.productos.map((producto) => `${producto.nombre} (${producto.cantidad}) `)}</td>
                                         <td>{order.direccion}</td>
                                         <td>
                                             <Button
-                                                onClick={() => viewMap(order.cliente.id)}
+                                                onClick={() => viewMap(order.direccion)}
                                                 fullWidth
                                                 variant="contained"
                                                 color="primary"
                                                 className={classes.submit}
                                             >
-                                                Ver posicion
-                  </Button>
+                                                Ver Ruta
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}
