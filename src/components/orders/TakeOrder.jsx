@@ -4,6 +4,8 @@ import { Counter } from '../counter/counter'
 import { useEffect } from "react";
 import { push } from "redux-first-history";
 import { api } from '../../store/middleware/api'
+import Geocode from "react-geocode";
+
 
 // Material UI
 import Avatar from "@material-ui/core/Avatar";
@@ -88,34 +90,36 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 function CreateOrder({ props, increment, onClickFunction }) {
 
-
-
   // Getting Real Time Location
-
-  //  const dispatch = useDispatch();
-  //const userID = useSelector((state) => state.login.usuario.user._id);
+  const dispatch = useDispatch();
   const position = useSelector((state) => state.ui.position);
   const positionId = useSelector((state) => state.ui.positionId);
   const users = useSelector((state) => state.ui.domiciliarios);
   const domiciliarioList = [...users]
   const domiciliarios = useSelector((state) => state.ui.domiciliarios)
 
-  //const domiciliarios = useSelector((state) => state.ui.domiciliarios)
 
 
-  //console.log('Domiciliarios', users) // comparar cual es el domiciliario de mi pedido
-
-
-
-
-
-  const theme = useTheme();
+  const theme = useTheme(); // Styles
   const [productName, setProductName] = React.useState([]);
   const [domiciliarioName, setDomiciliarioName] = React.useState([])
   const [count, setCount] = useState(0)
 
+
+  // Handlers
   const handleClick = () => {
     onClickFunction(increment)
   }
@@ -135,6 +139,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
     )
   }
 
+  // Hanlde Domiciliario State
   const handleDomiciliarioChange = (event) => {
     const {
       target: { value },
@@ -145,16 +150,10 @@ function CreateOrder({ props, increment, onClickFunction }) {
     )
   }
 
-  // Declarate dealers array for then find a random dealer inside this aray and finally add this dealer to the order collection
-  //const domiciliarios = useSelector((state) => state.ui.domiciliarios)
-  //const domiciliario = [...domiciliarios]
 
   // Generate a random domiciliario for to save the order
   //let randomDomiciliario = domiciliario[Math.floor(Math.random() * domiciliario.length)];
 
-  // Get Client and Domiciliario Location
-  //const clientLocation = useSelector((state) => state.ui.position)
-  //const domiciliarioLocation = useSelector((state) => state.ui.positionDomiciliario)
 
   // Get products from the global state
   const products = useSelector((state) => state.ui.products)
@@ -172,13 +171,10 @@ function CreateOrder({ props, increment, onClickFunction }) {
   const productos = useFormInput("Selector");
   const direccion = useFormInput("");
   const orderName = useFormInput("");
-  //const domiciliarioInput = useFormInput("");
-  const remaining = 180000
+  const remaining = 180000 // Time remaining since the order was created.
   const domiciliario = useFormInput("")
-  //console.log('ORDERNAME', orderName)
-  //console.log('DEALER', domiciliario)
   const classes = useStyles();
-  const dispatch = useDispatch();
+
   // Hanlde that send information to the API and then these datas will save into the database
   const handleCreate = (event) => {
     event.preventDefault();
@@ -194,13 +190,47 @@ function CreateOrder({ props, increment, onClickFunction }) {
         id: domiciliarioName[0],
       },
       productos: ContactProduct(), // Function that contents Name of the product, amount of products and their own ID
-      direccion: direccion.value,
+      //direccion: direccion.value,
+      direccion: {
+	address: direccion.value,
+	coords: address_coords,
+      },
       remaining
     };
     dispatch(createOrderAction(data));
     dispatch(push("/orderlist"));
     console.log('ORDER CREATED', data)
   };
+
+
+   // Geocoding handle for convert one address as coords
+	
+   // set Google Maps API Key
+Geocode.setApiKey("AIzaSyC3fhmeqzhFIthXezrymC_owJgFgH_yWgA");
+
+// set response language. Defaults to english.
+Geocode.setLanguage("es");
+
+// set response region. Its optional.
+// A Geocoding request with region=es (Spain) will return the Spanish city.
+Geocode.setRegion("co");
+
+const address = direccion.value
+let address_coords
+
+Geocode.fromAddress(address).then(
+  (response) => {
+    const { lat, lng } = response.results[0].geometry.location;
+    address_coords = { lat, lng }
+    console.log(address_coords);
+  },
+  (error) => {
+    console.error(error);
+  }
+);
+
+
+
 
   // Excecute actions
 
@@ -215,18 +245,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
     dispatch(getAllProductAction());
   }, [dispatch]);
 
-  /*
-  let randomDomiciliario = domiciliarioList[Math.floor(Math.random() * domiciliarioList.length)];
-  let userID //domiciliarioId 
-  users.map((user) => {
-    if (user._id === randomDomiciliario._id) {
-      userID = user._id
-    }
-  })
-  //console.log('FINAL ID', userID)
 
-
-  */
 
   const userID = domiciliarioName[0]
   

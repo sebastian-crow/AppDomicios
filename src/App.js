@@ -41,6 +41,10 @@ import Footer from "./components/base/Footer";
 import { useDispatch } from "react-redux";
 import { restoreSessionStateAction } from "./store/reducer";
 
+
+// Proof
+import DealerMap from './components/vistas/DealerMap'
+
 function App() {
   const dispatch = useDispatch();
   React.useEffect(() => {
@@ -59,6 +63,7 @@ function App() {
           <PrivateRoute path="/userproductlist" component={userProductList} />
           <PrivateRoute path="/userorderlist" component={UserOrderList} />
           <PrivateRoute path="/createproduct" component={CreateProduct} />
+	  <PrivateRoute path="/dealermap" component={DealerMap} />
 
 
           <PrivateRoute path="/orders" component={Orders} />

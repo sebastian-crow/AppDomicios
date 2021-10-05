@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 import { Link } from "react-router-dom";
 import "../../assets/css/home.css";
 import MapLocal from "../maps/Map";
 import { updatePositionAction, getFromUserPositionAction, createPositionAction, getAllDomiciliarioAction } from "../../store/reducer";
-//import { useSelector } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
-import { fromAddress } from '../geocode/geocode';
+
 
 
 const Inicio = () => {
@@ -45,6 +44,10 @@ const Inicio = () => {
 
   return (
     <>
+
+      <Link to="/dealermap">
+        <h1>Dealer map</h1>
+      </Link>
       <div style={{ height: "800px" }}>
         {user.rol === 'cliente' && (
           <>
@@ -139,7 +142,7 @@ const Inicio = () => {
               <h1 className="ordersText">Ordenes Hechas</h1>
             </Link>
           </div>
-          
+
         </>
       )}
 
@@ -254,5 +257,3 @@ export default Inicio;
 
 
 
-
-// <MapLocal position={JSON.parse(position.replace(/'/g, '"'))} />
