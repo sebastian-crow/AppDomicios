@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 
 // material-ui
@@ -16,16 +16,18 @@ import MainLayout from '../../layout/MainLayout'
 import { useDispatch, useSelector } from "react-redux";
 
 
-// Actions
+// Product List
+import ListProducts from 'ui-component/addresses/products/ListProducts'
 
-
+//<Link to="/mapbox">mapbox</Link>
 const SamplePage = () => {
-   
+
 
     return (
         <>
             <MainLayout />
-            <Link to="/mapbox">mapbox</Link>
+
+            <ListProducts />
         </>
     )
 }
