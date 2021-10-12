@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Collapse, List, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 import ListItemButton from '@material-ui/core/ListItemButton';
 
+
 // project imports
 import NavItem from '../NavItem';
 
@@ -103,6 +104,7 @@ const NavCollapse = ({ menu, level }) => {
     });
 
     const Icon = menu.icon;
+    console.log('ICON', Icon)
     const menuIcon = menu.icon ? (
         <Icon stroke={1.5} size="1.3rem" className={classes.listCustomIcon} />
     ) : (

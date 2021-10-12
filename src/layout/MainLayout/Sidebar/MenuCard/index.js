@@ -1,11 +1,15 @@
+// React
 import React from 'react';
-
+import { Link } from "react-router-dom";
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Button, Card, CardContent, Grid, Link, Stack, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, Grid, Stack, Typography } from '@material-ui/core';
 
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
+
+// Preview Map
+import { PreviewMap } from "../../../../ui-component/addresses/maps/mapbox/PreviewMap"
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -15,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '16px',
         overflow: 'hidden',
         position: 'relative',
+        height: '20rem',
         '&:after': {
             content: '""',
             position: 'absolute',
@@ -30,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
             content: '""',
             position: 'absolute',
             width: '200px',
-            height: '200px',
+            height: '600px',
             border: '3px solid ',
             borderColor: theme.palette.warning.main,
             borderRadius: '50%',
@@ -53,42 +58,43 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const mapStyles = { // THIS CLASS NEEDS TO BE REPAIRED
+    position: {
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+    }
+}
+
 // ===========================|| PROFILE MENU - UPGRADE PLAN CARD ||=========================== //
 
 const UpgradePlanCard = () => {
     const classes = useStyles();
+    
 
     return (
-        <Card className={classes.card}>
-            <CardContent>
+        <>
+            <Card className={classes.card} >
                 <Grid container direction="column" spacing={2}>
-                    <Grid item>
-                        <Typography variant="h4">Upgrade to Pro</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="subtitle2" className={classes.tagLine}>
-                            For more premium pages & features
-                        </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Stack direction="row">
-                            <AnimateButton>
-                                <Button
-                                    component={Link}
-                                    href="https://berrydashboard.io/"
-                                    target="_blank"
-                                    variant="contained"
-                                    className={classes.button}
-                                >
-                                    Go Premium
-                                </Button>
-                            </AnimateButton>
-                        </Stack>
-                    </Grid>
+                    <CardContent>
+                        {/* <PreviewMap /> */}
+                    </CardContent>
                 </Grid>
-            </CardContent>
-        </Card>
+            </Card>
+            <style jsx>{`
+                .mapBox {                
+                    height: 600px;
+                }
+            `}</style>
+        </>
     );
 };
 
 export default UpgradePlanCard;
+
+
+/*
+
+
+
+*/

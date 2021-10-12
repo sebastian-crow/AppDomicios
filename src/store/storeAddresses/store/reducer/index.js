@@ -1,6 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
-//import counterReducer from '../../components/counter/counterSlice';
+import counterReducer from "../../../../ui-component/addresses/counter/counterSlice"
 import uiReducer from "./uiReducer";
 import loginReducer from "./loginReducer";
 import { sessionStateReducer } from "./sessionReducer";
@@ -19,7 +19,7 @@ export const createRootReducer = (routerReducer) => {
     router: routerReducer,
     ui: uiReducer,
     login: loginReducer,
-    //counter: counterReducer,
+    counter: counterReducer,
     customization: customizationReducer
   });
   // create chain of reducers

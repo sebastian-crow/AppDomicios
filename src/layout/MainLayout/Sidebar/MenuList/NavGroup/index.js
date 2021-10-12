@@ -44,6 +44,7 @@ const NavGroup = ({ item }) => {
         }
     });
 
+    
     return (
         <>
             <List
@@ -56,7 +57,6 @@ const NavGroup = ({ item }) => {
                                     {item.caption}
                                 </Typography>
                             )}
-                            hola
                         </Typography>
                         
                     )

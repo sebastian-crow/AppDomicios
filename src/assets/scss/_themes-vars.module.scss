@@ -2,18 +2,39 @@
 $paper: #ffffff;
 
 // primary
-$primaryLight: #e3f2fd;
-$primaryMain: #2196f3;
+//$primaryLight: #e3f2fd;
+//$primaryMain: #2196f3;
+//$primaryDark: #1e88e5;
+//$primary200: #90caf9;
+//$primary800: #1565c0;
+
+// My proof
+$primaryLight: #E4E7EC; // background
+//$primaryMain: #1C2F59; // Blue 
+$primaryMain: #000000; // Red
 $primaryDark: #1e88e5;
-$primary200: #90caf9;
-$primary800: #1565c0;
+$primary200: #ffab91;
+$primary800: #ede7f6;
+
 
 // secondary
-$secondaryLight: #ede7f6;
-$secondaryMain: #673ab7;
-$secondaryDark: #5e35b1;
-$secondary200: #b39ddb;
-$secondary800: #4527a0;
+//$secondaryLight: #FDE8EF;
+$secondaryLight: #E4E7EC;
+$secondaryMain: #000000;
+$secondaryDark: #000000;
+$secondary200: #000000;
+$secondary800: #E42A5D;
+
+
+
+
+
+// secondary
+//$secondaryLight: #ede7f6;
+//$secondaryMain: #673ab7;
+//$secondaryDark: #5e35b1;
+//$secondary200: #b39ddb;
+//$secondary800: #4527a0;
 
 // success Colors
 $successLight: #b9f6ca;
@@ -24,7 +45,7 @@ $successDark: #00c853;
 // error
 $errorLight: #ef9a9a;
 $errorMain: #f44336;
-$errorDark: #c62828;
+$errorDark: #050404;
 
 // orange
 $orangeLight: #fbe9e7;

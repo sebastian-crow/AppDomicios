@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         ...theme.typography.mainContent,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
@@ -63,8 +63,8 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen
         }),
         marginLeft: 0,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
         [theme.breakpoints.down('md')]: {
             marginLeft: '20px'
         },

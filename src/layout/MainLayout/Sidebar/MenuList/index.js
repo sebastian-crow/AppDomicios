@@ -6,7 +6,6 @@ import { Typography } from '@material-ui/core';
 // project imports
 import NavGroup from './NavGroup';
 import menuItem from 'menu-items';
-console.log('menuItem', menuItem)
 
 // ===========================|| SIDEBAR MENU LIST ||=========================== //
 

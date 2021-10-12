@@ -62,6 +62,7 @@ import SamplePage from './views/sample-page'
 // Maps
 import {MapBox} from './ui-component/addresses/maps/mapbox/'
 
+
 // ===========================|| APP ||=========================== //
 
 const App = () => {
@@ -88,6 +89,7 @@ const App = () => {
                         <PrivateRoute path="/createproduct" component={CreateProduct} />
                         <PrivateRoute path="/dealermap" component={DealerMap} />
 
+                        <PrivateRoute path="/dashboard" component={Dashboard} />
                         <PrivateRoute path="/orders" component={Orders} />
                         <PrivateRoute path="/takeorder" component={TakeOrder} />
                         <PrivateRoute path="/orders" component={Orders} />

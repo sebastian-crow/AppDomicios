@@ -1,3 +1,5 @@
+/* Normal Map* */
+
 .map-container {
   height: 800px;
   
@@ -22,3 +24,9 @@
   height: 20rem;
 }
 
+
+/* Preview Map */
+
+.map-container-preview {
+  height: 60px;
+}

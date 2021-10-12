@@ -124,9 +124,11 @@ function CreateOrder({ props, increment, onClickFunction }) {
     onClickFunction(increment)
   }
 
+  
   const incrementCount = increment => {
     setCount(count + increment)
   }
+
 
   // Handle get Name of the product
   const handleChange = (event) => {
@@ -272,7 +274,6 @@ Geocode.fromAddress(address).then(
       function error(err) {
         console.warn('ERROR(' + err.code + '): ' + err.message);
       };
-
       navigator.geolocation.getCurrentPosition(success, error, options);
     }, 5000);
 
@@ -302,7 +303,7 @@ Geocode.fromAddress(address).then(
       return {
         nombre: product,
         id: id,
-        cantidad: amountProducts
+        //cantidad: amountProducts
       }
     })
   }

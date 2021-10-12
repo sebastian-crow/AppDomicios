@@ -14,32 +14,43 @@ const icons = {
 
 const pages = {
     id: 'pages',
-    title: 'Pages',
-    caption: 'Pages Caption',
+    title: 'Products',
     type: 'group',
     children: [
         {
             id: 'authentication',
-            title: 'Authentication',
+            title: 'My Products',
             type: 'collapse',
             icon: icons.IconKey,
             children: [
                 {
-                    id: 'login3',
-                    title: 'Login',
+                    id: 'default',
+                    title: 'Create',
                     type: 'item',
-                    url: '/pages/login/login3',
-                    target: true
+                    icon: icons.IconKey,
+                    url: '/createproduct', // Change this route
+                    //target: true
+                    breadcrumbs: false
                 },
                 {
                     id: 'register3',
-                    title: 'Register',
+                    title: 'Products',
                     type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    icon: icons.IconKey,
+                    url: '/userproductlist', // And change this route too
+                    //target: true
+                    breadcrumbs: false
                 }
-            ]
-        }
+            ],
+        },
+        {
+            id: 'default',
+            title: 'Products Available',
+            type: 'item',
+            url: '/listproducts',
+            icon: icons.IconKey,
+            breadcrumbs: false
+        },
     ]
 };
 

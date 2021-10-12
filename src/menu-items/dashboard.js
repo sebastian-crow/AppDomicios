@@ -11,18 +11,27 @@ const icons = {
 
 const dashboard = {
     id: 'dashboard',
-    title: 'Dashboard',
+    title: 'Orders',
     type: 'group',
     children: [
         {
             id: 'default',
-            title: 'Dashboard',
+            title: 'Orders',
             type: 'item',
-            url: '/dashboard/default',
+            url: '/orderlist',
+            icon: icons.IconDashboard,
+            breadcrumbs: false
+        },
+        {
+            id: 'default',
+            title: 'Take Order',
+            type: 'item',
+            url: '/takeorder',
             icon: icons.IconDashboard,
             breadcrumbs: false
         }
-    ]
+    ],
+    
 };
 
 export default dashboard;

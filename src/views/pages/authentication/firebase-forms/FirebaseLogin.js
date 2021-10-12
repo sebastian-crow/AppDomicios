@@ -107,7 +107,7 @@ const FirebaseLogin = (props, { ...others }) => {
     const handleLogin = (event) => {
         event.preventDefault();
         dispatch(loginAction({ documentoIdentidad, password }));
-        dispatch(push("/dashboard/default"));
+        dispatch(push("/"));
     };
 
     const handleChangeDocument = (event) => {
