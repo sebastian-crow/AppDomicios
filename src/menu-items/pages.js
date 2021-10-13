@@ -1,13 +1,22 @@
 // assets
 import { IconKey, IconReceipt2, IconBug, IconBellRinging, IconPhoneCall } from '@tabler/icons';
-
+import InventoryIcon from '@mui/icons-material/Inventory';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import KitchenIcon from '@mui/icons-material/Kitchen';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 // constant
 const icons = {
     IconKey,
     IconReceipt2,
     IconBug,
     IconBellRinging,
-    IconPhoneCall
+    IconPhoneCall,
+    InventoryIcon,
+    AddBoxIcon,
+    LunchDiningIcon,
+    KitchenIcon,
+    AllInboxIcon
 };
 
 // ===========================|| EXTRA PAGES MENU ITEMS ||=========================== //
@@ -21,13 +30,13 @@ const pages = {
             id: 'authentication',
             title: 'My Products',
             type: 'collapse',
-            icon: icons.IconKey,
+            icon: icons.LunchDiningIcon,
             children: [
                 {
                     id: 'default',
                     title: 'Create',
                     type: 'item',
-                    icon: icons.IconKey,
+                    icon: icons.AddBoxIcon,
                     url: '/createproduct', // Change this route
                     //target: true
                     breadcrumbs: false
@@ -36,7 +45,7 @@ const pages = {
                     id: 'register3',
                     title: 'Products',
                     type: 'item',
-                    icon: icons.IconKey,
+                    icon: icons.LunchDiningIcon,
                     url: '/userproductlist', // And change this route too
                     //target: true
                     breadcrumbs: false
@@ -48,7 +57,7 @@ const pages = {
             title: 'Products Available',
             type: 'item',
             url: '/listproducts',
-            icon: icons.IconKey,
+            icon: icons.KitchenIcon,
             breadcrumbs: false
         },
     ]

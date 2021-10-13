@@ -1,10 +1,14 @@
 // assets
 import { IconDashboard, IconDeviceAnalytics } from '@tabler/icons';
-
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 // constant
 const icons = {
     IconDashboard,
-    IconDeviceAnalytics
+    IconDeviceAnalytics,
+    ReceiptIcon,
+    AddBoxIcon
+    
 };
 
 // ===========================|| DASHBOARD MENU ITEMS ||=========================== //
@@ -19,7 +23,7 @@ const dashboard = {
             title: 'Orders',
             type: 'item',
             url: '/orderlist',
-            icon: icons.IconDashboard,
+            icon: icons.ReceiptIcon,
             breadcrumbs: false
         },
         {
@@ -27,7 +31,7 @@ const dashboard = {
             title: 'Take Order',
             type: 'item',
             url: '/takeorder',
-            icon: icons.IconDashboard,
+            icon: icons.AddBoxIcon,
             breadcrumbs: false
         }
     ],

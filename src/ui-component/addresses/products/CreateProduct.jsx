@@ -16,6 +16,10 @@ import { push } from "redux-first-history";
 import { browserHistory } from 'react-router'
 
 
+// Main layout - navbar
+import MainLayout from '../../../layout/MainLayout'
+
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -56,7 +60,7 @@ function CreateProduct(props) {
             valorCU: valorCU.value,
             user: {
                 name: user.nombre,
-                id:user._id
+                id: user._id
             }
         };
         dispatch(createProductAction(data));
@@ -65,109 +69,121 @@ function CreateProduct(props) {
 
     return (
         <>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar} />
-                    <LockOutlinedIcon />
-                    <Typography component="h1" variant="h5" /> Crear Producto{" "}
-                    <form
-                        className={classes.form}
-                        autoComplete="off"
-                        onSubmit={handleCreate}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    autoComplete="name"
-                                    name="nombre"
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="nombre"
-                                    label="Nombre"
-                                    autoFocus
-                                    {...nombre}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="descripcion"
-                                    label="Descripción"
-                                    name="descripcion"
-                                    autoComplete="descripcion"
-                                    {...descripcion}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <InputLabel name="tipo" id="tipo">
-                                    caracteristicas
-                                </InputLabel>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="caracteristicas"
-                                    label="Caracteristicas"
-                                    name="caracteristicas"
-                                    autoComplete="caracteristicas"
-                                    {...caracteristicas}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    name="empresa"
-                                    label="Empresa"
-                                    type="text"
-                                    id="empresa"
-                                    autoComplete="current-empresa"
-                                    {...empresa}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                            <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    name="valorCU"
-                                    label="Valor CU"
-                                    type="text"
-                                    id="valorCU"
-                                    autoComplete="current-valorCU"
-                                    {...valorCU}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
+
+            <MainLayout />
+            <div className="rezise">
+                <Container component="main" maxWidth="xs">
+
+                    <CssBaseline />
+                    <div className={classes.paper}>
+                        <Avatar className={classes.avatar} />
+                        <LockOutlinedIcon />
+                        <Typography component="h1" variant="h5" /> Crear Producto{" "}
+                        <form
+                            className={classes.form}
+                            autoComplete="off"
+                            onSubmit={handleCreate}
                         >
-                            {" "}
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        autoComplete="name"
+                                        name="nombre"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="nombre"
+                                        label="Nombre"
+                                        autoFocus
+                                        {...nombre}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="descripcion"
+                                        label="Descripción"
+                                        name="descripcion"
+                                        autoComplete="descripcion"
+                                        {...descripcion}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <InputLabel name="tipo" id="tipo">
+                                        caracteristicas
+                                </InputLabel>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="caracteristicas"
+                                        label="Caracteristicas"
+                                        name="caracteristicas"
+                                        autoComplete="caracteristicas"
+                                        {...caracteristicas}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="empresa"
+                                        label="Empresa"
+                                        type="text"
+                                        id="empresa"
+                                        autoComplete="current-empresa"
+                                        {...empresa}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="valorCU"
+                                        label="Valor CU"
+                                        type="text"
+                                        id="valorCU"
+                                        autoComplete="current-valorCU"
+                                        {...valorCU}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                            >
+                                {" "}
                             Create Product{" "}
-                        </Button>
-                        <Grid item>
-                            {error && (
-                                <>
-                                    <Alert severity="error">{error}</Alert>
-                                    <br />
-                                </>
-                            )}
-                            <br />
-                        </Grid>
-                    </form>
-                </div>
-            </Container>
+                            </Button>
+                            <Grid item>
+                                {error && (
+                                    <>
+                                        <Alert severity="error">{error}</Alert>
+                                        <br />
+                                    </>
+                                )}
+                                <br />
+                            </Grid>
+                        </form>
+                    </div>
+                </Container>
+            </div>
+            <style jsx>{`
+                .rezise {
+                    position: absolute;
+                    left: 45rem;
+                    top: 5rem;
+                }
+            `}</style>
         </>
     );
 }

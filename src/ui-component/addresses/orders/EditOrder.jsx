@@ -99,10 +99,6 @@ function EditOrder() {
         )
     }
 
-
-
-
-
     // Get id by split the current URL
     let paths = window.location.pathname.split('/');
     let id = paths[paths.length - 1];
@@ -185,6 +181,7 @@ function EditOrder() {
         if (user._id === domici_id) return user
     })
 
+    
     const domi1 = () => {
         let idfinal
         for(let i = 0; i < users.length; i++) {
@@ -345,8 +342,8 @@ function EditOrder() {
                                     id="direccion"
                                     label="direccion"
                                     name="direccion"
-                                    defaultValue={order.direccion}
-                                    {...direccion}
+                                    defaultValue={order.direccion.address}
+                                    {...order.direccion.address}
                                 />
                             </Grid>
                         </Grid>

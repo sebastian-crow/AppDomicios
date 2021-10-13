@@ -37,7 +37,7 @@ import Login from './views/pages/authentication/authentication3/Login3'
 // Users
 import ListClientes from "./ui-component/addresses/listUsers/ListClientes";
 import ListDomiciliarios from "./ui-component/addresses/listUsers/ListDomiciliarios"
-import userProductList from "./ui-component/addresses/products/UserProductList"
+import UserProductList from "./ui-component/addresses/products/UserProductList"
 
 // Products
 import Product from "./ui-component/addresses/products/Product"
@@ -84,7 +84,7 @@ const App = () => {
                         <PrivateRoute path="/listclientes" component={ListClientes} />
                         <PrivateRoute path="/listdomiciliarios" component={ListDomiciliarios} />
                         <PrivateRoute path="/listproducts" component={ListProducts} />
-                        <PrivateRoute path="/userproductlist" component={userProductList} />
+                        <PrivateRoute path="/userproductlist" component={UserProductList} />
                         <PrivateRoute path="/userorderlist" component={UserOrderList} />
                         <PrivateRoute path="/createproduct" component={CreateProduct} />
                         <PrivateRoute path="/dealermap" component={DealerMap} />

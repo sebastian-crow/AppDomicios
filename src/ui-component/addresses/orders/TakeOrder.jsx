@@ -41,8 +41,8 @@ import {
   createPositionAction, // Create position for one user, in this case we gonna save the delevery man locations
 } from "../../../store/storeAddresses/store/reducer";
 
-
-
+// Main Layout nav bar
+import MainLayout from '../../../layout/MainLayout'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -124,7 +124,7 @@ function CreateOrder({ props, increment, onClickFunction }) {
     onClickFunction(increment)
   }
 
-  
+
   const incrementCount = increment => {
     setCount(count + increment)
   }
@@ -191,11 +191,11 @@ function CreateOrder({ props, increment, onClickFunction }) {
       domiciliario: {
         id: domiciliarioName[0],
       },
-      productos: ContactProduct(), // Function that contents Name of the product, amount of products and their own ID
+      productos: ConcatProduct(), // Function that contents Name of the product, amount of products and their own ID
       //direccion: direccion.value,
       direccion: {
-	address: direccion.value,
-	coords: address_coords,
+        address: direccion.value,
+        //coords: address_coords,
       },
       remaining
     };
@@ -204,35 +204,34 @@ function CreateOrder({ props, increment, onClickFunction }) {
     console.log('ORDER CREATED', data)
   };
 
+  // Counter for give the amount of the products
+  const amountProducts = useSelector((state) => state.counter.value)
 
-   // Geocoding handle for convert one address as coords
-	
-   // set Google Maps API Key
-Geocode.setApiKey("AIzaSyC3fhmeqzhFIthXezrymC_owJgFgH_yWgA");
+  // Function that contents Name of the product, amount of products and their own ID
+  const ConcatProduct = () => {
 
-// set response language. Defaults to english.
-Geocode.setLanguage("es");
+    let productoFinal, id, nombre;
 
-// set response region. Its optional.
-// A Geocoding request with region=es (Spain) will return the Spanish city.
-Geocode.setRegion("co");
+    for (let i = 0; i < productName.length; i++) {
+      nombre = productName[i]
+    }
 
-const address = direccion.value
-let address_coords
-
-Geocode.fromAddress(address).then(
-  (response) => {
-    const { lat, lng } = response.results[0].geometry.location;
-    address_coords = { lat, lng }
-    console.log(address_coords);
-  },
-  (error) => {
-    console.error(error);
+    for (let i = 0; i < product.length; i++) {
+      if (product[i].nombre === nombre) {
+        id = product[i]._id
+      }
+    }
+    return productoFinal = productName.map((product) => {
+      return {
+        nombre: product,
+        id: id,
+        cantidad: amountProducts
+      }
+    })
   }
-);
 
 
-
+  const userID = domiciliarioName[0]
 
   // Excecute actions
 
@@ -247,10 +246,6 @@ Geocode.fromAddress(address).then(
     dispatch(getAllProductAction());
   }, [dispatch]);
 
-
-
-  const userID = domiciliarioName[0]
-  
   // Create / Update position
   useEffect(() => {
     const timer = setInterval(() => {
@@ -281,162 +276,146 @@ Geocode.fromAddress(address).then(
   }, [dispatch, position, positionId, userID]);
 
 
-  // Counter for give the amount of the products
-  const amountProducts = useSelector((state) => state.counter.value)
-
-
-  // Function that contents Name of the product, amount of products and their own ID
-  const ContactProduct = () => {
-
-    let productoFinal, id, nombre;
-
-    for (let i = 0; i < productName.length; i++) {
-      nombre = productName[i]
-    }
-
-    for (let i = 0; i < product.length; i++) {
-      if (product[i].nombre === nombre) {
-        id = product[i]._id
-      }
-    }
-    return productoFinal = productName.map((product) => {
-      return {
-        nombre: product,
-        id: id,
-        //cantidad: amountProducts
-      }
-    })
-  }
-
-
-
   return (
     <>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar} />
-          <LockOutlinedIcon />
-          <Typography component="h1" variant="h5" /> Take Order{" "}
-          <form
-            className={classes.form}
-            autoComplete="off"
-            onSubmit={handleCreate}
-          >
+      <MainLayout />
+      <div className="takeOrderContainer">
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar} />
+            <LockOutlinedIcon />
+            <Typography component="h1" variant="h5" /> Take Order{" "}
+            <form
+              className={classes.form}
+              autoComplete="off"
+              onSubmit={handleCreate}
+            >
 
-            <Grid container spacing={2}>
+              <Grid container spacing={2}>
 
+                <Grid item xs={12}>
+                  <TextField
+                    autoComplete="orderName"
+                    name="orderName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="orderName"
+                    label="Nombre de la orden"
+                    autoFocus
+                    {...orderName}
+                  />
+                </Grid>
+              </Grid>
+
+
+              <FormControl id="menuDomiciliario" sx={{ m: 1, width: 395 }}>
+                <InputLabel id="demo-multiple-name-label">Domiciliario</InputLabel>
+                <Select
+                  labelId="demo-multiple-name-label"
+                  id="demo-multiple-name"
+                  multiple
+                  value={domiciliarioName}
+                  onChange={handleDomiciliarioChange}
+                  input={<OutlinedInput label="Domiciliario" />}
+                  MenuProps={MenuProps}
+                >
+                  {domiciliarios.map((domiciliario) => (
+                    <MenuItem
+                      key={domiciliario._id}
+                      value={domiciliario._id}
+                    //style={getStyles(domiciliario, domiciliarioName, theme)}
+                    >
+                      {domiciliario.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+
+
+
+              <FormControl id="menuMultij" sx={{ m: 1, width: 395 }}>
+                <InputLabel id="demo-multiple-chip-label">Products</InputLabel>
+                <Select
+                  labelId="demo-multiple-chip-label"
+                  id="demo-multiple-chip"
+                  multiple
+                  value={productName}
+                  onChange={handleChange}
+                  input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+
+                  {product.map((prod) => (
+                    <MenuItem
+                      key={prod.nombre && prod._id}
+                      value={prod.nombre}
+                      style={getStyles(prod.nombre, productName, theme)}
+
+                    >
+                      {prod.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <br />
+              <br />
+
+              <Counter />
+
+              <br />
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="orderName"
-                  name="orderName"
                   variant="outlined"
                   required
                   fullWidth
-                  id="orderName"
-                  label="Nombre de la orden"
-                  autoFocus
-                  {...orderName}
+                  name="direccion"
+                  label="Dirección"
+                  type="text"
+                  id="direccion"
+                  autoComplete="direccion"
+                  {...direccion}
                 />
               </Grid>
-            </Grid>
-
-
-            <FormControl id="menuDomiciliario" sx={{ m: 1, width: 395 }}>
-              <InputLabel id="demo-multiple-name-label">Domiciliario</InputLabel>
-              <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={domiciliarioName}
-                onChange={handleDomiciliarioChange}
-                input={<OutlinedInput label="Domiciliario" />}
-                MenuProps={MenuProps}
-              >
-                {domiciliarios.map((domiciliario) => (
-                  <MenuItem
-                    key={domiciliario._id}
-                    value={domiciliario._id}
-                  //style={getStyles(domiciliario, domiciliarioName, theme)}
-                  >
-                    {domiciliario.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-
-
-
-            <FormControl id="menuMultij" sx={{ m: 1, width: 395 }}>
-              <InputLabel id="demo-multiple-chip-label">Products</InputLabel>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                value={productName}
-                onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {product.map((prod) => (
-                  <MenuItem
-                    key={prod.nombre && prod._id}
-                    value={prod.nombre}
-                    style={getStyles(prod.nombre, productName, theme)}
-
-                  >
-                    {prod.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Counter />
-
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
+              <Button
+                type="submit"
                 fullWidth
-                name="direccion"
-                label="Dirección"
-                type="text"
-                id="direccion"
-                autoComplete="direccion"
-                {...direccion}
-              />
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              {" "}
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                {" "}
               Create Order{" "}
-            </Button>
-            <Grid item>
-              {error && (
-                <>
-                  <Alert severity="error">{error}</Alert>
-                  <br />
-                </>
-              )}
-              <br />
-            </Grid>
-          </form>
-        </div>
-      </Container>
+              </Button>
+              <Grid item>
+                {error && (
+                  <>
+                    <Alert severity="error">{error}</Alert>
+                    <br />
+                  </>
+                )}
+                <br />
+              </Grid>
+            </form>
+          </div>
+        </Container>
+      </div>
       <style jsx>{`
+                .takeOrderContainer {
+                  position: absolute;
+                  top: 5rem;
+                  left: 44rem;
+                }
+
                 #menuMultij {
                   postiion: absolute;
                   left: -0.4rem;

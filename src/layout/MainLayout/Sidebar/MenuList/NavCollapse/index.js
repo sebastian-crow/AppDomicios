@@ -104,7 +104,6 @@ const NavCollapse = ({ menu, level }) => {
     });
 
     const Icon = menu.icon;
-    console.log('ICON', Icon)
     const menuIcon = menu.icon ? (
         <Icon stroke={1.5} size="1.3rem" className={classes.listCustomIcon} />
     ) : (
