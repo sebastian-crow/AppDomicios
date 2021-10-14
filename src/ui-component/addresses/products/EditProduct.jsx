@@ -11,9 +11,13 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from '@material-ui/styles';
 import Container from "@material-ui/core/Container";
 import { Select, MenuItem, InputLabel } from "@material-ui/core";
-import { updateProductAction } from "../../../store/storeAddresses/store/reducer";
+import { updateProductAction, getAllProductAction } from "../../../store/storeAddresses/store/reducer";
 import { useSelector } from "react-redux";
 import moment from "moment";
+
+
+// Main Layout
+import MainLayout from '../../../layout/MainLayout'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,16 +39,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function EditProduct() {
-    const results = useSelector((state) => state.router.location)
+function EditProduct(props) {
+    const id = props.match.params.id;
 
-    console.log(results.pathname)
-    const cadena = results.pathname
-    const id = cadena.substring(16)
-    console.log(id)
 
-    const product = useSelector((state) => state.ui.products)
-
+    
+    const products = useSelector((state) => state.ui.products)
+    const productFound = products.map((product) => {
+        if(product._id === id) {
+            return product
+        }
+    })
+    const product = productFound[0]
+    console.log('PRODUCT FOUND', product)
 
     const nombre = useFormInput(product.nombre);
     const descripcion = useFormInput(product.descripcion);
@@ -66,11 +73,15 @@ function EditProduct() {
         };
         dispatch(updateProductAction({ data, id: product._id }));
     };
-    
+
+    React.useEffect(() => {
+        dispatch(getAllProductAction())
+    },[])
 
     return (
         <>
-            <Container component="main" maxWidth="xs">
+            <MainLayout />
+            <Container component="main" maxWidth="xs" className="proudctEditContainer">
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar} />
@@ -162,6 +173,13 @@ function EditProduct() {
                     </form>
                 </div>
             </Container>
+            <style jsx>{`
+            .proudctEditContainer {
+                position: absolute;
+                left: 45rem;
+                top: 5rem;
+            }
+            `}</style>
         </>
     );
 }

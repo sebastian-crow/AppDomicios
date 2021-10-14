@@ -412,8 +412,10 @@ const ListOrders = () => {
                                     <TableCell><ReverseCounter /></TableCell>
                                     <TableCell>In process / Done</TableCell>
                                     <TableCell>
-                                        <Button
+                                        {/* 
+                                            <Button
                                             //onClick={() => viewMap(order.domiciliario.id)}
+                                            
                                             fullWidth
                                             variant="contained"
                                         //color="primary1"
@@ -421,6 +423,14 @@ const ListOrders = () => {
                                         >
                                             Ver Mapa
                                         </Button>
+                                        */}
+                                        <Link
+                                            to={`/clientmap/${order._id}`}
+                                            color="primary1"
+                                            className="btn btn-outline-primary my-2 my-sm-0"
+                                        >
+                                            View Map
+                                        </Link>
                                     </TableCell>
                                     <TableCell>
                                         <Link

@@ -43,8 +43,10 @@ gets 2/3 of the page. You can adjust this to your personal liking. */
   position: absolute;
   
   width: 66.6666%;
+  width: 100%;
   top: 0;
   bottom: 0;
+  border-radius: 12px;
 }
 
 .map {
@@ -53,6 +55,7 @@ gets 2/3 of the page. You can adjust this to your personal liking. */
   width: 66.6666%;
   top: 0;
   bottom: 0;
+  border-radius: 12px;
 }
 
 .heading {
@@ -72,6 +75,7 @@ gets 2/3 of the page. You can adjust this to your personal liking. */
   left: 0;
   width: 100%;
   height: 100%;
+  
 }
 
 

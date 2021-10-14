@@ -61,6 +61,7 @@ import SamplePage from './views/sample-page'
 
 // Maps
 import {MapBox} from './ui-component/addresses/maps/mapbox/'
+import {ClientMap} from './ui-component/addresses/maps/mapbox/ClientMap'
 
 
 // ===========================|| APP ||=========================== //
@@ -94,6 +95,8 @@ const App = () => {
                         <PrivateRoute path="/takeorder" component={TakeOrder} />
                         <PrivateRoute path="/orders" component={Orders} />
                         <PrivateRoute path="/orderlist" component={OrderList} />
+
+                        <PrivateRoute path="/clientmap/:id" component={ClientMap} />
 
 
                         <PrivateRoute path="/mapbox" component={MapBox} />
