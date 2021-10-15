@@ -1,0 +1,9 @@
+{
+  "esversion": 9,
+  "indent": true,
+  "latedef": "nofunc",
+  "newcap": true,
+  "asi": true,
+  "boss": true,
+  "lastsemic": true
+}
