@@ -1,25 +1,12 @@
 // assets
-import { IconKey, IconReceipt2, IconBug, IconBellRinging, IconPhoneCall } from '@tabler/icons';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import KitchenIcon from '@mui/icons-material/Kitchen';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
+
 // constant
 const icons = {
-    IconKey,
-    IconReceipt2,
-    IconBug,
-    IconBellRinging,
-    IconPhoneCall,
-    InventoryIcon,
-    AddBoxIcon,
-    LunchDiningIcon,
-    KitchenIcon,
-    AllInboxIcon
+    KitchenIcon
 };
 
-// ===========================|| EXTRA PAGES MENU ITEMS ||=========================== //
+// ===========================|| ADMIN MENU ITEMS ||=========================== //
 
 const adminItems = {
     id: 'pages',

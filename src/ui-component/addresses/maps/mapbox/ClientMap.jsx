@@ -86,7 +86,7 @@ export const ClientMap = (props) => {
 
 
     const orderId = props.match.params.id;
-    console.log('ORDER ID RECEIVED', orderId)
+    //console.log('ORDER ID RECEIVED', orderId)
 
     const orders = useSelector((state) => state.ui.orders)
 

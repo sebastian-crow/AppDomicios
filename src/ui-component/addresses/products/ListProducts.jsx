@@ -232,7 +232,7 @@ const ListProducts = () => {
             )}
 
             {/* Rol user cliente*/}
-            {user.rol === 'cliente' && (
+            {user.rol === 'cliente' || 'domiciliario' && (
                 <TableContainer component={Paper} className={classes.tableContainer}>
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>

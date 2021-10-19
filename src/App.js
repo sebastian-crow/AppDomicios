@@ -55,7 +55,6 @@ import UserOrderList from "./ui-component/addresses/orders/UserOrderList";
 
 
 // Proof
-import DealerMap from './ui-component/addresses/vistas/DealerMap'
 import Dashboard from './views/dashboard/Default'
 import SamplePage from './views/sample-page'
 
@@ -65,6 +64,8 @@ import MainLayout from './layout/MainLayout'
 // Maps
 import { MapBox } from './ui-component/addresses/maps/mapbox/'
 import { ClientMap } from './ui-component/addresses/maps/mapbox/ClientMap'
+import { DealerMap } from './ui-component/addresses/maps/mapbox/DealerMap'
+
 
 
 // ===========================|| APP ||=========================== //
@@ -96,7 +97,7 @@ const App = () => {
                         <PrivateRoute path="/userproductlist" component={UserProductList} />
                         <PrivateRoute path="/userorderlist" component={UserOrderList} />
                         <PrivateRoute path="/createproduct" component={CreateProduct} />
-                        <PrivateRoute path="/dealermap" component={DealerMap} />
+                        
 
                         <PrivateRoute path="/dashboard" component={Dashboard} />
                         <PrivateRoute path="/orders" component={Orders} />
@@ -105,6 +106,7 @@ const App = () => {
                         <PrivateRoute path="/orderlist" component={OrderList} />
 
                         <PrivateRoute path="/clientmap/:id" component={ClientMap} />
+                        <PrivateRoute path="/dealermap/:id" component={DealerMap} />
 
 
                         <PrivateRoute path="/mapbox" component={MapBox} />
