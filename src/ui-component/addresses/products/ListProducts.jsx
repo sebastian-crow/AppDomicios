@@ -39,6 +39,7 @@ import {
     TablePagination,
     TableFooter
 } from '@material-ui/core';
+import Box from '@mui/material/Box';
 import Button from "@material-ui/core/Button";
 
 
@@ -134,9 +135,20 @@ const ListProducts = () => {
 
 
     return (
-        <>1
+        <>
             {user.rol === 'admin' && (
                 <Grid container >
+                    <Box
+                        component="span"
+                        sx={{ p: 2, position: 'absolute', top: '10rem', left: '80rem' }}>
+                        <Button variant="contained">
+                            <Link
+                                to={`/createproduct`}
+                            >
+                                Create New {" "}
+                            </Link></Button>
+                    </Box>
+
                     <TableContainer component={Paper} className={classes.tableContainer}>
                         <Table className={classes.table} aria-label="simple table">
                             <TableHead>

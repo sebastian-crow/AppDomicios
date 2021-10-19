@@ -16,6 +16,7 @@ import { store } from '../../../../store/storeAddresses/store/configureStore'
 import dashboard from '../../../../menu-items/dashboard'
 import pages from '../../../../menu-items/pages'
 import other from '../../../../menu-items/other'
+import adminItems from '../../../../menu-items/adminItems'
 
 
 
@@ -36,7 +37,7 @@ const menuItem = () => {
     switch (rol) {
         case 'admin':
             menuItem = {
-                items: [dashboard, pages]
+                items: [dashboard, adminItems]
             }
             break;
         case 'cliente':
