@@ -41,8 +41,6 @@ import {
   createPositionAction, // Create position for one user, in this case we gonna save the delevery man locations
 } from "../../../store/storeAddresses/store/reducer";
 
-// Main Layout nav bar
-import MainLayout from '../../../layout/MainLayout'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -85,19 +83,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -278,7 +263,6 @@ function CreateOrder({ props, increment, onClickFunction }) {
 
   return (
     <>
-      <MainLayout />
       <div className="takeOrderContainer">
         <Container component="main" maxWidth="xs">
           <CssBaseline />

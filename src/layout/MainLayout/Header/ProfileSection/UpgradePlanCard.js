@@ -81,7 +81,7 @@ const UpgradePlanCard = () => {
                             <Stack direction="row">
                                 <AnimateButton>
                                     <Button variant="contained" className={classes.button}>
-                                        <Link className="link" to="/edit">
+                                        <Link className="link" to="/editarusuario">
                                             Edit
                                     </Link>
                                     </Button>

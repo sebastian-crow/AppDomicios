@@ -22,10 +22,6 @@ import {
 import { api } from "../../../store/storeAddresses/store/middleware/api";
 
 
-// Children Components
-import MainLayout from '../../../layout/MainLayout'
-
-
 // Material UI
 import { DataGrid } from '@mui/x-data-grid';
 import { makeStyles } from '@material-ui/styles';
@@ -63,8 +59,9 @@ const useStyles = makeStyles((theme) => ({
         top: '-55rem',
         left: '2.4rem',
         borderRadius: 15,
+        width: '85%',
         margin: '10px 10px',
-        maxWidth: '95%',
+        maxWidth: '98%',
         height: '90%'
     },
     tableHeaderCell: {
@@ -122,22 +119,7 @@ const ListProducts = () => {
         setPage(0);
     };
 
-
     const products = useSelector((state) => state.ui.products);
-    const copyProducts = [...products]
-
-    
-    //Own products for each user
-    const usersProducts = () => {
-        let result = []
-        for (let i = 0; i < copyProducts.length; i++) {
-            if (copyProducts[i].user.id === user._id && copyProducts[i] !== undefined) {
-                result.push(copyProducts[i])
-            }
-        }
-        return result
-    }
-    const userProducts = usersProducts()
 
     const handleDelete = (event) => {
         event.preventDefault();
@@ -152,8 +134,92 @@ const ListProducts = () => {
 
 
     return (
-        <>
-            <MainLayout />
+        <>1
+            {user.rol === 'admin' && (
+                <Grid container >
+                    <TableContainer component={Paper} className={classes.tableContainer}>
+                        <Table className={classes.table} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.tableHeaderCell}>Name</TableCell>
+                                    <TableCell className={classes.tableHeaderCell}>Description</TableCell>
+                                    <TableCell className={classes.tableHeaderCell}>Owner</TableCell>
+                                    <TableCell className={classes.tableHeaderCell}>Features</TableCell>
+                                    <TableCell className={classes.tableHeaderCell}>Company</TableCell>
+                                    <TableCell className={classes.tableHeaderCell}>ValueCU</TableCell>
+                                    {/* <TableCell className={classes.tableHeaderCell}>Dealer</TableCell>*/}
+                                    <TableCell className={classes.tableHeaderCell}>Edit</TableCell>
+                                    <TableCell className={classes.tableHeaderCell}>Delete</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {products.map((product) => (
+                                    <TableRow key={product._id}>
+                                        <TableCell>
+                                            <Grid container>
+                                                <Grid item lg={10}>
+                                                    <Typography className={classes.name}>{product.nombre}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </TableCell>
+                                        <TableCell>{product.descripcion}</TableCell>
+                                        <TableCell>
+                                            <Grid container>
+                                                <Grid item lg={10}>
+                                                    <Typography className={classes.name}>{product.user.name}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </TableCell>
+                                        <TableCell>{product.caracteristicas}</TableCell>
+                                        <TableCell>{product.empresa}</TableCell>
+                                        <TableCell>{product.valorCU}</TableCell>
+                                        <TableCell>
+                                            <Link
+                                                to={`/editarproducto/${product._id}`}
+                                                variant="contained"
+                                                color="secondary"
+                                            >
+                                                Edit {" "}
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                onClick={handleDelete}
+                                                variant="contained"
+                                                color="secondary"
+                                                className="btn btn-outline-danger my-2 my-sm-0"
+                                            >
+                                                Delete
+                                    </Button>
+                                        </TableCell>
+                                        {/* 
+                                        <TableCell>
+                                        <Typography color="primary" variant="subtitle2">{order.domiciliario.name}</Typography>
+                                        <Typography color="textSecondary" variant="body2">{`sdad`}</Typography>
+                                    </TableCell>
+                                    
+                                    */}
+
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            <TableFooter>
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 15]}
+                                    component="div"
+                                    count={products.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={handleChangePage}
+                                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                                />
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </Grid>
+            )}
+
+            {/* Rol user cliente*/}
             {user.rol === 'cliente' && (
                 <TableContainer component={Paper} className={classes.tableContainer}>
                     <Table className={classes.table} aria-label="simple table">
@@ -166,12 +232,10 @@ const ListProducts = () => {
                                 <TableCell className={classes.tableHeaderCell}>Company</TableCell>
                                 <TableCell className={classes.tableHeaderCell}>ValueCU</TableCell>
                                 {/* <TableCell className={classes.tableHeaderCell}>Dealer</TableCell>*/}
-                                <TableCell className={classes.tableHeaderCell}>Edit</TableCell>
-                                <TableCell className={classes.tableHeaderCell}>Delete</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {userProducts.map((product) => (
+                            {products.map((product) => (
                                 <TableRow key={product._id}>
                                     <TableCell>
                                         <Grid container>
@@ -191,25 +255,6 @@ const ListProducts = () => {
                                     <TableCell>{product.caracteristicas}</TableCell>
                                     <TableCell>{product.empresa}</TableCell>
                                     <TableCell>{product.valorCU}</TableCell>
-                                    <TableCell>
-                                        <Link
-                                            to={`/editarproducto/${product._id}`}
-                                            variant="contained"
-                                            color="secondary"
-                                        >
-                                            Edit {" "}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button
-                                            onClick={handleDelete}
-                                            variant="contained"
-                                            color="secondary"
-                                            className="btn btn-outline-danger my-2 my-sm-0"
-                                        >
-                                            Delete
-                                    </Button>
-                                    </TableCell>
                                     {/* 
                                         <TableCell>
                                         <Typography color="primary" variant="subtitle2">{order.domiciliario.name}</Typography>
@@ -235,6 +280,7 @@ const ListProducts = () => {
                     </Table>
                 </TableContainer>
             )}
+
         </>
     );
 }

@@ -61,19 +61,19 @@ function EditarUsuario() {
       fechaNacimiento: fechaNacimiento.value,
       rol: "cliente"
     };
-    dispatch(actualizarUsuarioAction({data, id: usuario._id}));
+    dispatch(actualizarUsuarioAction({ data, id: usuario._id }));
     dispatch(push("/"));
 
   };
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" className="editUserContainer">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar} />
           <LockOutlinedIcon />
-          <Typography component="h1" variant="h5" /> Registrarse{" "}
+          <Typography component="h1" variant="h5" /> Edit User{" "}
           <form
             className={classes.form}
             autoComplete="off"
@@ -177,6 +177,13 @@ function EditarUsuario() {
           </form>
         </div>
       </Container>
+      <style jsx>{`
+                .editUserContainer {
+                  position: absolute;
+                  left: 45rem;
+                  top: 8rem;
+                }
+      `}</style>
     </>
   );
 }

@@ -14,10 +14,8 @@ import { Select, MenuItem, InputLabel } from "@material-ui/core";
 import { updateProductAction, getAllProductAction } from "../../../store/storeAddresses/store/reducer";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { push } from "redux-first-history";
 
-
-// Main Layout
-import MainLayout from '../../../layout/MainLayout'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -41,8 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 function EditProduct(props) {
     const id = props.match.params.id;
-
-
     
     const products = useSelector((state) => state.ui.products)
     const productFound = products.map((product) => {
@@ -72,6 +68,7 @@ function EditProduct(props) {
             valorCU: valorCU.value,
         };
         dispatch(updateProductAction({ data, id: product._id }));
+        dispatch(push('/userproductlist'))
     };
 
     React.useEffect(() => {
@@ -80,7 +77,6 @@ function EditProduct(props) {
 
     return (
         <>
-            <MainLayout />
             <Container component="main" maxWidth="xs" className="proudctEditContainer">
                 <CssBaseline />
                 <div className={classes.paper}>

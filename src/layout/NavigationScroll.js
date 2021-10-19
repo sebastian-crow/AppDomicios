@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 
 const NavigationScroll = ({ children }) => {
     const location = useLocation();
+    console.log('LOCATION USTED', location)
     const { pathname } = location;
 
     useEffect(() => {
@@ -23,5 +24,7 @@ NavigationScroll.propTypes = {
     children: PropTypes.node,
     location: PropTypes.object
 };
+
+console.log('NAVIGATION SCROLL PROP TYPES LOG', NavigationScroll.propTypes)
 
 export default NavigationScroll;

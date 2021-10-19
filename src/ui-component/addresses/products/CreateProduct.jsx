@@ -16,10 +16,8 @@ import { push } from "redux-first-history";
 import { browserHistory } from 'react-router'
 
 
-// Main layout - navbar
-import MainLayout from '../../../layout/MainLayout'
 
-
+// Styles
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -40,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
+// Create Product Component
 function CreateProduct(props) {
     const user = useSelector((state) => state.login.usuario.user)
     const error = useSelector((state) => state.login.errorCreateProduct);
@@ -69,8 +69,6 @@ function CreateProduct(props) {
 
     return (
         <>
-
-            <MainLayout />
             <div className="rezise">
                 <Container component="main" maxWidth="xs">
 

@@ -59,15 +59,20 @@ import DealerMap from './ui-component/addresses/vistas/DealerMap'
 import Dashboard from './views/dashboard/Default'
 import SamplePage from './views/sample-page'
 
+// Main Layout
+import MainLayout from './layout/MainLayout'
+
 // Maps
-import {MapBox} from './ui-component/addresses/maps/mapbox/'
-import {ClientMap} from './ui-component/addresses/maps/mapbox/ClientMap'
+import { MapBox } from './ui-component/addresses/maps/mapbox/'
+import { ClientMap } from './ui-component/addresses/maps/mapbox/ClientMap'
 
 
 // ===========================|| APP ||=========================== //
 
 const App = () => {
     const customization = useSelector((state) => state.customization);
+
+    const user = useSelector((state) => state.login.usuario.user)
 
     const dispatch = useDispatch();
     React.useEffect(() => {
@@ -78,6 +83,9 @@ const App = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={themes(customization)}>
+                {user && (
+                    <MainLayout />
+                )}
                 <CssBaseline />
                 <NavigationScroll>
                     <Switch>

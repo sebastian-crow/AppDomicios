@@ -18,9 +18,6 @@ import {
 } from "../../../../store/storeAddresses/store/reducer";
 
 
-// Main Layout
-import MainLayout from '../../../../layout/MainLayout'
-
 //console.log('MAPBOXGL', mapboxgl)
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXN0aWFuY3JvdyIsImEiOiJja3VnOW5yazUwanYwMm9waHY1NWdoaHRnIn0.kIsU3HWfUybUwU2DvavkwA';
 
@@ -337,7 +334,6 @@ export const ClientMap = (props) => {
 
     return (
         <>
-            <MainLayout />
             <div className="mainContainer">
                 <div class='sidebar'>
                     <div class='heading'>

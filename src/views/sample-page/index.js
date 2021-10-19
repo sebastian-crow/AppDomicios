@@ -7,8 +7,6 @@ import { Typography } from '@material-ui/core';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 
-// Header
-import MainLayout from '../../layout/MainLayout'
 
 //= =============================|| SAMPLE PAGE ||==============================//
 
@@ -25,8 +23,6 @@ const SamplePage = () => {
 
     return (
         <>
-            <MainLayout />
-
             <ListProducts />
         </>
     )

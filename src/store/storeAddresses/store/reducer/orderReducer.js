@@ -38,14 +38,20 @@ const initialState = {
 };
 
 const uiReducer = createReducer(initialState, {
+    [createOrderAction]: (state, action) => {
+        state.order = action.payload.data;
+    },
     [createOrderDoneAction]: (state, action) => {
         state.order = action.payload.data;
     },
-    [deleteOrderDoneAction]: (state, action) => {
+    [deleteOrderAction]: (state, action) => {
         state.order = {};
     },
+    [deleteOrderDoneAction]: (state, action) => {
+        state.order.order = {};
+    },
     [updateOrderDoneAction]: (state, action) => {
-        state.order.Order = action.payload.data;
+        state.order.order = action.payload.data;
     },
     [errorCreateOrder]: (state, action) => {
         state.errorCreate = action.payload;

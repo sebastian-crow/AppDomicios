@@ -12,7 +12,7 @@
 
 // ===========================|| PERFECT SCROLLBAR ||=========================== //
 
-.scrollbar-container {
+.-container {
     .ps__rail-y {
         &:hover > .ps__thumb-y,
         &:focus > .ps__thumb-y,
@@ -29,7 +29,7 @@
     }
 }
 
-.scrollbar-container.ps,
+.-container.ps,
 .scrollbar-container > .ps {
     &.ps--active-y > .ps__rail-y {
         width: 5px;
