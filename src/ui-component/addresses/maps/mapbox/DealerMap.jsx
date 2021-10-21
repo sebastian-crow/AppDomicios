@@ -22,6 +22,13 @@ import {
 import { convertArrayToObject } from '../../../../hooks/convertArrayToObject'
 
 
+// UUID for generate one unique ID
+//import uuid from 'uuid'
+
+
+// Store
+import { store } from '../../../../store/storeAddresses/store/configureStore'
+
 //console.log('MAPBOXGL', mapboxgl)
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXN0aWFuY3JvdyIsImEiOiJja3VnOW5yazUwanYwMm9waHY1NWdoaHRnIn0.kIsU3HWfUybUwU2DvavkwA';
 
@@ -75,6 +82,7 @@ const stores = {
 }
 */
 
+// Dealer Map Component
 export const DealerMap = (props) => {
 
     const dispatch = useDispatch();
@@ -90,52 +98,45 @@ export const DealerMap = (props) => {
     const orders = useSelector((state) => state.ui.orders)
     //console.log('ORDERS DEALER', orders)
 
-    let ordersDealer = []
-    orders.map((order) => {
+    const storesDomiciliario = orders.map((order) => {
         if (order.domiciliario.id === user._id) {
-            ordersDealer.push(order)
-        }
-    })
-
-    const storesDealer = ordersDealer.map((order) => {
-        return {
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [
-                            -75.512527,
-                            6.343636
-                        ]
-                    },
-                    "properties": {
-                        //"phoneFormatted": "3195158887",
-                        //"phone": "2022347336",
-                        "address": order.direccion.address,
-                        "city": "Copacabana",
-                        "country": "Colombia",
-                        //"crossStreet": "at 15th St NW",
-                        "postalCode": "050022",
-                        //"state": "D.C."
-                    }
+            const esteStore = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -75.512527,
+                        6.343636
+                    ]
                 },
-            ]
+                "properties": {
+                    "id": Math.floor(Math.random() * 100),
+                    "phoneFormatted": "3195158887",
+                    "phone": "2022347336",
+                    "address": order.direccion.address,
+                    "city": "Copacabana",
+                    "country": "Colombia",
+                    "crossStreet": "at 15th St NW",
+                    "postalCode": "050022",
+                    //"state": "D.C."
+                },
+            }
+            return esteStore
         }
+
     })
 
-    const stores = Object.assign({}, storesDealer)
-
-    //console.log('STORES BY ORDERS DEALER', stores)
+    console.log('STORES DOMICILIO', storesDomiciliario)
 
 
-    /* Assign a unique ID to each store  */
-    /*
-    stores.features.forEach(function (store, i) {
-        store.properties.id = i;
-    });
-*/
+    const stores = {
+        "type": "FeatureCollection",
+        "features": storesDomiciliario
+    }
+    console.log('SEE FINAL STORE', stores)
+
+
+
 
 
 
@@ -185,8 +186,9 @@ export const DealerMap = (props) => {
 
 
 
-
     const buildLocationList = ({ features }) => {
+        console.log('STORE FEATURES', features)
+        //let features
         for (const { properties } of features) {
             /* Add a new listing section to the sidebar. */
             const listings = document.getElementById('listings');
@@ -391,3 +393,56 @@ export const DealerMap = (props) => {
 }
 
 
+
+
+/*
+//const storesDealer = ordersDealer.map((order) => {
+const stores = ordersDealer.map((order) => {
+    return {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -75.512527,
+                        6.343636
+                    ]
+                },
+                "properties": {
+                    "id": Math.floor(Math.random() * 100),
+                    //"phoneFormatted": "3195158887",
+                    //"phone": "2022347336",
+                    "address": order.direccion.address,
+                    "city": "Copacabana",
+                    "country": "Colombia",
+                    //"crossStreet": "at 15th St NW",
+                    "postalCode": "050022",
+                    //"state": "D.C."
+                }
+            },
+        ]
+    }
+})
+*/
+
+    //const stores = Object.assign({}, storesDealer)
+
+    //console.log('STORES BY ORDERS DEALER', stores)
+
+
+
+
+/* Assign a unique ID to each store  */
+/*
+stores.features.forEach(function (store, i) {
+    store.properties.id = i;
+});
+
+
+stores.map((store, i) => {
+store.features.properties.id = Math.random()
+store.features.properties.id = i
+})
+*/
