@@ -17,8 +17,7 @@ import dashboard from '../../../../menu-items/dashboard'
 import pages from '../../../../menu-items/pages'
 import other from '../../../../menu-items/other'
 import adminItems from '../../../../menu-items/adminItems'
-import {dealerItems} from '../../../../menu-items/dealerItems'
-import {dealerItems_two} from '../../../../menu-items/dealerItems'
+import {DealerItems, dealerItems_two} from '../../../../menu-items/dealerItems'
 
 
 
@@ -49,7 +48,7 @@ const menuItem = () => {
             break;
         case 'domiciliario':
             menuItem = {
-                items: [dealerItems, dealerItems_two]
+                items: [DealerItems(), dealerItems_two]
             }
             break;
         default:

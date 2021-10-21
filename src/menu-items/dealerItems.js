@@ -3,7 +3,11 @@ import KitchenIcon from '@mui/icons-material/Kitchen';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 
 // Import store
-import {store} from '../store/storeAddresses/store/configureStore'
+import { store } from '../store/storeAddresses/store/configureStore'
+
+
+// Redux
+import { useDispatch, useSelector } from "react-redux";
 
 // Constant
 const icons = {
@@ -15,27 +19,52 @@ const icons = {
 const state = store.getState()
 
 // Get user from state
-const user = state.login.usuario.user
-console.log('DOMICILIARIO USER', user)
+
+
 
 
 // ===========================|| DEALER MENU ITEMS ||=========================== //
 
-export const dealerItems = {
-    id: 'pages',
-    title: 'Orders',
-    type: 'group',
-    children: [
-        {
-            id: 'default',
+
+
+export const DealerItems = () => {
+    const user = useSelector((state) => state.login.usuario.user)
+    console.log('DOMICILIARIO USER', user)
+
+    if (user) {
+        return {
+            id: 'pages',
             title: 'Orders',
-            type: 'item',
-            url: `/dealermap/${user._id}`,
-            icon: icons.ReceiptIcon,
-            breadcrumbs: false
-        }
-    ],
-};
+            type: 'group',
+            children: [
+                {
+                    id: 'default',
+                    title: 'Orders',
+                    type: 'item',
+                    url: `/dealermap/${user._id}`,
+                    icon: icons.ReceiptIcon,
+                    breadcrumbs: false
+                }
+            ],
+        };
+    } else {
+        return {
+            id: 'pages',
+            title: 'Orders',
+            type: 'group',
+            children: [
+                {
+                    id: 'default',
+                    title: 'Orders',
+                    type: 'item',
+                    url: `/dealermap/`,
+                    icon: icons.ReceiptIcon,
+                    breadcrumbs: false
+                }
+            ],
+        };
+    }
+}
 
 
 export const dealerItems_two = {

@@ -18,12 +18,16 @@ import {
 } from "../../../../store/storeAddresses/store/reducer";
 
 
+// Convert Array into an Object
+import { convertArrayToObject } from '../../../../hooks/convertArrayToObject'
+
+
 //console.log('MAPBOXGL', mapboxgl)
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXN0aWFuY3JvdyIsImEiOiJja3VnOW5yazUwanYwMm9waHY1NWdoaHRnIn0.kIsU3HWfUybUwU2DvavkwA';
 
 
 
-
+/*
 const stores = {
     "type": "FeatureCollection",
     "features": [
@@ -69,12 +73,7 @@ const stores = {
         },
     ]
 }
-
-/* Assign a unique ID to each store */
-stores.features.forEach(function (store, i) {
-    store.properties.id = i;
-});
-
+*/
 
 export const DealerMap = (props) => {
 
@@ -89,34 +88,60 @@ export const DealerMap = (props) => {
     //console.log('ORDER ID RECEIVED', orderId)
 
     const orders = useSelector((state) => state.ui.orders)
+    //console.log('ORDERS DEALER', orders)
 
-
-    /*
-    const orderFind = () => {
-
-        let order
-        const orderSelect = orders.map((order) => {
-            if (order._id === orderId) return order
-        })
-
-        for (let i = 0; i < orderSelect; i++) {
-            if(orderSelect[i]._id === orderId) {
-                
-            }
+    let ordersDealer = []
+    orders.map((order) => {
+        if (order.domiciliario.id === user._id) {
+            ordersDealer.push(order)
         }
+    })
+
+    const storesDealer = ordersDealer.map((order) => {
+        return {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [
+                            -75.512527,
+                            6.343636
+                        ]
+                    },
+                    "properties": {
+                        //"phoneFormatted": "3195158887",
+                        //"phone": "2022347336",
+                        "address": order.direccion.address,
+                        "city": "Copacabana",
+                        "country": "Colombia",
+                        //"crossStreet": "at 15th St NW",
+                        "postalCode": "050022",
+                        //"state": "D.C."
+                    }
+                },
+            ]
+        }
+    })
+
+    const stores = Object.assign({}, storesDealer)
+
+    //console.log('STORES BY ORDERS DEALER', stores)
 
 
-        
-    }
-    //console.log('ORDER FOUND', order)
-
-    console.log(orders)
-    console.log('ORDER FIND', order)
+    /* Assign a unique ID to each store  */
+    /*
+    stores.features.forEach(function (store, i) {
+        store.properties.id = i;
+    });
 */
+
+
 
     useEffect(() => {
         dispatch(getAllOrderAction())
-    }, [dispatch, orders])
+    }, [dispatch])
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -364,6 +389,5 @@ export const DealerMap = (props) => {
         </>
     );
 }
-//Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
 
 
