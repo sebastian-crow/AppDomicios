@@ -4,15 +4,13 @@ import { Route, Switch } from "react-router-dom";
 function Dashboard(props) {
   return (
     <Switch>
-      {props.routes.map((prop, key) => {
-        return (
+      {props.routes.map((prop, key) => (
           <Route
             path={prop.layout + prop.path}
             component={prop.component}
             key={key}
           />
-        );
-      })}
+        ))}
     </Switch>
   );
 }

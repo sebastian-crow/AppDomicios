@@ -1,33 +1,17 @@
-/*!
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-=========================================================
-* Paper Dashboard React - v1.3.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
-import "bootstrap/dist/css/bootstrap.css";
-import "assets/scss/paper-dashboard.scss?v=1.3.0";
-import "assets/demo/demo.css";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
-import { store, history } from "./store/configureStore";
-import { Provider } from "react-redux";
-import { Router } from "react-router-dom";
-import App from "./App";
+import 'bootstrap/dist/css/bootstrap.css';
+// eslint-disable-next-line import/no-unresolved
+import 'assets/scss/paper-dashboard.scss?v=1.3.0';
+// eslint-disable-next-line import/no-unresolved
+import 'assets/demo/demo.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { store, history } from './store/configureStore';
+import App from './App';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -35,5 +19,5 @@ ReactDOM.render(
       <App />
     </Router>
   </Provider>,
-  document.getElementById("root"),
+  document.getElementById('root'),
 );

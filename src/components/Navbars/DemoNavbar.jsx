@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Collapse,
   Navbar,
@@ -16,21 +16,19 @@ import {
   InputGroupText,
   InputGroupAddon,
   Input,
-} from "reactstrap";
-
-import routes from "routes.js";
+} from 'reactstrap';
 
 function Header(props) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
-  const [color, setColor] = React.useState("transparent");
+  const [color, setColor] = React.useState('transparent');
   const sidebarToggle = React.useRef();
   const location = useLocation();
   const toggle = () => {
     if (isOpen) {
-      setColor("transparent");
+      setColor('transparent');
     } else {
-      setColor("dark");
+      setColor('dark');
     }
     setIsOpen(!isOpen);
   };
@@ -38,8 +36,8 @@ function Header(props) {
     setDropdownOpen(!dropdownOpen);
   };
   const getBrand = () => {
-    let brandName = "Default Brand";
-    routes.map((prop, key) => {
+    let brandName = 'Default Brand';
+    props.routes.map((prop, key) => {
       if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
         brandName = prop.name;
       }
@@ -48,43 +46,43 @@ function Header(props) {
     return brandName;
   };
   const openSidebar = () => {
-    document.documentElement.classList.toggle("nav-open");
-    sidebarToggle.current.classList.toggle("toggled");
+    document.documentElement.classList.toggle('nav-open');
+    sidebarToggle.current.classList.toggle('toggled');
   };
   // function that adds color dark/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && isOpen) {
-      setColor("dark");
+      setColor('dark');
     } else {
-      setColor("transparent");
+      setColor('transparent');
     }
   };
   React.useEffect(() => {
-    window.addEventListener("resize", updateColor.bind(this));
+    window.addEventListener('resize', updateColor.bind(this));
   });
   React.useEffect(() => {
     if (
-      window.innerWidth < 993 &&
-      document.documentElement.className.indexOf("nav-open") !== -1
+      window.innerWidth < 993
+      && document.documentElement.className.indexOf('nav-open') !== -1
     ) {
-      document.documentElement.classList.toggle("nav-open");
-      sidebarToggle.current.classList.toggle("toggled");
+      document.documentElement.classList.toggle('nav-open');
+      sidebarToggle.current.classList.toggle('toggled');
     }
   }, [location]);
   return (
     // add or remove classes depending if we are on full-screen-maps page or not
     <Navbar
       color={
-        props.location.pathname.indexOf("full-screen-maps") !== -1
-          ? "dark"
+        props.location.pathname.indexOf('full-screen-maps') !== -1
+          ? 'dark'
           : color
       }
       expand="lg"
       className={
-        props.location.pathname.indexOf("full-screen-maps") !== -1
-          ? "navbar-absolute fixed-top"
-          : "navbar-absolute fixed-top " +
-            (color === "transparent" ? "navbar-transparent " : "")
+        props.location.pathname.indexOf('full-screen-maps') !== -1
+          ? 'navbar-absolute fixed-top'
+          : `navbar-absolute fixed-top ${
+            color === 'transparent' ? 'navbar-transparent ' : ''}`
       }
     >
       <Container fluid>

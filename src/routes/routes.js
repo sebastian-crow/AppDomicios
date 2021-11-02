@@ -7,34 +7,34 @@ import Maps from "views/Map.js";
 import UserPage from "views/User.js";
 import UpgradeToPro from "views/Upgrade.js";
 
-import Inicio from "./components/addresses/vistas/Inicio";
-import UserMap from "./components/addresses/vistas/UserMap";
+import Inicio from "../components/addresses/vistas/Inicio";
+import UserMap from "../components/addresses/vistas/UserMap";
 
 //Servicios de authenticacion
 
-import EditarUsuario from "./components/addresses/auth/EditarUsuario";
+import EditarUsuario from "../components/addresses/auth/EditarUsuario";
 
 // Users
-import ListClientes from "./components/addresses/listUsers/ListClientes";
-import ListDomiciliarios from "./components/addresses/listUsers/ListDomiciliarios";
-import UserProductList from "./components/addresses/products/UserProductList";
+import ListClientes from "../components/addresses/listUsers/ListClientes";
+import ListDomiciliarios from "../components/addresses/listUsers/ListDomiciliarios";
+import UserProductList from "../components/addresses/products/UserProductList";
 
 // Products
-import Product from "./components/addresses/products/Product";
-import CreateProduct from "./components/addresses/products/CreateProduct";
-import EditProduct from "./components/addresses/products/EditProduct";
-import ListProducts from "./components/addresses/products/ListProducts";
+import Product from "../components/addresses/products/Product";
+import CreateProduct from "../components/addresses/products/CreateProduct";
+import EditProduct from "../components/addresses/products/EditProduct";
+import ListProducts from "../components/addresses/products/ListProducts";
 
 // Orders
-import Orders from "./components/addresses/orders/Orders";
-import TakeOrder from "./components/addresses/orders/TakeOrder";
-import CreateOrder from "./components/addresses/orders/CreateOrder";
-import EditOrder from "./components/addresses/orders/EditOrder";
-import OrderList from "./components/addresses/orders/OrderList";
-import UserOrderList from "./components/addresses/orders/UserOrderList";
+import Orders from "../components/addresses/orders/Orders";
+import TakeOrder from "../components/addresses/orders/TakeOrder";
+import CreateOrder from "../components/addresses/orders/CreateOrder";
+import EditOrder from "../components/addresses/orders/EditOrder";
+import OrderList from "../components/addresses/orders/OrderList";
+import UserOrderList from "../components/addresses/orders/UserOrderList";
 
 // Proof
-import DealerMap from "./components/addresses/vistas/DealerMap";
+import DealerMap from "../components/addresses/vistas/DealerMap";
 
 // Aqui añades las rutas y pones para que roles estan permitidas automaticamente se listan en el layout
 var routes = [

@@ -1,49 +1,31 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.3.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import React from "react";
+import React from 'react';
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
-import { Route, Switch, useLocation } from "react-router-dom";
+import PerfectScrollbar from 'perfect-scrollbar';
+import { Route, Switch, useLocation } from 'react-router-dom';
 
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
-import Footer from "components/Footer/Footer.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
+import Footer from '../components/Footer/Footer';
+import Sidebar from '../components/Sidebar/Sidebar';
+import FixedPlugin from '../components/FixedPlugin/FixedPlugin';
+import DemoNavbar from '../components/Navbars/DemoNavbar';
 
-var ps;
+let ps;
 
 function Dashboard(props) {
   const user = useSelector((state) => state.login.usuario.user);
-  const [backgroundColor, setBackgroundColor] = React.useState("black");
-  const [activeColor, setActiveColor] = React.useState("info");
+  const [backgroundColor, setBackgroundColor] = React.useState('black');
+  const [activeColor, setActiveColor] = React.useState('info');
   const mainPanel = React.useRef();
   const location = useLocation();
   React.useEffect(() => {
-    if (navigator.platform.indexOf("Win") > -1) {
+    if (navigator.platform.indexOf('Win') > -1) {
       ps = new PerfectScrollbar(mainPanel.current);
-      document.body.classList.toggle("perfect-scrollbar-on");
+      document.body.classList.toggle('perfect-scrollbar-on');
     }
     return function cleanup() {
-      if (navigator.platform.indexOf("Win") > -1) {
+      if (navigator.platform.indexOf('Win') > -1) {
         ps.destroy();
-        document.body.classList.toggle("perfect-scrollbar-on");
+        document.body.classList.toggle('perfect-scrollbar-on');
       }
     };
   });
