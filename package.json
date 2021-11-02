@@ -83,9 +83,5 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.9"
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ]
+  }
 }

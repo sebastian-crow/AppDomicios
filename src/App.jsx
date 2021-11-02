@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable linebreak-style */
-/* eslint-disable import/no-unresolved */
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom'; // Librería react-router-dom
 import { push } from 'redux-first-history';
