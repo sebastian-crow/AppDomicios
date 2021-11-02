@@ -1,17 +1,11 @@
-## AppDomicios
+# API de busqueda de restaurantes con google maps en nodejs
 
-### Getting Started
+## Deploy
 
-Install dependent packages:
-```
-yarn install
-```
+$ npm install
 
-Run:
-```
-yarn start
-```
-Build:
-```
-yarn build
-```
+$ cp .env.example .env
+
+## Uso
+
+$ npm start

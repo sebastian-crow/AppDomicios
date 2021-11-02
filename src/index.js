@@ -1,34 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+/*!
 
-// third party
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
+=========================================================
+* Paper Dashboard React - v1.3.0
+=========================================================
 
-// project imports
-//import { store } from './store';
-import { store } from './store/storeAddresses/store/configureStore'
+* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
 
-import * as serviceWorker from './serviceWorker';
-import App from './App';
+* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/main/LICENSE.md)
 
-// style + assets
-import './assets/scss/style.scss';
-require("dotenv").config();
+* Coded by Creative Tim
 
-// ===========================|| REACT DOM RENDER  ||=========================== //
+=========================================================
 
-console.log('THIS IS YOUR STORE', store)
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "assets/scss/paper-dashboard.scss?v=1.3.0";
+import "assets/demo/demo.css";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
+import { store, history } from "./store/configureStore";
+import { Provider } from "react-redux";
+import { Router } from "react-router-dom";
+import App from "./App";
+
 ReactDOM.render(
-    <Provider store={store}>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
-    </Provider>,
-    document.getElementById('root')
+  <Provider store={store}>
+    <Router history={history}>
+      <App />
+    </Router>
+  </Provider>,
+  document.getElementById("root"),
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
