@@ -11,8 +11,15 @@ import NoAuth from 'layouts/NoAuth';
 import { restoreSessionStateAction } from './store/reducer';
 import Login from './components/addresses/auth/Login';
 import Register from './components/addresses/auth/Register';
-import routes from './routes/routes';
+import routesCliente from './routes/routesCliente';
+import routesAdmin from './routes/routesAdmin';
+import routesDomiciliario from './routes/routesDomiciliario';
+
 import defaultRoutes from './routes/defaultRoutes';
+
+import { useLocation } from 'react-router-dom'
+
+
 
 function App() {
   const dispatch = useDispatch();
@@ -24,6 +31,10 @@ function App() {
       dispatch(push('/login'));
     }
   }, [dispatch, user]);
+
+  let location = useLocation();
+  console.log(location.pathname);
+
   return (
     <>
       <div>
@@ -35,15 +46,15 @@ function App() {
            */}
           <Route
             path="/admin"
-            render={(props) => <AdminLayout {...props} routes={routes} />}
+            render={(props) => <AdminLayout {...props} routes={routesAdmin} />}
           />
           <Route
             path="/domiciliario"
-            render={(props) => <AdminLayout {...props} routes={routes} />}
+            render={(props) => <AdminLayout {...props} routes={routesDomiciliario} />}
           />
           <Route
             path="/cliente"
-            render={(props) => <AdminLayout {...props} routes={routes} />}
+            render={(props) => <AdminLayout {...props} routes={routesCliente} />}
           />
           <Route
             path="/user"
@@ -51,7 +62,16 @@ function App() {
           />
           <Route restricted path="/login" component={Login} />
           <Route restricted path="/register" component={Register} />
-          <Redirect to="/admin/dashboard" />
+
+          {user?.rol === 'cliente' && (
+            <Redirect to="/cliente/user-page" />
+          )}
+          {user?.rol === 'admin' && (
+            <Redirect to="/admin/dashboard" />
+          )}
+          {user?.rol === 'domiciliario' && (
+            <Redirect to="/domiciliario/dashboard" />
+          )}
         </Switch>
       </div>
     </>
@@ -59,3 +79,4 @@ function App() {
 }
 
 export default App;
+

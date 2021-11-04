@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -12,6 +12,8 @@ import { makeStyles } from "@material-ui/styles";
 import Container from "@material-ui/core/Container";
 import { Select, MenuItem, InputLabel } from "@material-ui/core";
 import { registerAction } from "../../../store/reducer";
+
+console.log(theme)
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -188,3 +190,12 @@ const useFormInput = (initialValue) => {
 };
 
 export default SignUp;
+*/
+
+ const SignUp = () => {
+  return(
+    <div>Hello madafaka</div>
+  )
+}
+
+export default SignUp

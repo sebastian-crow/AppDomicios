@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import './css/markersStyle.css'
 import './css/index.css'
 import ReactMapGL, { Layer } from 'react-map-gl';
-import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import mapboxgl from '!mapbox-gl'; 
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -18,69 +18,18 @@ import {
 } from "../../../../store/reducer";
 
 
+
+/* 
 // Convert Array into an Object
 import { convertArrayToObject } from '../../../hooks/convertArrayToObject'
 
-
-// UUID for generate one unique ID
-//import uuid from 'uuid'
-
-
 // Store
 import { store } from '../../../../store/storeAddresses/store/configureStore'
+*/
 
 //console.log('MAPBOXGL', mapboxgl)
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXN0aWFuY3JvdyIsImEiOiJja3VnOW5yazUwanYwMm9waHY1NWdoaHRnIn0.kIsU3HWfUybUwU2DvavkwA';
 
-
-
-/*
-const stores = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    -75.512527,
-                    6.343636
-                ]
-            },
-            "properties": {
-                "phoneFormatted": "3195158887",
-                "phone": "2022347336",
-                "address": "Carrera 57A N# 48-43",
-                "city": "Copacabana",
-                "country": "Colombia",
-                "crossStreet": "at 15th St NW",
-                "postalCode": "050022",
-                //"state": "D.C."
-            }
-        },
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    -75.561148,
-                    6.259861
-                ]
-            },
-            "properties": {
-                "phoneFormatted": "21171157",
-                "phone": "21171157",
-                "address": "Calle 64 #154, Medellín, Antioquia",
-                "city": "Medellin",
-                "country": "Colombia",
-                "crossStreet": "at 15th St NW",
-                "postalCode": "050022",
-                //"state": "D.C."
-            }
-        },
-    ]
-}
-*/
 
 // Dealer Map Component
 export const DealerMap = (props) => {
@@ -93,10 +42,8 @@ export const DealerMap = (props) => {
 
 
     const orderId = props.match.params.id;
-    //console.log('ORDER ID RECEIVED', orderId)
 
     const orders = useSelector((state) => state.ui.orders)
-    //console.log('ORDERS DEALER', orders)
 
     const storesDomiciliario = orders.map((order) => {
         if (order.domiciliario.id === user._id) {
@@ -361,9 +308,9 @@ export const DealerMap = (props) => {
 
     return (
         <>
-            <div className="mainContainer">
-                <div class='sidebar'>
-                    <div class='heading'>
+            <div className="mainContainerMapBox">
+                <div class='sidebarMapBox'>
+                    <div class='headingMapBox'>
                         <h1>Dealer Orders</h1>
                     </div>
                     <div id='listings' className='listings'></div>
@@ -373,76 +320,18 @@ export const DealerMap = (props) => {
             </div>
 
             <style jsx>{`
-        .mainContainer {
-            position: absolute;
-            top: 7rem;
-            left: 3rem;
-            width: 95%;
-            height: 80%;
-            
-            
-        }
+                .mainContainerMapBox {
+                        position: absolute;
+                        top: 7rem;
+                        left: 3rem;
+                        width: 95%;
+                        height: 80%;    
+                    }
 
-        .map-z {
-            
-            border: 1px solid black;
-        }
+                    .map-z {    
+                    border: 1px solid black;
+                    }
         `}</style>
         </>
     );
 }
-
-
-
-
-/*
-//const storesDealer = ordersDealer.map((order) => {
-const stores = ordersDealer.map((order) => {
-    return {
-        "type": "FeatureCollection",
-        "features": [
-            {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        -75.512527,
-                        6.343636
-                    ]
-                },
-                "properties": {
-                    "id": Math.floor(Math.random() * 100),
-                    //"phoneFormatted": "3195158887",
-                    //"phone": "2022347336",
-                    "address": order.direccion.address,
-                    "city": "Copacabana",
-                    "country": "Colombia",
-                    //"crossStreet": "at 15th St NW",
-                    "postalCode": "050022",
-                    //"state": "D.C."
-                }
-            },
-        ]
-    }
-})
-*/
-
-    //const stores = Object.assign({}, storesDealer)
-
-    //console.log('STORES BY ORDERS DEALER', stores)
-
-
-
-
-/* Assign a unique ID to each store  */
-/*
-stores.features.forEach(function (store, i) {
-    store.properties.id = i;
-});
-
-
-stores.map((store, i) => {
-store.features.properties.id = Math.random()
-store.features.properties.id = i
-})
-*/

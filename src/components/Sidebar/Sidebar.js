@@ -48,7 +48,7 @@ function Sidebar(props) {
           href="#"
           className="simple-text logo-normal"
         >
-          Domicilios
+          Addresses
         </a>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
@@ -60,7 +60,7 @@ function Sidebar(props) {
                 validateRol = true;
               }
             });
-            if (validateRol) {
+            if (validateRol && prop.visible) {
               return (
                 <li
                   className={

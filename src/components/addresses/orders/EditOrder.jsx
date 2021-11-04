@@ -1,75 +1,43 @@
-import React, { useState } from "react";
+// React 
+import * as React from 'react'
+
+// Redux
 import { useDispatch } from "react-redux";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Alert from "@material-ui/lab/Alert";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from '@material-ui/styles';
-import Container from "@material-ui/core/Container";
-import { Select, MenuItem, InputLabel } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { push } from "redux-first-history";
-import moment from "moment";
-import { getAllProductAction, getAllDomiciliarioAction, updateOrderAction} from "../../../store/reducer";
+
+// Reducers
+import {
+    getAllProductAction,
+    getAllDomiciliarioAction,
+    updateOrderAction
+} from "../../../store/reducer";
 
 
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import { useTheme } from '@mui/material/styles';
+// Reacstrap
+import { Container, Col, Form, Row, FormGroup, Label, Input } from 'reactstrap';
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: "100%", // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-}));
+// React Bootstrap
+import { Button, Stack } from 'react-bootstrap';
+
+// React Select
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated';
+//import { colourOptions } from './colors/data.ts';
+
+const animatedComponents = makeAnimated();
+
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+]
 
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
+// Edit Order Component
+const EditOrder = () => {
 
 
-function getStyles(name, productName, theme) {
-    return {
-        fontWeight:
-            productName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
-
-
-
-function EditOrder() {
-    const theme = useTheme();
     const results = useSelector((state) => state.router.location)
 
     const orders = useSelector((state) => state.ui.orders)
@@ -117,6 +85,7 @@ function EditOrder() {
     console.log('ORDERS', orders)
     // Transform the object products in one Array for most easilier manipulation
     const product = Array.from(products)
+    console.log('PRODUCTndkjasdkjassakd', product)
 
     // Counter for give the amount of the products
     const amountProducts = useSelector((state) => state.counter.value)
@@ -145,15 +114,14 @@ function EditOrder() {
         })
     }
 
-
     const orden = FoundOrder()
     console.log('Found Orden', orden)
     const orderF = orden[0]
     console.log('ORDERF', orderF)
-    
+
     let domici_id
 
-    if(orderF.domiciliario.id.length > 1) {
+    if (orderF.domiciliario.id.length > 1) {
         domici_id = orderF.domiciliario.id
         console.log('Domiciliario field in this order have mora than 1 item')
     } else {
@@ -165,9 +133,6 @@ function EditOrder() {
     const domiciliarios = useSelector((state) => state.ui.domiciliarios)
     const domiciCopy = [...domiciliarios]
     console.log('domici_id', domici_id)
-
-
-   
 
     const user = useSelector((state) => state.login.usuario.user)
 
@@ -181,11 +146,11 @@ function EditOrder() {
         if (user._id === domici_id) return user
     })
 
-    
+
     const domi1 = () => {
         let idfinal
-        for(let i = 0; i < users.length; i++) {
-            if(users[i]._id === domici_id) {
+        for (let i = 0; i < users.length; i++) {
+            if (users[i]._id === domici_id) {
                 idfinal = users[i]
             }
         }
@@ -194,25 +159,21 @@ function EditOrder() {
     console.log('domi1', domi1())
 
     const mydomiciliario = domi1()
-    
-
 
     console.log('Mydomiciliario', mydomiciliario)
-
-
 
     //console.log('orderF', orderF)
     const fecha = new Date()
 
-    console.log('End log',orderF)
+    console.log('End log', orderF)
 
     const orderName = useFormInput(orderF.orderName);
-    const cliente = {...user}
-    const domiciliario = useFormInput(mydomiciliario.nombre); 
+    const cliente = { ...user }
+    const domiciliario = useFormInput(mydomiciliario?.nombre);
     const productos = ContactProduct()
     const direccion = useFormInput(orderF.direccion);
-    const [error, setError] = useState(null);
-    const classes = useStyles();
+    const [error, setError] = React.useState(null);
+
     const dispatch = useDispatch();
     const handleUpdate = (event) => {
         event.preventDefault();
@@ -236,8 +197,8 @@ function EditOrder() {
         dispatch(push("/orderlist"));
     };
 
-      // Get Products Array
-      React.useEffect(() => {
+    // Get Products Array
+    React.useEffect(() => {
         dispatch(getAllProductAction());
     }, [dispatch]);
 
@@ -246,144 +207,86 @@ function EditOrder() {
         dispatch(getAllDomiciliarioAction());
     }, [dispatch]);
 
-
-
-   
-
     return (
         <>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar} />
-                    <LockOutlinedIcon />
-                    <Typography component="h1" variant="h5" /> Edit Order{" "}
-                    <form
-                        className={classes.form}
-                        autoComplete="off"
-                        onSubmit={handleUpdate}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    name="orderName"
-                                    variant="outlined"
-                                    fullWidth
-                                    id="orderName"
-                                    label="OrderName"
-                                    autoFocus
-                                    defaultValue={orderName}
-                                    {...orderName}
-                                />
-                            </Grid>
+            <div>
+
+                <Container className="themed-container" fluid="sm">
+                    <Form className="form">
+                        <Col>
+                            <FormGroup row>
+                                <Col sm={10}>
+                                    <Input type="text" id="orderName" placeholder="Order Name" />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col sm={10}>
+                                    <Select
 
 
-
-                            <FormControl id="menuDomiciliario" sx={{ m: 1, width: 395 }}>
-                                <InputLabel id="demo-multiple-name-label">Domiciliario</InputLabel>
-                                <Select
-                                    labelId="demo-multiple-name-label"
-                                    id="demo-multiple-name"
-                                    multiple
-                                    value={domiciliarioName}
-                                    onChange={handleDomiciliarioChange}
-                                    input={<OutlinedInput label="Domiciliario" />}
-                                    MenuProps={MenuProps}
-                                >
-                                    {domiciCopy.map((domiciliario) => (
-                                        <MenuItem
-                                            key={domiciliario._id}
-                                            value={domiciliario._id}
-                                        //style={getStyles(domiciliario, domiciliarioName, theme)}
-                                        >
-                                            {domiciliario.nombre}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                        options={options}
+                                    />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col sm={10}>
 
 
-                            <FormControl id="menuMultij" sx={{ m: 1, width: 395 }}>
-                                <InputLabel id="demo-multiple-chip-label">Products</InputLabel>
-                                <Select
-                                    labelId="demo-multiple-chip-label"
-                                    id="demo-multiple-chip"
-                                    multiple
-                                    value={productName}
-                                    onChange={handleProductChange}
-                                    input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                                    renderValue={(selected) => (
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4 }}>
-                                            {selected.map((value) => (
-                                                <Chip key={value} label={value} />
-                                            ))}
-                                        </Box>
-                                    )}
-                                    MenuProps={MenuProps}
-                                >
-                                    {product.map((prod) => (
-                                        <MenuItem
-                                            key={prod.nombre && prod._id}
-                                            value={prod.nombre}
-                                            style={getStyles(prod.nombre, productName, theme)}
-
-                                        >
-                                            {prod.nombre}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                    <Select
+                                        closeMenuOnSelect={false}
+                                        components={animatedComponents}
+                                        defaultValue={[options[2], options[5]]}
+                                        value={productName}
+                                        onChange={handleProductChange}
+                                        isMulti
+                                        options={product.map((prod) => {
+                                            return {
+                                                value: prod.nombre,
+                                                label: prod.nombre
+                                            }
+                                        })}
+                                        placeholder="Products"
+                                    />
 
 
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    id="direccion"
-                                    label="direccion"
-                                    name="direccion"
-                                    defaultValue={order.direccion.address}
-                                    {...order.direccion.address}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            {" "}
-                            Edit{" "}
-                        </Button>
-                        <Grid item>
-                            {error && (
-                                <>
-                                    <Alert severity="error">{error}</Alert>
-                                    <br />
-                                </>
-                            )}
-                            <br />
-                        </Grid>
-                    </form>
-                </div>
-            </Container>
+                                    {/*
+                                            const options = [
+                                                { value: 'chocolate', label: 'Chocolate' },
+                                            { value: 'strawberry', label: 'Strawberry' },
+                                            { value: 'vanilla', label: 'Vanilla' }
+                                        ]
+                                     */}
 
-            <style jsx>{`
-                    #menuMultij {
-                        postiion: absolute;
-                        left: 0.5rem;
-                        top: 0rem;
-                    }
-            
-            `}</style>
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col sm={10}>
+                                    <Input type="text" id="dealerName" placeholder="Dirección" />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup className="">
+                                <div className="">
+                                    <Button
+                                        variant="secondary"
+                                        size="lg"
+                                        onClick={() => alert('hello')}
+                                    >
+                                        Send
+                                </Button> {``}
+                                </div>
+                            </FormGroup>
+                        </Col>
+                        <Col>
+                        </Col>
+                    </Form>
+                </Container>
+            </div>
         </>
-    );
+    )
 }
 
 const useFormInput = (initialValue) => {
-    const [value, setValue] = useState(initialValue);
+    const [value, setValue] = React.useState(initialValue);
 
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -394,4 +297,8 @@ const useFormInput = (initialValue) => {
     };
 };
 
-export default EditOrder;
+
+
+
+export default EditOrder
+

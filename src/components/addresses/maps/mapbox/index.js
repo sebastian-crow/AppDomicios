@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './css/markersStyle.css'
 import './css/index.css'
+import mapboxgl from '!mapbox-gl'; 
 import ReactMapGL, { Layer } from 'react-map-gl';
-import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";

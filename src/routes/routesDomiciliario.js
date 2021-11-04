@@ -33,27 +33,23 @@ import EditOrder from "../components/addresses/orders/EditOrder";
 import OrderList from "../components/addresses/orders/OrderList";
 import UserOrderList from "../components/addresses/orders/UserOrderList";
 
-// Proof
-import DealerMap from "../components/addresses/vistas/DealerMap";
+// Maps
+import { ClientMap } from '../components/addresses/maps/mapbox/ClientMap'
+import { DealerMap } from '../components/addresses/maps/mapbox/DealerMap'
+
+
 
 // Aqui añades las rutas y pones para que roles estan permitidas automaticamente se listan en el layout
-var routes = [
-  {
-    path: "/delatemap",
-    rol: ["admin", "cliente"],
-    name: "Dealer map",
-    icon: "nc-icon nc-pin-3",
-    component: DealerMap,
-    layout: "/admin",
-  },
+var routesDomiciliario = [
+
   // Default routes
   {
     path: "/dashboard",
-    rol: ['domiciliario', 'cliente', 'admin'],
+    rol: ['domiciliario', 'cliente', 'admin', 'user'],
     name: "Dashboard",
     icon: "nc-icon nc-diamond",
     component: Dashboard,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   {
     path: "/icons",
@@ -61,7 +57,7 @@ var routes = [
     name: "Icons",
     icon: "nc-icon nc-pin-3",
     component: Icons,
-    layout: "/admin",
+    layout: '/admin', visible: false
   },
   {
     path: "/maps",
@@ -69,7 +65,7 @@ var routes = [
     name: "Maps",
     icon: "nc-icon nc-pin-3",
     component: Maps,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   {
     path: "/notifications",
@@ -77,7 +73,7 @@ var routes = [
     name: "Notifications",
     icon: "nc-icon nc-bell-55",
     component: Notifications,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   {
     path: "/user-page",
@@ -85,7 +81,7 @@ var routes = [
     name: "User Profile",
     icon: "nc-icon nc-single-02",
     component: UserPage,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   {
     path: "/tables",
@@ -93,7 +89,8 @@ var routes = [
     name: "Table List",
     icon: "nc-icon nc-tile-56",
     component: TableList,
-    layout: "/admin",
+    layout: '/admin',
+    visible: true
   },
   {
     path: "/typography",
@@ -101,7 +98,7 @@ var routes = [
     name: "Typography",
     icon: "nc-icon nc-caps-small",
     component: Typography,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   {
     pro: true,
@@ -110,16 +107,17 @@ var routes = [
     name: "Upgrade to PRO",
     icon: "nc-icon nc-spaceship",
     component: UpgradeToPro,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   // Auth routes
   {
     path: "/listclientes",
-    name: "Orders",
-    rol: ['domiciliario', 'cliente', 'admin'],
-    icon: "nc-icon nc-bank",
+    name: "User List",
+    rol: ['admin'],
+    icon: "nc-single-02",
     component: ListClientes,
-    layout: "/admin",
+    layout: '/admin',
+    visible: true,
   },
   {
     path: "/takeorder",
@@ -127,7 +125,16 @@ var routes = [
     icon: "nc-icon nc-bank",
     rol: ['domiciliario', 'cliente', 'admin'],
     component: TakeOrder,
-    layout: "/admin",
+    //layout: `/${userRole()}`,
+    layout: '/admin',
+  },
+  {
+    path: "/orderslist",
+    name: "Order List",
+    icon: "nc-tablet-2",
+    rol: ['domiciliario', 'cliente', 'admin'],
+    component: OrderList,
+    layout: '/admin', visible: true
   },
   {
     path: "/createproduct",
@@ -135,7 +142,7 @@ var routes = [
     icon: "nc-icon nc-bank",
     rol: ['domiciliario', 'cliente', 'admin'],
     component: CreateProduct,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   {
     path: "/userproductlist",
@@ -143,7 +150,7 @@ var routes = [
     icon: "nc-icon nc-bank",
     rol: ['domiciliario', 'cliente', 'admin'],
     component: UserProductList,
-    layout: "/admin",
+    layout: '/admin', visible: true
   },
   {
     path: "/listproducts",
@@ -151,7 +158,27 @@ var routes = [
     icon: "nc-icon nc-bank",
     rol: ['domiciliario', 'cliente', 'admin'],
     component: ListProducts,
-    layout: "/admin",
+    layout: '/admin', visible: true
+  },
+
+  // Maps
+  {
+    path: '/clientmap/:id',
+    name: "Client Map",
+    rol: ['domiciliario', 'cliente', 'admin'],
+    component: ClientMap,
+    layout: '/admin',
+    visible: false,
+  },
+
+  {
+    path: "/dealermap/:id",
+    rol: ["admin", "cliente"],
+    name: "Dealer map",
+    icon: "nc-icon nc-pin-3",
+    component: DealerMap,
+    layout: '/admin',
+    visible: false,
   },
 ];
-export default routes;
+export default routesDomiciliario;
