@@ -7,12 +7,11 @@ import Maps from "views/Map.js";
 import UserPage from "views/User.js";
 import UpgradeToPro from "views/Upgrade.js";
 
-
 // Aqui añades las rutas y pones para que roles estan permitidas automaticamente se listan en el layout
 var routes = [
   {
     path: "/dashboard",
-    rol: ['domiciliario', 'cliente', 'admin'],
+    rol: ["domiciliario", "cliente", "admin"],
     name: "Dashboard",
     icon: "nc-icon nc-diamond",
     component: Dashboard,

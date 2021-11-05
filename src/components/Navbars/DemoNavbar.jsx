@@ -17,10 +17,14 @@ import {
   InputGroupAddon,
   Input,
 } from 'reactstrap';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
+import { logoutAction } from "../../store/reducer";
 function Header(props) {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [dropdownNotificationOpen, setDropdownNotificationOpen] = React.useState(false);
+  const [dropdownOptionsOpen, setDropdownOptionsOpen] = React.useState(false);
   const [color, setColor] = React.useState('transparent');
   const sidebarToggle = React.useRef();
   const location = useLocation();
@@ -32,8 +36,18 @@ function Header(props) {
     }
     setIsOpen(!isOpen);
   };
-  const dropdownToggle = (e) => {
-    setDropdownOpen(!dropdownOpen);
+  const dropdownNotificationToggle = (e) => {
+    setDropdownNotificationOpen(!dropdownNotificationOpen);
+  };
+  const dropdownOptionsToggle = (e) => {
+    setDropdownOptionsOpen(!dropdownOptionsOpen);
+  };
+  const logout = (e) => {
+    e.preventDefault();
+    console.log("lgout");
+    dispatch(logoutAction());
+    dispatch(push("/"));
+    //push(!dropdownOptionsOpen);
   };
   const getBrand = () => {
     let brandName = 'Default Brand';
@@ -128,8 +142,8 @@ function Header(props) {
             </NavItem>
             <Dropdown
               nav
-              isOpen={dropdownOpen}
-              toggle={(e) => dropdownToggle(e)}
+              isOpen={dropdownNotificationOpen}
+              toggle={(e) => dropdownNotificationToggle(e)}
             >
               <DropdownToggle caret nav>
                 <i className="nc-icon nc-bell-55" />
@@ -143,14 +157,21 @@ function Header(props) {
                 <DropdownItem tag="a">Something else here</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <NavItem>
-              <Link to="#pablo" className="nav-link btn-rotate">
+            <Dropdown
+              nav
+              isOpen={dropdownOptionsOpen}
+              toggle={(e) => dropdownOptionsToggle(e)}
+            >
+              <DropdownToggle caret nav>
                 <i className="nc-icon nc-settings-gear-65" />
                 <p>
                   <span className="d-lg-none d-md-block">Account</span>
                 </p>
-              </Link>
-            </NavItem>
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem onClick={logout} tag="a">Cerrar sesión</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </Nav>
         </Collapse>
       </Container>
