@@ -23,6 +23,7 @@ import { Button, Stack } from 'react-bootstrap';
 // React Select
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
+import { EventNoteTwoTone } from '@material-ui/icons';
 //import { colourOptions } from './colors/data.ts';
 
 const animatedComponents = makeAnimated();
@@ -35,167 +36,55 @@ const options = [
 
 
 // Edit Order Component
-const EditOrder = () => {
+const EditOrder = (props) => {
 
 
+    const dispatch = useDispatch()
     const results = useSelector((state) => state.router.location)
 
-    const orders = useSelector((state) => state.ui.orders)
-    const order = [...orders]
-    const [productName, setProductName] = React.useState([])
-    const [domiciliarioName, setDomiciName] = React.useState([])
+    // Component State
+    const [productData, setProductData] = React.useState({})
+    const [dealerData, setDealerData] = React.useState({})
 
-    const products = useSelector((state) => state.ui.products)
-
-    const handleProductChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setProductName(
-            // On autofill we get a the stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        )
-    }
-
-    const handleDomiciliarioChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setDomiciName(
-            // On autofill we get a the stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        )
-    }
-
-    // Get id by split the current URL
-    let paths = window.location.pathname.split('/');
-    let id = paths[paths.length - 1];
-
-    // Fuction for take all information abot this Ordee
-    const FoundOrder = () => {
-        let orden = []
-        for (let i = 0; i < orders.length; i++) {
-            if (orders[i]._id === id) {
-                orden.push(orders[i])
-            }
-        }
-        return orden
-    }
-
-    console.log('ORDERS', orders)
-    // Transform the object products in one Array for most easilier manipulation
-    const product = Array.from(products)
-    console.log('PRODUCTndkjasdkjassakd', product)
-
-    // Counter for give the amount of the products
-    const amountProducts = useSelector((state) => state.counter.value)
-
-
-    // Function that contents Name of the product, amount of products and their own ID
-    const ContactProduct = () => {
-
-        let productoFinal, id, nombre;
-
-        for (let i = 0; i < productName.length; i++) {
-            nombre = productName[i]
-        }
-
-        for (let i = 0; i < product.length; i++) {
-            if (product[i].nombre === nombre) {
-                id = product[i]._id
-            }
-        }
-        return productoFinal = productName.map((product) => {
-            return {
-                nombre: product,
-                id: id,
-                cantidad: amountProducts
-            }
-        })
-    }
-
-    const orden = FoundOrder()
-    console.log('Found Orden', orden)
-    const orderF = orden[0]
-    console.log('ORDERF', orderF)
-
-    let domici_id
-
-    if (orderF.domiciliario.id.length > 1) {
-        domici_id = orderF.domiciliario.id
-        console.log('Domiciliario field in this order have mora than 1 item')
-    } else {
-        domici_id = orderF.domiciliario.id[0]
-        console.log('Domiciliario field only have one item')
-    }
-
-    //console.log('Domici_Id', domici_id)
-    const domiciliarios = useSelector((state) => state.ui.domiciliarios)
-    const domiciCopy = [...domiciliarios]
-    console.log('domici_id', domici_id)
-
+    // Get Current User
     const user = useSelector((state) => state.login.usuario.user)
 
-    const users = useSelector((state) => state.ui.domiciliarios)
+    // Get Dealers List
+    const dealers = useSelector((state) => state.ui.domiciliarios)
 
-    console.log('Users that give to the state', users)
+    // Orders from store
+    const orders = useSelector((state) => state.ui.orders)
 
-    //let domici
-    //let nameDomici = domici.nombre
-    const domici = users.map((user) => {
-        if (user._id === domici_id) return user
+    // Get Current Order Id
+    const idCurrentOrder = props.match.params.id
+
+    // Get Current Order
+    let currentOrder
+    orders.map((order) => {
+        if (order._id === idCurrentOrder) {
+            currentOrder = order
+        }
     })
 
+    // Products from store
+    const products = useSelector((state) => state.ui.products)
 
-    const domi1 = () => {
-        let idfinal
-        for (let i = 0; i < users.length; i++) {
-            if (users[i]._id === domici_id) {
-                idfinal = users[i]
-            }
-        }
-        return idfinal
+    // Get Products by current order
+    const currentProducts = []
+    currentProducts.push(currentOrder.productos)
+    console.log('CURRENT PRODUCTS',)
+
+    // Hanlde the event onChange to the Product multi select
+    const handleProductChange = (productData) => {
+        setProductData(productData)
+        console.log('HANDLE PRODUC CHANGE', productData)
     }
-    console.log('domi1', domi1())
 
-    const mydomiciliario = domi1()
-
-    console.log('Mydomiciliario', mydomiciliario)
-
-    //console.log('orderF', orderF)
-    const fecha = new Date()
-
-    console.log('End log', orderF)
-
-    const orderName = useFormInput(orderF.orderName);
-    const cliente = { ...user }
-    const domiciliario = useFormInput(mydomiciliario?.nombre);
-    const productos = ContactProduct()
-    const direccion = useFormInput(orderF.direccion);
-    const [error, setError] = React.useState(null);
-
-    const dispatch = useDispatch();
-    const handleUpdate = (event) => {
-        event.preventDefault();
-        setError(null);
-        let data = {
-            orderName: orderName.value,
-            fecha: fecha,
-            cliente: {
-                id: cliente._id,
-                name: cliente.nombre,
-                //location: clientLocation,
-            },
-            domiciliario: {
-                id: mydomiciliario._id,
-                name: domiciliario.value,
-            },
-            productos,
-            direccion: direccion.value,
-        };
-        dispatch(updateOrderAction({ data, id: orderF._id }));
-        dispatch(push("/orderlist"));
-    };
+    // Handle event onChange to dealer multii select
+    const handleDealerChange = (dealerData) => {
+        setDealerData(dealerData)
+        console.log('DEALER DATA', dealerData)
+    }
 
     // Get Products Array
     React.useEffect(() => {
@@ -216,52 +105,54 @@ const EditOrder = () => {
                         <Col>
                             <FormGroup row>
                                 <Col sm={10}>
-                                    <Input type="text" id="orderName" placeholder="Order Name" />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Col sm={10}>
-                                    <Select
-
-
-                                        options={options}
+                                    <Input
+                                        type="text"
+                                        id="orderName"
+                                        placeholder="Order Name"
+                                        defaultValue={currentOrder.orderName}
                                     />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Col sm={10}>
-
+                                    <Select
+                                        onChange={handleDealerChange}
+                                        placeholder="Dealer"
+                                        options={dealers.map((dealer) => {
+                                            return {
+                                                value: dealer._id,
+                                                label: dealer.nombre
+                                            }
+                                        })}
+                                    />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col sm={10}>
 
                                     <Select
                                         closeMenuOnSelect={false}
                                         components={animatedComponents}
-                                        defaultValue={[options[2], options[5]]}
-                                        value={productName}
-                                        onChange={handleProductChange}
+                                        defaultValue={[currentProducts[0][0], currentProducts[0][0]]}
                                         isMulti
-                                        options={product.map((prod) => {
+                                        options={products.map((product) => {
                                             return {
-                                                value: prod.nombre,
-                                                label: prod.nombre
+                                                value: product._id,
+                                                label: product.nombre
                                             }
                                         })}
                                         placeholder="Products"
                                     />
-
-
-                                    {/*
-                                            const options = [
-                                                { value: 'chocolate', label: 'Chocolate' },
-                                            { value: 'strawberry', label: 'Strawberry' },
-                                            { value: 'vanilla', label: 'Vanilla' }
-                                        ]
-                                     */}
-
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Col sm={10}>
-                                    <Input type="text" id="dealerName" placeholder="Dirección" />
+                                    <Input
+                                        type="text"
+                                        id="address"
+                                        placeholder="Dirección"
+                                        defaultValue={currentOrder.direccion.address}
+                                    />
                                 </Col>
                             </FormGroup>
                             <FormGroup className="">
