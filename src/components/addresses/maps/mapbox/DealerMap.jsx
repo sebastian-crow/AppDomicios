@@ -23,7 +23,7 @@ export const DealerMap = () => {
 
   const currentOrders = [];
   orders.map((order) => {
-    if (order.domiciliario.id === user?._id) {
+    if (order.domiciliario?.id === user?._id) {
       currentOrders.push(order);
     }
   });

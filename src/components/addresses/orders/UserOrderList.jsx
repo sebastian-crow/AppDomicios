@@ -18,60 +18,23 @@ import moment from "moment";
 
 const UserOrderList = () => {
   const dispatch = useDispatch();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // Get Current User
   const user = useSelector((state) => state.login.usuario.user);
 
-  const rol = user.rol === "cliente" || user.rol === "admin";
+  // Get All Orders from store and filter for user
+  const orders = useSelector((state) =>
+    state.ui.orders.filter((order) => order.cliente.id === user._id),
+  );
 
-  // Get All Orders from store
-  const orders = useSelector((state) => state.ui.orders);
-
-  // Filter orders by users
-
-  const ordersCurrentUser = [];
-  orders.map((order) => {
-    if (order.cliente.id === user._id) {
-      return ordersCurrentUser.push(order);
-    }
-  });
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleDelete = (event) => {
+  const handleDelete = (event, id) => {
     event.preventDefault();
-    const data = {};
-    dispatch(deleteOrderAction(data));
-    dispatch(getAllOrderAction());
-    dispatch(push("/orderslist"));
+    dispatch(deleteOrderAction(id));
+    dispatch(push("/cliente/orderslist"));
   };
 
-  // Update List
-
   React.useEffect(() => {
     dispatch(getAllOrderAction());
   }, [dispatch]);
 
-  React.useEffect(() => {
-    if (!orders.lenght) dispatch(getAllOrderAction());
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    orders.map((order) => {
-      if (order.cliente.id === user._id) {
-        return ordersCurrentUser.push(order);
-      }
-    }, []);
-  });
   return (
     <>
       <div style={{ height: "800px", overflowY: "scroll" }}>
@@ -89,7 +52,7 @@ const UserOrderList = () => {
             </tr>
           </thead>
           <tbody>
-            {ordersCurrentUser.map((order) => (
+            {orders.map((order) => (
               <tr key={order._id}>
                 <td>{order.orderName}</td>
                 <td>{order.direccion.address}</td>
@@ -123,8 +86,11 @@ const UserOrderList = () => {
                   </Button>
                 </td>
                 <td>
-                  <Button onClick={handleDelete} variant="danger">
-                    Delete
+                  <Button
+                    onClick={(e) => handleDelete(e, order._id)}
+                    variant="danger"
+                  >
+                    Borrar
                   </Button>
                 </td>
               </tr>

@@ -10,7 +10,7 @@ import { push } from "redux-first-history";
 import {
   getAllProductAction,
   getAllDomiciliarioAction,
-  createOrderAction,
+  updateOrderAction,
 } from "../../../store/reducer";
 
 // Reacstrap
@@ -39,7 +39,7 @@ const TakeOrder = (props) => {
   const [productsAndAmount, setProductsAndAmount] = React.useState([]);
   let domiciliariosPreview = {};
   dealers?.forEach((domiciliario) => {
-    if (order.domiciliario.id === domiciliario._id) {
+    if (order.domiciliario?.id === domiciliario._id) {
       if (Object.values(dealerData).length === 0) {
         domiciliariosPreview = {
           value: domiciliario._id,
@@ -56,7 +56,7 @@ const TakeOrder = (props) => {
       label: product.nombre,
       amount: product.cantidad,
     });
-    if(productsAndAmount.length === 0){
+    if (productsAndAmount.length === 0) {
       setProductsAndAmount(productosPreview);
     }
     console.log(productosPreview);
@@ -90,7 +90,7 @@ const TakeOrder = (props) => {
   };
 
   // Handle  Update
-  const handleSave = () => {
+  const handleUpdate = () => {
     const productDone = [];
     productsAndAmount.map((info) => {
       productDone.push({
@@ -108,15 +108,20 @@ const TakeOrder = (props) => {
         id: user._id,
         name: user.nombre,
       },
-      domiciliario: {
-        id: dealerData.value,
-        name: dealerData.label,
-      },
+      domiciliario: Object.values(dealerData).length
+        ? {
+            id: dealerData.value,
+            name: dealerData.label,
+          }
+        : {
+            id: domiciliariosPreview.value,
+            name: domiciliariosPreview.label,
+          },
       productos: productDone,
       direccion: address,
       remaining,
     };
-    dispatch(createOrderAction(data));
+    dispatch(updateOrderAction({ data, id: order._id }));
     if (user?.rol === "admin") {
       dispatch(push("/admin/orderslist"));
     } else if (user?.rol === "cliente") {
@@ -225,7 +230,10 @@ const TakeOrder = (props) => {
                                 };
                               })}
                               placeholder="Productos"
-                              value={{label: productsAndAmountElement.label, value: productsAndAmountElement.value}}
+                              value={{
+                                label: productsAndAmountElement.label,
+                                value: productsAndAmountElement.value,
+                              }}
                             />
                           </Col>
                         </td>
@@ -269,7 +277,7 @@ const TakeOrder = (props) => {
               </FormGroup>
               <FormGroup className="">
                 <div className="">
-                  <Button variant="success" size="lg" onClick={handleSave}>
+                  <Button variant="success" size="lg" onClick={handleUpdate}>
                     Guardar
                   </Button>{" "}
                   {``}

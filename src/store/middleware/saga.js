@@ -376,9 +376,9 @@ function* updateOrderSaga(action) {
 
 function* deleteOrderSaga(action) {
   try {
-    const { data } = yield call(api.deleteOrder, action.payload);
+    const data = yield call(api.deleteOrder, action.payload);
     if (data.status === 200) {
-      yield put(deleteOrderDoneAction(data));
+      yield put(getAllOrderAction());
     } else {
       yield put(errorDeleteOrder(data.status));
     }

@@ -1,6 +1,5 @@
 // React
 import * as React from "react";
-import { Link } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +31,7 @@ const ListOrders = () => {
   // Filter orders by user
   const ordersCurrentUser = [];
   orders.map((order) => {
-    if (order.domiciliario.id === user._id) {
+    if (order.domiciliario?.id === user._id) {
       ordersCurrentUser.push(order);
     }
   });
