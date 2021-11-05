@@ -8,21 +8,25 @@ import { useDispatch, useSelector } from "react-redux";
 // Moment
 
 // Material UI
-import Button from "@material-ui/core/Button";
+import { Button, Stack } from "react-bootstrap";
 
 // Reverse counter for know the time we need to remaining
 import { ReverseCounter } from "../counter/ReverseCounter";
 
 // Reducers
-import {
-  getAllOrderAction,
-} from "../../../store/reducer";
+import { getAllOrderAction } from "../../../store/reducer";
 
+// DealerMap
+import { DealerMap } from "../maps/mapbox/DealerMap";
+
+// Component List Orders
 const ListOrders = () => {
   const dispatch = useDispatch();
 
   // Get current user
   const user = useSelector((state) => state.login.usuario.user);
+
+  const rol = user.rol === "cliente" || user.rol === "admin";
 
   // Get all orders from store
   const orders = useSelector((state) => state.ui.orders);
@@ -30,10 +34,11 @@ const ListOrders = () => {
   // Filter orders by user
   const ordersCurrentUser = [];
   orders.map((order) => {
-    if (order.cliente.id === user._id) {
-      return ordersCurrentUser.push(order);
+    if (order.domiciliario.id === user._id) {
+      ordersCurrentUser.push(order);
     }
   });
+  console.log("ORDERS CURRENT USER", ordersCurrentUser);
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -61,56 +66,97 @@ const ListOrders = () => {
               <th scope="col">Address</th>
               <th scope="col">Date</th>
               <th scope="col">Remaining</th>
-              <th scope="col">State</th>
-              <th scope="col">Ubication</th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
+              {user.rol === "admin" && <th scope="col">State</th>}
+
+              {user.rol === "admin" && (
+                <>
+                  <th scope="col">Ubication</th>
+                  <th scope="col">Edit</th>
+                  <th scope="col">Delete</th>
+                </>
+              )}
+              {user.rol === "domiciliario" && (
+                <>
+                  <th scope="col">Aceptar</th>
+                  <th scope="col">Cancelar</th>
+                </>
+              )}
             </tr>
           </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order._id}>
-                <td>{order.orderName}</td>
-                <td>{order.direccion.address}</td>
-                <td>
-                  {order.fecha} <br></br>
-                  <strong>Ordered two minutes ago</strong>
-                </td>
-                <td>
-                  <ReverseCounter />
-                </td>
-                <td>In process / Done</td>
-                <td>
-                  <Link
-                    to={`/admin/clientmap/${order._id}`}
-                    color="primary1"
-                    className="btn btn-outline-primary my-2 my-sm-0"
-                  >
-                    View Map
-                  </Link>
-                </td>
-                <td>
-                  <Link
-                    to={`/editOrder/${order._id}`}
-                    className="btn btn-outline-primary my-2 my-sm-0"
-                  >
-                    Edit{" "}
-                  </Link>
-                </td>
-                <td>
-                  <Button
-                    onClick={handleDelete}
-                    variant="contained"
-                    color="secondary"
-                    className="btn btn-outline-danger my-2 my-sm-0"
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {user.rol === "admin" && (
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order.orderName}</td>
+                  <td>{order.direccion.address}</td>
+                  <td>
+                    {order.fecha} <br></br>
+                    <strong>Ordered two minutes ago</strong>
+                  </td>
+                  <td>
+                    <ReverseCounter />
+                  </td>
+                  <td>In process / Done</td>
+                  <td>
+                    <Link
+                      to={`/admin/clientmap/${order._id}`}
+                      color="primary1"
+                      className="btn btn-outline-primary my-2 my-sm-0"
+                    >
+                      View Map
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/editOrder/${order._id}`}
+                      className="btn btn-outline-primary my-2 my-sm-0"
+                    >
+                      Edit{" "}
+                    </Link>
+                  </td>
+                  <td>
+                    <Button
+                      onClick={handleDelete}
+                      variant="contained"
+                      color="secondary"
+                      className="btn btn-outline-danger my-2 my-sm-0"
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+          {user.rol === "domiciliario" && (
+            <tbody>
+              {ordersCurrentUser.map((order) => (
+                <tr key={order._id}>
+                  <td>{order.orderName}</td>
+                  <td>{order.direccion.address}</td>
+                  <td>
+                    {order.fecha} <br></br>
+                    <strong>Ordered two minutes ago</strong>
+                  </td>
+                  <td>
+                    <ReverseCounter />
+                  </td>
+
+                  <td>
+                    <Button variant="success">+</Button>
+                  </td>
+                  <td>
+                    <Button variant="secondary">X</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
+      </div>
+
+      <div>
+        <DealerMap />
       </div>
     </>
   );
