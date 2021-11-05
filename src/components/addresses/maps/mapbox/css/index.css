@@ -2,7 +2,7 @@
 
 .map-container {
   height: 800px;
-  
+
 }
 
 .sidebarMapBox {
@@ -23,8 +23,6 @@
   width: 18rem;
   height: 20rem;
 }
-
-
 /* Preview Map */
 
 .map-container-preview {

@@ -1,147 +1,131 @@
 // React
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 // Redux
-import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 // Mapbox
-import mapboxgl from '!mapbox-gl'
-import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding'
-
-
+import mapboxgl from "!mapbox-gl";
+import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 
 // Component DealerMap
 export const DealerMap = () => {
+  const map = useRef(null);
+  const mapContainerRef = useRef(null);
+  mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
-    const dispatch = useDispatch()
-    const map = useRef(null)
-    const mapContainerRef = useRef(null)
-    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
 
-    const [lat, setLat] = useState(null);
-    const [lng, setLng] = useState(null);
+  const orders = useSelector((state) => state.ui.orders);
 
-    const orders = useSelector((state) => state.ui.orders)
+  const user = useSelector((state) => state.login.usuario.usre);
 
-    const user = useSelector((state) => state.login.usuario.usre)
+  const currentOrders = [];
+  orders.map((order) => {
+    if (order.domiciliario.id === user?._id) {
+      currentOrders.push(order);
+    }
+  });
 
-    const currentOrders = []
-    orders.map((order) => {
-        if (order.domiciliario.id === user._id) {
-            currentOrders.push(order)
-        }
-    })
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      console.log("geolocation not supported");
+    } else {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+      });
+    }
+  });
 
-    useEffect(() => {
-        if (!navigator.geolocation) {
-            console.log('geolocation not supported')
-        } else {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setLat(position.coords.latitude);
-                setLng(position.coords.longitude);
-            })
-        }
-    })
+  useEffect(() => {
+    if (map.current) return;
 
-    useEffect(() => {
-        if (map.current) return
+    map.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      zoom: 9,
+      center: [lng, lat],
+    });
 
-        map.current = new mapboxgl.Map({
-            container: mapContainerRef.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
-            zoom: 9,
-            center: [lng, lat]
-        })
+    // Clean up on unmount
+    return () => map.current.remove();
+  }, []);
 
-        // Clean up on unmount
-        return () => map.current.remove()
-    }, [])
+  const fetchData = useCallback(() => {
+    const geocodingClient = mbxGeocoding({
+      accessToken: process.env.REACT_APP_MAPBOX_API,
+    });
 
-    const fetchData = useCallback(() => {
-        const geocodingClient = mbxGeocoding({
-            accessToken: process.env.REACT_APP_MAPBOX_API,
-        })
+    // Geocoding with countries
+    return geocodingClient
+      .forwardGeocode({
+        query: "Cr. 57A N# 48-43 Copacabana Antoquia",
+        countries: ["co"],
+        language: ["es"],
+        limit: 2,
+      })
+      .send()
+      .then((response) => {
+        const match = response.body;
+        const coordinates = match.features[0].geometry.coordinates;
+        console.log("coordinates", coordinates);
+        const placeName = match.features[0].place_name;
+        const center = match.features[0].center;
 
-        // Geocoding with countries
+        return {
+          type: "Feature",
+          center: center,
+          geometry: {
+            type: "Point",
+            coordinates: coordinates,
+          },
+          properties: {
+            description: placeName,
+          },
+        };
+      });
+  }, []);
 
-        return currentOrders.map((order) => {
-            geocodingClient
-                .forwardGeocode({
-                    query: order.direccion.address,
-                    countries: ['co'],
-                    language: ['es'],
-                    limit: 2,
-                })
-                .send()
-                .then((response) => {
-                    const match = response.body
-                    const coordinates = match.features[0].geometry.coordinates
-                    console.log('coordinates', coordinates)
-                    const placeName = match.features[0].place_name
-                    const center = match.features[0].center
+  useEffect(() => {
+    if (!map.current) return; // Waits for the map to initialise
 
-                    return {
-                        type: 'Feature',
-                        center: center,
-                        geometry: {
-                            type: 'Point',
-                            coordinates: coordinates,
-                        },
-                        properties: {
-                            description: placeName
-                        }
-                    }
-                })
-        }, [])
-    })
+    const results = fetchData();
 
+    results.then((marker) => {
+      // Create a HTML document for each feature
+      let el = document.createElement("div");
+      el.className = "marker";
 
-    useEffect(() => {
-        if (!map.current) return // Waits for the map to initialise
+      // Make a marker for each feature and add it to the map
+      new mapboxgl.Marker(el)
+        .setLngLat(marker.geometry.coordinates)
+        .setPopup(
+          new mapboxgl.Popup({ offset: 5 }) // add popups
+            .setHTML("<p>" + marker.properties.description + "</p>"),
+        )
+        .addTo(map.current);
 
-        const results = fetchData()
+      map.current.on("load", async () => {
+        map.current.flyTo({
+          center: marker.center,
+        });
+      });
+    });
+  }, fetchData);
 
-        results.then((marker) => {
-            // Create a HTML document for each feature
-            let el = document.createElement('div')
-            el.className = 'marker'
-
-            // Make a marker for each feature and add it to the map
-            new mapboxgl.Marker(el)
-                .setLngLat(marker.geometry.coordinates)
-                .setPopup(
-                    new mapboxgl.Popup({ offset: 5 }) // add popups
-                        .setHTML('<p>' + marker.properties.description + '</p>')
-                )
-                .addTo(map.current)
-
-            map.current.on('load', async () => {
-                map.current.flyTo({
-                    center: marker.center,
-                })
-            })
-        })
-    }, fetchData)
-
-
-
-    return (
-        <>
-            <div>
-                <div ref={mapContainerRef} className="map-container" />
-            </div>
-            <style jsx>{`
+  return (
+    <>
+      <div>
+        <div ref={mapContainerRef} className="map-container" />
+      </div>
+      <style jsx>{`
       .map-container {
         width: 100%;
-        height: 500px;
-        border-radius: 5px;
+        height: 100%;
         position: absolute;
-        left: 0;
-        top: 40%;
-        border: 2px solid black;
       }
-
       .marker {
         height: 15px;
         width: 15px;
@@ -185,40 +169,6 @@ export const DealerMap = () => {
         }
       }
     `}</style>
-        </>
-    )
-}
-
-
-
-/*
-return geocodingClient
-            .forwardGeocode({
-                query: 'Cr. 57A N# 48-43 Copacabana Antoquia',
-                countries: ['co'],
-                language: ['es'],
-                limit: 2,
-            })
-            .send()
-            .then((response) => {
-                const match = response.body
-                const coordinates = match.features[0].geometry.coordinates
-                console.log('coordinates', coordinates)
-                const placeName = match.features[0].place_name
-                const center = match.features[0].center
-
-                return {
-                    type: 'Feature',
-                    center: center,
-                    geometry: {
-                        type: 'Point',
-                        coordinates: coordinates,
-                    },
-                    properties: {
-                        description: placeName
-                    }
-                }
-            })
-    }, [])
-
-*/
+    </>
+  );
+};
