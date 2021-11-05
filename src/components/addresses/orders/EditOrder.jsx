@@ -115,12 +115,12 @@ const EditOrder = (props) => {
     }
 
 
-
     // Handle  Update
-    const handleUpdate = () => {
+    const handleUpdate = (event) => {
+        event.preventDefault();
         
         const productDone = [];
-        productData.map((info) => {
+        productData?.map((info) => {
             productDone.push({
                 nombre: info.nombre,
                 id: info.id,
@@ -144,6 +144,8 @@ const EditOrder = (props) => {
             direccion: address
         }
         console.log('DATA TO SEND', data)
+        dispatch(updateOrderAction({data, id: idCurrentOrder }))
+        dispatch(push("/orderlist"))
     }
 
     // Get Products Array
