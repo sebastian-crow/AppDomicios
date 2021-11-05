@@ -6,7 +6,7 @@ import UserProductList from "../components/addresses/products/UserProductList";
 
 // Products
 import CreateProduct from "../components/addresses/products/CreateProduct";
-import ListProducts from "../components/addresses/products/ListProducts";
+import ListProducts from "../components/addresses/products/UserProductList";
 
 // Orders
 import TakeOrder from "../components/addresses/orders/TakeOrder";

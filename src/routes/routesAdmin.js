@@ -51,7 +51,7 @@ var routesAdmin = [
     icon: "nc-icon nc-cart-simple",
     rol: ["admin"],
     component: TakeOrder,
-    layout: "/cliente",
+    layout: "/admin",
     visible: true,
   },
   {
@@ -66,7 +66,7 @@ var routesAdmin = [
   {
     path: "/createproduct",
     name: "Crear producto",
-    icon: "nc-icon nc-bank",
+    icon: "nc-icon nc-app",
     rol: ["domiciliario", "cliente", "admin"],
     component: CreateProduct,
     layout: "/admin",

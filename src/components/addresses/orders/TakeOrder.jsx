@@ -1,370 +1,259 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Counter } from "../counter/counter";
-import { useEffect } from "react";
+// React
+import * as React from "react";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
-import Geocode from "react-geocode";
-
-// Material UI
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Alert from "@material-ui/lab/Alert";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/styles";
-import Container from "@material-ui/core/Container";
-
-import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
-
-// Actions
+// Reducers
 import {
-  createOrderAction, // Create order
-  getAllDomiciliarioAction, // Get Domiciliarios
-  getAllProductAction, // Get products
-  getFromUserPositionAction, // Get Position
-  updatePositionAction, // Update position
-  createPositionAction, // Create position for one user, in this case we gonna save the delevery man locations
+  getAllProductAction,
+  getAllDomiciliarioAction,
+  createOrderAction,
 } from "../../../store/reducer";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+// Reacstrap
+import { Container, Col, Form, FormGroup, Input } from "reactstrap";
 
-function getStyles(name, productName, theme) {
-  return {
-    fontWeight:
-      productName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+// React Bootstrap
+import { Button } from "react-bootstrap";
 
-function CreateOrder({ props, increment, onClickFunction }) {
-  // Getting Real Time Location
+// React Select
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+const animatedComponents = makeAnimated();
+
+// Take Order Component
+const TakeOrder = (props) => {
   const dispatch = useDispatch();
-  const position = useSelector((state) => state.ui.position);
-  const positionId = useSelector((state) => state.ui.positionId);
-  const users = useSelector((state) => state.ui.domiciliarios);
-  const domiciliarioList = [...users];
-  const domiciliarios = useSelector((state) => state.ui.domiciliarios);
 
-  const theme = useTheme(); // Styles
-  const [productName, setProductName] = React.useState([]);
-  const [domiciliarioName, setDomiciliarioName] = React.useState([]);
-  const [count, setCount] = useState(0);
+  const [dealerData, setDealerData] = React.useState({});
+  const [orderName, setOrderName] = React.useState(null);
+  const [address, setAddress] = React.useState(null);
 
-  // Handlers
-  const handleClick = () => {
-    onClickFunction(increment);
-  };
+  const [productsAndAmount, setProductsAndAmount] = React.useState([]);
 
-  const incrementCount = (increment) => {
-    setCount(count + increment);
-  };
-
-  // Handle get Name of the product
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setProductName(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
-  };
-
-  // Hanlde Domiciliario State
-  const handleDomiciliarioChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setDomiciliarioName(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
-  };
-
-  // Generate a random domiciliario for to save the order
-  //let randomDomiciliario = domiciliario[Math.floor(Math.random() * domiciliario.length)];
-
-  // Get products from the global state
-  const products = useSelector((state) => state.ui.products);
-
-  // Transform the object products in one Array for most easilier manipulation
-  const product = Array.from(products);
-
-  // Get current user from the global state
+  // Get Current User
   const user = useSelector((state) => state.login.usuario.user);
 
-  // Get errors that will happends
-  const error = useSelector((state) => state.login.errorCreateOrder);
+  // Get Dealers List
+  const dealers = useSelector((state) => state.ui.domiciliarios);
 
-  // Fields por send the query to the API
-  const productos = useFormInput("Selector");
-  const direccion = useFormInput("");
-  const orderName = useFormInput("");
-  const remaining = 180000; // Time remaining since the order was created.
-  const domiciliario = useFormInput("");
+  // Products from store
+  const products = useSelector((state) => state.ui.products);
 
-  // Hanlde that send information to the API and then these datas will save into the database
-  const handleCreate = (event) => {
-    event.preventDefault();
+  // Handle event onChange amount
+  const handleAmountChange = (amount, index) => {
+    productsAndAmount[index].amount = amount.target.value;
+    setProductsAndAmount(productsAndAmount);
+  };
+
+  // Hanlde the event onChange to the Product multi select
+  const handleProductChange = (productData, index) => {
+    productsAndAmount[index] = productData;
+    setProductsAndAmount(productsAndAmount);
+  };
+
+  // Handle event onChange to dealer multii select
+  const handleDealerChange = (dealerData) => {
+    setDealerData(dealerData);
+  };
+
+  // Handle event onChange to orderName
+  const handleOrderNameChange = (orderName) => {
+    setOrderName(orderName.target.value);
+  };
+
+  // Handle event onChange to Address
+  const handleAddressChange = (address) => {
+    setAddress(address.target.value);
+  };
+
+  // Handle  Update
+  const handleSave = () => {
+    const productDone = [];
+    productsAndAmount.map((info) => {
+      productDone.push({
+        nombre: info.label,
+        id: info.value,
+        cantidad: info.amount,
+      });
+    });
+    const remaining = 180000; // Time remaining since the order was created.
+
     let data = {
-      orderName: orderName.value,
-      fecha: Date.now(),
+      orderName,
+      fecha: new Date(),
       cliente: {
         id: user._id,
         name: user.nombre,
-        //location: clientLocation,
       },
       domiciliario: {
-        id: domiciliarioName[0],
+        id: dealerData.value,
+        name: dealerData.label,
       },
-      productos: ConcatProduct(), // Function that contents Name of the product, amount of products and their own ID
-      //direccion: direccion.value,
-      direccion: {
-        address: direccion.value,
-        //coords: address_coords,
-      },
+      productos: productDone,
+      direccion: address,
       remaining,
     };
     dispatch(createOrderAction(data));
     dispatch(push("/orderlist"));
-    console.log("ORDER CREATED", data);
   };
 
-  // Counter for give the amount of the products
-  const amountProducts = useSelector((state) => state.counter.value);
-
-  // Function that contents Name of the product, amount of products and their own ID
-  const ConcatProduct = () => {
-    let productoFinal, id, nombre;
-
-    for (let i = 0; i < productName.length; i++) {
-      nombre = productName[i];
-    }
-
-    for (let i = 0; i < product.length; i++) {
-      if (product[i].nombre === nombre) {
-        id = product[i]._id;
+  const addListProduct = () => {
+    const listProducs = [];
+    if (productsAndAmount.length) {
+      for (let index = 0; index <= productsAndAmount.length - 1; index++) {
+        const element = productsAndAmount[index];
+        listProducs.push(element);
       }
+      listProducs.push({});
+    } else {
+      listProducs.push({});
     }
-    return (productoFinal = productName.map((product) => {
-      return {
-        nombre: product,
-        id: id,
-        cantidad: amountProducts,
-      };
-    }));
+    setProductsAndAmount(listProducs);
   };
 
-  const userID = domiciliarioName[0];
-
-  // Excecute actions
-
-  // Get all user's rol 'domiciliario'
-  React.useEffect(() => {
-    dispatch(getAllDomiciliarioAction());
-  }, [dispatch]);
+  const deleteProducto = (e, index) => {
+    e.preventDefault();
+    const listProducs = [];
+    productsAndAmount.forEach((indexProducto, key) => {
+      if (index !== key) {
+        listProducs.push(indexProducto);
+      }
+    });
+    setProductsAndAmount(listProducs);
+  };
 
   // Get Products Array
   React.useEffect(() => {
     dispatch(getAllProductAction());
+    dispatch(getAllDomiciliarioAction());
   }, [dispatch]);
-
-  // Create / Update position
-  useEffect(() => {
-    const timer = setInterval(() => {
-      dispatch(getFromUserPositionAction(userID));
-      const options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      };
-      dispatch(getAllDomiciliarioAction());
-
-      function success(pos) {
-        var crd = pos.coords;
-        if (positionId) {
-          dispatch(
-            updatePositionAction({
-              lat: crd.latitude,
-              lng: crd.longitude,
-              positionId: positionId,
-            }),
-          );
-        } else {
-          dispatch(
-            createPositionAction({
-              position: JSON.stringify({
-                lat: crd.latitude,
-                lng: crd.longitude,
-              }),
-              usuario: userID,
-            }),
-          );
-        }
-      }
-
-      function error(err) {
-        console.warn("ERROR(" + err.code + "): " + err.message);
-      }
-      navigator.geolocation.getCurrentPosition(success, error, options);
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, [dispatch, position, positionId, userID]);
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div>
-          <Avatar />
-          <LockOutlinedIcon />
-          <Typography component="h1" variant="h5" /> Take Order{" "}
-          <form autoComplete="off" onSubmit={handleCreate}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="orderName"
-                  name="orderName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="orderName"
-                  label="Nombre de la orden"
-                  autoFocus
-                  {...orderName}
-                />
-              </Grid>
-            </Grid>
-
-            <FormControl id="menuDomiciliario" sx={{ m: 1, width: 395 }}>
-              <InputLabel id="demo-multiple-name-label">
-                Domiciliario
-              </InputLabel>
-              <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={domiciliarioName}
-                onChange={handleDomiciliarioChange}
-                input={<OutlinedInput label="Domiciliario" />}
-                MenuProps={MenuProps}
-              >
-                {domiciliarios.map((domiciliario) => (
-                  <MenuItem
-                    key={domiciliario._id}
-                    value={domiciliario._id}
-                    //style={getStyles(domiciliario, domiciliarioName, theme)}
-                  >
-                    {domiciliario.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl id="menuMultij" sx={{ m: 1, width: 395 }}>
-              <InputLabel id="demo-multiple-chip-label">Products</InputLabel>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                value={productName}
-                onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.4 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+      <div>
+        <Container className="themed-container" fluid="sm">
+          <Form className="form">
+            <Col>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="orderName"
+                    placeholder="Titulo del pedido"
+                    onChange={handleOrderNameChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Select
+                    onChange={handleDealerChange}
+                    placeholder="Domiciliario"
+                    options={dealers.map((dealer) => {
+                      return {
+                        value: dealer._id,
+                        label: dealer.nombre,
+                      };
+                    })}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Button size="sm" variant="primary" onClick={addListProduct}>
+                  Añadir producto
+                </Button>{" "}
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th width="60%" scope="col">
+                        Producto
+                      </th>
+                      <th width="30%" scope="col">
+                        Cantidad
+                      </th>
+                      <th width="10%" scope="col">
+                        Borrar
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {productsAndAmount.map((productsAndAmountElement, key) => (
+                      <tr key={key}>
+                        <td>
+                          {" "}
+                          <Col sm={12}>
+                            <Select
+                              onChange={(data) =>
+                                handleProductChange(data, key)
+                              }
+                              closeMenuOnSelect={false}
+                              components={animatedComponents}
+                              options={products.map((product) => {
+                                return {
+                                  value: product._id,
+                                  label: product.nombre,
+                                };
+                              })}
+                              placeholder="Productos"
+                            />
+                          </Col>
+                        </td>
+                        <td>
+                          <Col sm={12}>
+                            <Input
+                              type="number"
+                              id="counter"
+                              placeholder="Cantidad"
+                              onChange={(data) => handleAmountChange(data, key)}
+                            />
+                          </Col>
+                        </td>
+                        <td>
+                          <Col sm={12}>
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={(e) => deleteProducto(e, key)}
+                            >
+                              Borrar
+                            </Button>
+                          </Col>
+                        </td>
+                      </tr>
                     ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {product.map((prod) => (
-                  <MenuItem
-                    key={prod.nombre && prod._id}
-                    value={prod.nombre}
-                    style={getStyles(prod.nombre, productName, theme)}
-                  >
-                    {prod.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <br />
-            <br />
-
-            <Counter />
-
-            <br />
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="direccion"
-                label="Dirección"
-                type="text"
-                id="direccion"
-                autoComplete="direccion"
-                {...direccion}
-              />
-            </Grid>
-            <Button type="submit" fullWidth variant="contained" color="primary">
-              {" "}
-              Create Order{" "}
-            </Button>
-            <Grid item>
-              {error && (
-                <>
-                  <Alert severity="error">{error}</Alert>
-                  <br />
-                </>
-              )}
-              <br />
-            </Grid>
-          </form>
-        </div>
-      </Container>
+                  </tbody>
+                </table>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="address"
+                    placeholder="Dirección"
+                    onChange={handleAddressChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup className="">
+                <div className="">
+                  <Button variant="success" size="lg" onClick={handleSave}>
+                    Guardar
+                  </Button>{" "}
+                  {``}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col></Col>
+          </Form>
+        </Container>
+      </div>
     </>
   );
-}
-
-const useFormInput = (initialValue) => {
-  const [value, setValue] = useState(initialValue);
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
-
-  const handleProducts = (e) => {
-    setValue(e.map((e) => e.target.value));
-  };
-  return {
-    value,
-    onChange: handleChange,
-  };
 };
 
-export default CreateOrder;
+export default TakeOrder;

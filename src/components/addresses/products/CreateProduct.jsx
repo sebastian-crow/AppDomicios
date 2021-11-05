@@ -1,30 +1,32 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Alert from "@material-ui/lab/Alert";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/styles";
-import Container from "@material-ui/core/Container";
-import { Select, MenuItem, InputLabel } from "@material-ui/core";
-import { createProductAction } from "../../../store/reducer";
-import { push } from "redux-first-history";
-import { browserHistory } from "react-router";
+// React
+import * as React from "react";
 
-// Create Product Component
-function CreateProduct(props) {
+// Redux
+import { useDispatch, useSelector} from "react-redux";
+import { push } from "redux-first-history";
+
+// Reducers
+import { createProductAction } from "../../../store/reducer";
+
+// Reacstrap
+import { Container, Col, Form, FormGroup, Input } from "reactstrap";
+
+// React Bootstrap
+import { Button } from "react-bootstrap";
+
+// Take Order Component
+const CreateProduct = (props) => {
+  const dispatch = useDispatch();
+
+  // Get Current User
   const user = useSelector((state) => state.login.usuario.user);
-  const error = useSelector((state) => state.login.errorCreateProduct);
+
   const nombre = useFormInput("");
   const descripcion = useFormInput("");
-  const caracteristicas = useFormInput("caracteristicas");
+  const caracteristicas = useFormInput("");
   const empresa = useFormInput("");
   const valorCU = useFormInput("");
-  const dispatch = useDispatch();
+
   const handleCreate = (event) => {
     event.preventDefault();
     let data = {
@@ -39,108 +41,88 @@ function CreateProduct(props) {
       },
     };
     dispatch(createProductAction(data));
-    dispatch(push("/listproducts"));
+    if (user?.rol === "admin") {
+      dispatch(push("/admin/userproductlist"));
+    } else if (user?.rol === "cliente") {
+      dispatch(push("/cliente/userproductlist"));
+    }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
+    <>
       <div>
-        <Avatar />
-        <LockOutlinedIcon />
-        <Typography component="h1" variant="h5" /> Crear Producto{" "}
-        <form autoComplete="off" onSubmit={handleCreate}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="name"
-                name="nombre"
-                variant="outlined"
-                required
-                fullWidth
-                id="nombre"
-                label="Nombre"
-                autoFocus
-                {...nombre}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="descripcion"
-                label="Descripción"
-                name="descripcion"
-                autoComplete="descripcion"
-                {...descripcion}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputLabel name="tipo" id="tipo">
-                caracteristicas
-              </InputLabel>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="caracteristicas"
-                label="Caracteristicas"
-                name="caracteristicas"
-                autoComplete="caracteristicas"
-                {...caracteristicas}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="empresa"
-                label="Empresa"
-                type="text"
-                id="empresa"
-                autoComplete="current-empresa"
-                {...empresa}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="valorCU"
-                label="Valor CU"
-                type="text"
-                id="valorCU"
-                autoComplete="current-valorCU"
-                {...valorCU}
-              />
-            </Grid>
-          </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary">
-            {" "}
-            Create Product{" "}
-          </Button>
-          <Grid item>
-            {error && (
-              <>
-                <Alert severity="error">{error}</Alert>
-                <br />
-              </>
-            )}
-            <br />
-          </Grid>
-        </form>
+        <Container className="themed-container" fluid="sm">
+          <Form className="form">
+            <Col>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="nombre"
+                    placeholder="Nombre del producto"
+                    {...nombre}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="descripcion"
+                    placeholder="Descripción"
+                    {...descripcion}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="empresa"
+                    placeholder="Empresa"
+                    {...empresa}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="caracteristicas"
+                    placeholder="Caracteristicas"
+                    {...caracteristicas}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="valorCU"
+                    placeholder="Valor CU"
+                    {...valorCU}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup className="">
+                <div className="">
+                  <Button variant="success" size="lg" onClick={handleCreate}>
+                    Guardar
+                  </Button>{" "}
+                  {``}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col></Col>
+          </Form>
+        </Container>
       </div>
-    </Container>
+    </>
   );
-}
+};
 
 const useFormInput = (initialValue) => {
-  const [value, setValue] = useState(initialValue);
+  const [value, setValue] = React.useState(initialValue);
 
   const handleChange = (e) => {
     setValue(e.target.value);
