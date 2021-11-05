@@ -310,9 +310,11 @@ function* updateProductSaga(action) {
 
 function* deleteProductSaga(action) {
   try {
-    const { data } = yield call(api.deleteProduct, action.payload);
+    const data = yield call(api.deleteProduct, action.payload);
+    console.log(data);
     if (data.status === 200) {
-      yield put(deleteProductDoneAction(data));
+      yield put(deleteProductDoneAction());
+      yield put(getAllProductAction());
     } else {
       yield put(errorDeleteProduct(data.status));
     }

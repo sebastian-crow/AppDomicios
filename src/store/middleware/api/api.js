@@ -126,7 +126,7 @@ export function getAllProducts() {
 export function createProduct(params) {
   return callAPI({
     method: "POST",
-    url: `/products/create`,
+    url: `/products`,
     data: params,
   });
 }
@@ -134,7 +134,7 @@ export function createProduct(params) {
 export function updateProduct(params) {
   return callAPI({
     method: "PUT",
-    url: `/products/update/` + params.id,
+    url: `/products/` + params.id,
     data: params.data,
   });
 }
@@ -142,8 +142,7 @@ export function updateProduct(params) {
 export function deleteProduct(params) {
   return callAPI({
     method: "DELETE",
-    url: `/products/delete/` + params.id,
-    data: params.data,
+    url: `/products/` + params,
   });
 }
 

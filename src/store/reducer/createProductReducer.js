@@ -37,12 +37,6 @@ const uiReducer = createReducer(initialState, {
   [createProductDoneAction]: (state, action) => {
     state.product = action.payload.data;
   },
-  [deleteProductAction]: (state, action) => {
-    state.product = {};
-  },
-  [deleteProductDoneAction]: (state, action) => {
-    state.product.product = {};
-  },
   [updateProductDoneAction]: (state, action) => {
     state.product.product = action.payload.data;
   },

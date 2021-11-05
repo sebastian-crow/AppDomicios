@@ -26,8 +26,6 @@ const ListOrders = () => {
   // Get current user
   const user = useSelector((state) => state.login.usuario.user);
 
-  const rol = user.rol === "cliente" || user.rol === "admin";
-
   // Get all orders from store
   const orders = useSelector((state) => state.ui.orders);
 
@@ -98,30 +96,33 @@ const ListOrders = () => {
                   </td>
                   <td>In process / Done</td>
                   <td>
-                    <Link
-                      to={`/admin/clientmap/${order._id}`}
-                      color="primary1"
-                      className="btn btn-outline-primary my-2 my-sm-0"
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault;
+                        dispatch(push(`/cliente/clientmap/${order._id}`));
+                      }}
+                      variant="contained"
                     >
-                      View Map
-                    </Link>
+                      Ver en mapa{" "}
+                    </Button>
                   </td>
                   <td>
-                    <Link
-                      to={`/editOrder/${order._id}`}
-                      className="btn btn-outline-primary my-2 my-sm-0"
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault;
+                        dispatch(push(`/editOrder/${order._id}`));
+                      }}
+                      variant="warning"
                     >
-                      Edit{" "}
-                    </Link>
+                      Editar{" "}
+                    </Button>
                   </td>
                   <td>
                     <Button
                       onClick={handleDelete}
-                      variant="contained"
-                      color="secondary"
-                      className="btn btn-outline-danger my-2 my-sm-0"
+                      variant="danger"
                     >
-                      Delete
+                      Borrar
                     </Button>
                   </td>
                 </tr>

@@ -9,7 +9,7 @@ import {
   deleteProductAction,
 } from "../../../store/reducer";
 
-import { Container, Table, Button, FormGroup, Input } from "reactstrap";
+import { Container, Table, Button } from "reactstrap";
 
 // Component Order List
 const ListProducts = () => {
@@ -22,10 +22,9 @@ const ListProducts = () => {
   const user = useSelector((state) => state.login.usuario.user);
   const products = useSelector((state) => state.ui.products);
 
-  const handleDelete = (event) => {
+  const handleDelete = (event, id) => {
     event.preventDefault();
-    const data = {};
-    dispatch(deleteProductAction(data));
+    dispatch(deleteProductAction(id));
   };
 
   // Actualizar la lista
@@ -81,7 +80,7 @@ const ListProducts = () => {
                   </td>
                   <td scope="col">
                     <Button
-                      onClick={handleDelete}
+                      onClick={(e) => handleDelete(e, product._id)}
                       variant="contained"
                       color="secondary"
                       size="sm"

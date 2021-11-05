@@ -12,170 +12,92 @@ import {
   deleteProductAction,
 } from "../../../store/reducer";
 
-// Material UI
-import { DataGrid } from "@mui/x-data-grid";
-import { makeStyles } from "@material-ui/styles";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Avatar,
-  Grid,
-  Typography,
-  TablePagination,
-  TableFooter,
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-
-// icons
-import ReceiptIcon from "@mui/icons-material/Receipt";
-
+import { Container, Table, Button, FormGroup, Input } from "reactstrap";
 
 // Component Order List
 const UserProductList = () => {
   const dispatch = useDispatch();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // Get orders from store
-  const orders = useSelector((state) => state.ui.orders);
 
   // Get current user
   const user = useSelector((state) => state.login.usuario.user);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   // Get products from the store
-  const products = useSelector((state) => state.ui.products);
-
-  //  Proucts by current user
-  let userProducts = [];
-  products.map((product) => {
-    if (product.user.id == user._id) {
-      userProducts.push(product);
-    }
-  });
-
-  console.log("ALL PRODUCTS BY USERS", products);
-  console.log("PRODUCTS BY CURRENT USER", userProducts);
+  const products = useSelector((state) => state.ui.products.filter(product => product.user.id === user._id));
 
   // Delete one product
-  const handleDelete = (event) => {
+  const handleDelete = (event, id) => {
     event.preventDefault();
-    const data = {};
-    dispatch(deleteProductAction(data));
-    dispatch(getAllProductAction());
+    dispatch(deleteProductAction(id));
   };
 
   // Actualizar la lista
   React.useEffect(() => {
-    /* 
-            if (!userProducts.length) dispatch(getAllProductAction());  
-            Estono funciona para llenar userProducts cada vez que hay un cambio, solo llena userProducts cuando  está vacia :v
-        */
     dispatch(getAllProductAction());
   }, [dispatch]);
 
   return (
     <>
-      {/* User rol client */}
-      {user?.rol === "cliente" && (
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell >Name</TableCell>
-                <TableCell >
-                  Description
-                </TableCell>
-                <TableCell >Owner</TableCell>
-                <TableCell >
-                  Features
-                </TableCell>
-                <TableCell >
-                  Company
-                </TableCell>
-                <TableCell >
-                  ValueCU
-                </TableCell>
-                <TableCell >Edit</TableCell>
-                <TableCell >
-                  Delete
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {userProducts.map((product) => (
-                <TableRow key={product._id}>
-                  <TableCell>
-                    <Grid container>
-                      <Grid item lg={10}>
-                        <Typography >
-                          {product.nombre}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </TableCell>
-                  <TableCell>{product.descripcion}</TableCell>
-                  <TableCell>
-                    <Grid container>
-                      <Grid item lg={10}>
-                        <Typography >
-                          {product.user.name}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </TableCell>
-                  <TableCell>{product.caracteristicas}</TableCell>
-                  <TableCell>{product.empresa}</TableCell>
-                  <TableCell>{product.valorCU}</TableCell>
-                  <TableCell>
-                    <Link
-                      to={`/editarproducto/${product._id}`}
-                      variant="contained"
-                      color="secondary"
-                    >
-                      Edit{" "}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={handleDelete}
-                      variant="contained"
-                      color="secondary"
-                      className="btn btn-outline-danger my-2 my-sm-0"
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 15]}
-                component="div"
-                count={products.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-              />
-            </TableFooter>
-          </Table>
-        </TableContainer>
-      )}
+      <Container className="themed-container" fluid="sm">
+        <Button
+          onClick={(e) => {
+            e.preventDefault;
+            dispatch(push("/cliente/createproduct"));
+          }}
+          variant="success"
+          size="sm"
+        >
+          Crear nuevo producto
+        </Button>
+        <Table aria-label="simple table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Owner</th>
+              <th scope="col">Features</th>
+              <th scope="col">Company</th>
+              <th scope="col">ValueCU</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td scope="col">{product.nombre}</td>
+                <td scope="col">{product.descripcion}</td>
+                <td scope="col">{product.user.name}</td>
+                <td scope="col">{product.caracteristicas}</td>
+                <td scope="col">{product.empresa}</td>
+                <td scope="col">{product.valorCU}</td>
+                <td scope="col">
+                  <Button
+                    onClick={() =>
+                      dispatch(push(`/cliente/editarproducto/${product._id}`))
+                    }
+                    variant="contained"
+                    color="secondary"
+                    size="sm"
+                  >
+                    Edit{" "}
+                  </Button>
+                </td>
+                <td scope="col">
+                  <Button
+                    onClick={(e) => handleDelete(e, product._id)}
+                    variant="contained"
+                    color="secondary"
+                    size="sm"
+                    className="btn btn-outline-danger my-2 my-sm-0"
+                  >
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Container>
     </>
   );
 };

@@ -13,10 +13,8 @@ import { Button } from "react-bootstrap";
 import { ReverseCounter } from "../counter/ReverseCounter";
 
 // Reducers
-import {
-  getAllOrderAction,
-  deleteOrderAction,
-} from "../../../store/reducer";
+import { getAllOrderAction, deleteOrderAction } from "../../../store/reducer";
+import moment from "moment";
 
 const UserOrderList = () => {
   const dispatch = useDispatch();
@@ -80,14 +78,14 @@ const UserOrderList = () => {
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Order Name</th>
-              <th scope="col">Address</th>
-              <th scope="col">Date</th>
-              <th scope="col">Remaining</th>
-              <th scope="col">State</th>
+              <th scope="col">Titulo</th>
+              <th scope="col">Direccion</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Tiempo</th>
+              <th scope="col">Estado</th>
               <th scope="col">Ubication</th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Borrar</th>
             </tr>
           </thead>
           <tbody>
@@ -96,21 +94,32 @@ const UserOrderList = () => {
                 <td>{order.orderName}</td>
                 <td>{order.direccion.address}</td>
                 <td>
-                  {order.fecha} <br></br>
-                  <strong>Ordered two minutes ago</strong>
+                  {moment(order.fecha).format("YYYY-MM-DD HH:mm:ss")} <br></br>
                 </td>
                 <td>
                   <ReverseCounter />
                 </td>
-                <td>In process / Done</td>
+                <td>En progreso / Terminada</td>
                 <td>
-                  <Button variant="info">
-                    <Link to={`/cliente/clientmap/${order._id}`}>View Map</Link>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault;
+                      dispatch(push(`/cliente/clientmap/${order._id}`));
+                    }}
+                    variant="primary"
+                  >
+                    Mapa{" "}
                   </Button>
                 </td>
                 <td>
-                  <Button variant="warning">
-                    <Link to={`/cliente/editorder/${order._id}`}>Edit </Link>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault;
+                      dispatch(push(`/cliente/editorder/${order._id}`));
+                    }}
+                    variant="warning"
+                  >
+                    Editar{" "}
                   </Button>
                 </td>
                 <td>
@@ -126,6 +135,5 @@ const UserOrderList = () => {
     </>
   );
 };
-
 
 export default UserOrderList;

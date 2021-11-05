@@ -64,7 +64,7 @@ function App() {
           <Route restricted path="/register" component={Register} />
 
           {user?.rol === 'cliente' && (
-            <Redirect to="/cliente/user-page" />
+            <Redirect to="/cliente/dashboard" />
           )}
           {user?.rol === 'admin' && (
             <Redirect to="/admin/dashboard" />

@@ -7,6 +7,7 @@ import UserProductList from "../components/addresses/products/UserProductList";
 // Products
 import CreateProduct from "../components/addresses/products/CreateProduct";
 import ListProducts from "../components/addresses/products/UserProductList";
+import EditProduct from "../components/addresses/products/EditProduct";
 
 // Orders
 import TakeOrder from "../components/addresses/orders/TakeOrder";
@@ -54,6 +55,15 @@ var routesCliente = [
     component: CreateProduct,
     layout: "/cliente",
     visible: true,
+  },
+  {
+    path: "/editarproducto/:id",
+    name: "Editar producto",
+    icon: "nc-icon nc-app",
+    rol: ["cliente"],
+    component: EditProduct,
+    layout: "/cliente",
+    visible: false,
   },
   {
     path: "/userproductlist",

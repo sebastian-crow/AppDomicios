@@ -1,195 +1,139 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Alert from "@material-ui/lab/Alert";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from '@material-ui/styles';
-import Container from "@material-ui/core/Container";
-import { Select, MenuItem, InputLabel } from "@material-ui/core";
-import { updateProductAction, getAllProductAction } from "../../../store/reducer";
-import { useSelector } from "react-redux";
-import moment from "moment";
+// React
+import * as React from "react";
+
+// Redux
+import { useDispatch, useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
+// Reducers
+import { updateProductAction } from "../../../store/reducer";
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: "100%", // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-}));
+// Reacstrap
+import { Container, Col, Form, FormGroup, Input } from "reactstrap";
 
-function EditProduct(props) {
-    const id = props.match.params.id;
-    
-    const products = useSelector((state) => state.ui.products)
-    const productFound = products.map((product) => {
-        if(product._id === id) {
-            return product
-        }
-    })
-    const product = productFound[0]
-    console.log('PRODUCT FOUND', product)
+// React Bootstrap
+import { Button } from "react-bootstrap";
 
-    const nombre = useFormInput(product.nombre);
-    const descripcion = useFormInput(product.descripcion);
-    const caracteristicas = useFormInput(product.caracteristicas);
-    const empresa = useFormInput(product.empresa);
-    const valorCU = useFormInput(product.valorCU);
-    const [error, setError] = useState(null);
-    const classes = useStyles();
-    const dispatch = useDispatch();
-    const handleUpdate = (event) => {
-        event.preventDefault();
-        setError(null);
-        let data = {
-            nombre: nombre.value,
-            descripcion: descripcion.value,
-            caracteristicas: caracteristicas.value,
-            empresa: empresa.value,
-            valorCU: valorCU.value,
-        };
-        dispatch(updateProductAction({ data, id: product._id }));
-        dispatch(push('/userproductlist'))
+// Take Order Component
+const EditProduct = (props) => {
+  const dispatch = useDispatch();
+  const product = useSelector((state) =>
+    state.ui.products.find((product) => product._id === props.match.params.id),
+  );
+  console.log(product);
+  // Get Current User
+  const user = useSelector((state) => state.login.usuario.user);
+
+  const nombre = useFormInput(product ? product.nombre : "");
+  const descripcion = useFormInput(product ? product.descripcion : "");
+  const caracteristicas = useFormInput(product ? product.caracteristicas : "");
+  const empresa = useFormInput(product ? product.empresa : "");
+  const valorCU = useFormInput(product ? product.valorCU : "");
+
+  const handleCreate = (event) => {
+    event.preventDefault();
+    let data = {
+      nombre: nombre.value,
+      descripcion: descripcion.value,
+      caracteristicas: caracteristicas.value,
+      empresa: empresa.value,
+      valorCU: valorCU.value,
+      user: {
+        name: user.nombre,
+        id: user._id,
+      },
     };
+    dispatch(updateProductAction({ data, id: product._id }));
+    if (user?.rol === "admin") {
+      dispatch(push("/admin/userproductlist"));
+    } else if (user?.rol === "cliente") {
+      dispatch(push("/cliente/userproductlist"));
+    }
+  };
 
-    React.useEffect(() => {
-        dispatch(getAllProductAction())
-    },[])
-
-    return (
-        <>
-            <Container component="main" maxWidth="xs" className="proudctEditContainer">
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar} />
-                    <LockOutlinedIcon />
-                    <Typography component="h1" variant="h5" /> Edit Product{" "}
-                    <form
-                        className={classes.form}
-                        autoComplete="off"
-                        onSubmit={handleUpdate}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    name="nombre"
-                                    variant="outlined"
-                                    fullWidth
-                                    id="nombre"
-                                    label="Nombre"
-                                    autoFocus
-                                    defaultValue={product.nombre}
-                                    {...nombre}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    id="descripcion"
-                                    label="Descripcion"
-                                    name="descripcion"
-                                    defaultValue={product.descripcion}
-                                    {...descripcion}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    id="caracteristicas"
-                                    label="Caracteristicas"
-                                    name="caracteristicas"
-                                    defaultValue={product.caracteristicas}
-                                    {...caracteristicas}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    id="empresa"
-                                    label="Empresa"
-                                    name="empresa"
-                                    defaultValue={product.empresa}
-                                    {...empresa}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    name="valorCU"
-                                    label="ValorCU"
-                                    type="valorCU"
-                                    id="valorCU"
-                                    {...valorCU}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            {" "}
-                            Edit{" "}
-                        </Button>
-                        <Grid item>
-                            {error && (
-                                <>
-                                    <Alert severity="error">{error}</Alert>
-                                    <br />
-                                </>
-                            )}
-                            <br />
-                        </Grid>
-                    </form>
+  return (
+    <>
+      <div>
+        <Container className="themed-container" fluid="sm">
+          <Form className="form">
+            <Col>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="nombre"
+                    placeholder="Nombre del producto"
+                    {...nombre}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="descripcion"
+                    placeholder="Descripción"
+                    {...descripcion}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="empresa"
+                    placeholder="Empresa"
+                    {...empresa}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="caracteristicas"
+                    placeholder="Caracteristicas"
+                    {...caracteristicas}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="valorCU"
+                    placeholder="Valor CU"
+                    {...valorCU}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup className="">
+                <div className="">
+                  <Button variant="success" size="lg" onClick={handleCreate}>
+                    Guardar
+                  </Button>{" "}
+                  {``}
                 </div>
-            </Container>
-            <style jsx>{`
-            .proudctEditContainer {
-                position: absolute;
-                left: 45rem;
-                top: 5rem;
-            }
-            `}</style>
-        </>
-    );
-}
+              </FormGroup>
+            </Col>
+            <Col></Col>
+          </Form>
+        </Container>
+      </div>
+    </>
+  );
+};
 
 const useFormInput = (initialValue) => {
-    const [value, setValue] = useState(initialValue);
+  const [value, setValue] = React.useState(initialValue);
 
-    const handleChange = (e) => {
-        setValue(e.target.value);
-    };
-    return {
-        value,
-        onChange: handleChange,
-    };
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+  return {
+    value,
+    onChange: handleChange,
+  };
 };
 
 export default EditProduct;
