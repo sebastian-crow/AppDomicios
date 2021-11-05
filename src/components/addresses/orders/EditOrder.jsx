@@ -24,7 +24,11 @@ import { Button, Stack } from 'react-bootstrap';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
 import { EventNoteTwoTone } from '@material-ui/icons';
-//import { colourOptions } from './colors/data.ts';
+
+// Counter
+import { Counter } from "../counter/counter";
+
+
 
 const animatedComponents = makeAnimated();
 
@@ -43,8 +47,11 @@ const EditOrder = (props) => {
     const results = useSelector((state) => state.router.location)
 
     // Component State
+    const [amount, setAmount] = React.useState(null)
     const [productData, setProductData] = React.useState({})
     const [dealerData, setDealerData] = React.useState({})
+    const [orderName, setOrderName] = React.useState(null)
+    const [address, setAddress] = React.useState(null)
 
     // Get Current User
     const user = useSelector((state) => state.login.usuario.user)
@@ -72,18 +79,71 @@ const EditOrder = (props) => {
     // Get Products by current order
     const currentProducts = []
     currentProducts.push(currentOrder.productos)
-    console.log('CURRENT PRODUCTS',)
+
+
+    // Handle event onChange amount
+    const handleAmountChange = (amount) => {
+        setAmount(amount.target.value)
+    }
 
     // Hanlde the event onChange to the Product multi select
     const handleProductChange = (productData) => {
-        setProductData(productData)
-        console.log('HANDLE PRODUC CHANGE', productData)
+        const productsFinal = []
+        productData.map((info) => {
+            productsFinal.push({
+                nombre: info.label,
+                id: info.value,
+            })
+        })
+        
+        setProductData(productsFinal)
     }
 
     // Handle event onChange to dealer multii select
     const handleDealerChange = (dealerData) => {
         setDealerData(dealerData)
-        console.log('DEALER DATA', dealerData)
+    }
+
+    // Handle event onChange to orderName
+    const handleOrderNameChange = (orderName) => {
+        setOrderName(orderName.target.value)
+    }
+
+    // Handle event onChange to Address
+    const handleAddressChange = (address) => {
+        setAddress(address.target.value)
+    }
+
+
+
+    // Handle  Update
+    const handleUpdate = () => {
+        
+        const productDone = [];
+        productData.map((info) => {
+            productDone.push({
+                nombre: info.nombre,
+                id: info.id,
+                cantidad: amount
+            })
+        })
+        
+
+        let data = {
+            orderName,
+            fecha: new Date(),
+            cliente: {
+                id: user._id,
+                name: user.nombre,
+            },
+            domiciliario: {
+                id: dealerData.value,
+                name: dealerData.label,
+            },
+            productos: productDone,
+            direccion: address
+        }
+        console.log('DATA TO SEND', data)
     }
 
     // Get Products Array
@@ -110,6 +170,7 @@ const EditOrder = (props) => {
                                         id="orderName"
                                         placeholder="Order Name"
                                         defaultValue={currentOrder.orderName}
+                                        onChange={handleOrderNameChange}
                                     />
                                 </Col>
                             </FormGroup>
@@ -128,9 +189,10 @@ const EditOrder = (props) => {
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Col sm={10}>
+                                <Col sm={8}>
 
                                     <Select
+                                        onChange={handleProductChange}
                                         closeMenuOnSelect={false}
                                         components={animatedComponents}
                                         defaultValue={[currentProducts[0][0], currentProducts[0][0]]}
@@ -144,6 +206,14 @@ const EditOrder = (props) => {
                                         placeholder="Products"
                                     />
                                 </Col>
+                                <Col sm={2}>
+                                    <Input
+                                        type="text"
+                                        id="counter"
+                                        placeholder="Cantidad"
+                                        onChange={handleAmountChange}
+                                    />
+                                </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Col sm={10}>
@@ -152,6 +222,7 @@ const EditOrder = (props) => {
                                         id="address"
                                         placeholder="Dirección"
                                         defaultValue={currentOrder.direccion.address}
+                                        onChange={handleAddressChange}
                                     />
                                 </Col>
                             </FormGroup>
@@ -160,7 +231,7 @@ const EditOrder = (props) => {
                                     <Button
                                         variant="secondary"
                                         size="lg"
-                                        onClick={() => alert('hello')}
+                                        onClick={handleUpdate}
                                     >
                                         Send
                                 </Button> {``}

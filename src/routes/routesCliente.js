@@ -174,8 +174,6 @@ var routesCliente = [
     visible: false
   },
 
-
-
   // Maps
   {
     path: '/clientmap/:id',
@@ -196,10 +194,5 @@ var routesCliente = [
     visible: false,
   },
 ];
+
 export default routesCliente;
-
-
-
-/*
-
-*/
