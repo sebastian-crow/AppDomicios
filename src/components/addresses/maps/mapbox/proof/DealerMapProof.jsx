@@ -1,11 +1,14 @@
 // React
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import './css/markersStyle.css'
-import './css/index.css'
-import ReactMapGL, { Layer } from 'react-map-gl';
-import mapboxgl from '!mapbox-gl';
-import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding'
 
+// Custom CSS
+import '../css/markersStyle.css'
+import '../css/index.css'
+
+// Mapbox
+import mapboxgl from '!mapbox-gl';
+import ReactMapGL, { Layer } from 'react-map-gl';
+import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding'
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -15,33 +18,127 @@ import {
     updatePositionAction,
     getFromUserPositionAction,
     createPositionAction,
-    //getAllDomiciliarioAction 
+    getAllDomiciliarioAction,
     getAllOrderAction
-} from "../../../../store/reducer";
+} from "../../../../../store/reducer";
 
 
-mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXN0aWFuY3JvdyIsImEiOiJja3VnOW5yazUwanYwMm9waHY1NWdoaHRnIn0.kIsU3HWfUybUwU2DvavkwA';
+// DealerMap Component
+export const DealerMapProof = (props) => {
 
-
-// Dealer Map Component
-export const DealerMap = (props) => {
-
-    // Mapbox API Token5
-    mapboxgl.accesToken = process.env.REACT_APP_MAPBOX_API
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API
 
     const dispatch = useDispatch();
     const userID = useSelector((state) => state.login.usuario.user._id);
     const position = useSelector((state) => state.ui.position);
     const positionId = useSelector((state) => state.ui.positionId);
-    const user = useSelector((state) => state.login.usuario.user)
+    const user = useSelector((state) => state.login.usuario.user);
 
 
     const orderId = props.match.params.id;
 
     const orders = useSelector((state) => state.ui.orders)
 
+    const currentOrder = []
+    orders.map((order) => {
+        if (order._id === orderId) {
+            currentOrder.push(order)
+        }
+    })
+    const city = currentOrder[0].direccion.address.split(" ")[5]
+
+    useEffect(() => {
+        dispatch(getAllOrderAction())
+    }, [])
+
+    const fetchData = useCallback(() => {
+        const geocodingClient = mbxGeocoding({
+            accessToken: process.env.REACT_APP_MAPBOX_API
+        })
+
+        // Geocoding with countries
+        return geocodingClient
+            .forwardGeocode({
+                query: "Cr57A N#48-43 Copacabana Antioquia",
+                countries: ["co"],
+                language: ["es"],
+                limit: 2,
+            })
+            .send()
+            .then((response) => {
+                const match = response.body
+                const coordinates = match.features[0].geometry.coordinates;
+                console.log('COORDINATES FETCH DATA', coordinates);
+                const placeName = match.features[0].place_name;
+                const center = match.features[0].center;
+
+                return {
+                    type: "Feature",
+                    center: center,
+                    geometry: {
+                        type: "Point",
+                        coordinates: coordinates,
+                    },
+                    properties: {
+                        description: placeName,
+                    }
+                }
+            })
+    }, [])
+
+    const fetchGeocodingData = () => {
+
+        const geocodingClient = mbxGeocoding({
+            accessToken: process.env.REACT_APP_MAPBOX_API
+        })
+
+        // Geocoding with countries
+        return geocodingClient
+            .forwardGeocode({
+                query: currentOrder[0].direccion.address,
+                countries: ["co"],
+                language: ["es"],
+                limit: 2,
+            })
+            .send()
+            .then((response) => {
+                const match = response.body
+                const coordinates = match.features[0].geometry.coordinates;
+                const placeName = match.features[0].place_name;
+                const center = match.features[0].center
+
+                return {
+                    type: "Feature",
+                    center: center,
+                    geometry: {
+                        type: "Point",
+                        coordinates: coordinates,
+                    },
+                    properties: {
+                        description: placeName,
+                    },
+                }
+            })
+
+    }
+
+    const [geoCoordinates, setGeoCoordinates] = useState([])
+
+    const resultsGeocoding = fetchGeocodingData()
+    if(!geoCoordinates) {
+        resultsGeocoding.then((geoInfo) => {
+            setGeoCoordinates(geoInfo)
+        })
+    
+    }
+    
+    console.log('RESULTS GEOCODING FETCH', geoCoordinates)
+
     const storesDomiciliario = orders.map((order) => {
+
+        // Validate orders current user5
         if (order.domiciliario.id === user._id) {
+            const orderSplit = order.direccion.address.split(" ")
             const esteStore = {
                 "type": "Feature",
                 "geometry": {
@@ -49,105 +146,49 @@ export const DealerMap = (props) => {
                     "coordinates": [
                         -75.512527,
                         6.343636
-                    ]
+                    ],
                 },
                 "properties": {
                     "id": Math.floor(Math.random() * 100),
-                    "phoneFormatted": "3195158887",
-                    "phone": "2022347336",
+                    "phoneFormatted": "13245746545",
                     "address": order.direccion.address,
-                    "city": "Copacabana",
-                    "country": "Colombia",
+                    "city": orderSplit[5],
                     "crossStreet": "at 15th St NW",
-                    "postalCode": "050022",
-                    //"state": "D.C."
+                    "postalCode": "05002",
+                    //"state": "D.C"
                 },
             }
             return esteStore
         }
-
     })
 
-    console.log('STORES DOMICILIO', storesDomiciliario)
-
+    const currentStore = [
+	    {
+	        "type": "Feature",
+        	"geometry": {
+	            "type": "Point",
+	            "coordinates": geoCoordinates.geometry?.coordinates,
+	        },
+	        "properties": {
+	            "id": Math.floor(Math.random() * 100),
+	            "phoneFormatted": "235343546",
+	            "address": currentOrder[0].direccion.address,
+	            "city": city,
+	            //"crossStreet": "at 15th St NW",
+	            "postalCode": "050025",
+        	    //"state": "D.C"
+	        }
+	    }
+	]
 
     const stores = {
-        "type": "FeatureCollection",
-        "features": storesDomiciliario
+        "type": "FeaturesCollection",
+        "features": currentStore
     }
-    console.log('SEE FINAL STORE', stores)
-
-
-    const fetchData = useCallback(() => {
-        const geocodingClient = mbxGeocoding({
-            accesToken: process.env.REACT_API_MAPBOX_API,
-        })
-
-        // Geocoding with countries
-        return geocodingClient
-            .forwardGeocode({
-                query: 'Cr. 57A N# 48 - 43 Copacabana Antioquia',
-		    countries: ['co'],
-		    language: ['es'],
-                limit: 2,
-		})
-            .send()
-            .then((response) => {
-                const match = response.body
-                const coordinates = match.features[0].place_name
-                const center = match.features[0].center
-
-                return {
-                    type: 'Feature',
-                    center: center,
-                    geometry: {
-                        type: 'Point',
-                        coordinates: coordinates,
-                    },
-                    properties: {
-                        description: placeName
-                    }
-
-                }
-            })
-    }, [])
-
-    useEffect(() => {
-        if (!map.current) return // Waits for the map to initialise
-
-        const results = fetchData()
-
-        results.then((marker) => {
-            // Create a HTML document for each feature
-            let el = document.createElement('div')
-            el.className = 'marker'
-
-            // Make a marker for each feature and add it to the map
-            new mapboxgl.Marker(el)
-                .setLngLat(marker.geometry.coordinates)
-                .setPopup(
-                    new mapboxgl.Popup({ offset: 25 }) // Add Popups
-                        .setHTML('<p>' + marker.properties.description + '</p>')
-                )
-                .addTo(map.current)
-
-            map.current.on('load', async () => {
-                map.current.flyTo({
-                    center: marker.center,
-                })
-            })
-        }, fetchData)
-    })
-
-
-
-    useEffect(() => {
-        dispatch(getAllOrderAction())
-    }, [dispatch])
 
     useEffect(() => {
         const timer = setInterval(() => {
-            dispatch(getFromUserPositionAction(userID)); //  this line
+            dispatch(getFromUserPositionAction(userID));
             const options = {
                 enableHighAccuracy: true,
                 timeout: 5000,
@@ -174,22 +215,16 @@ export const DealerMap = (props) => {
     }, [dispatch, position, positionId, userID]);
 
 
-
-    //console.log('POSITION', position)
+    // Component State
     const userPosition = JSON.parse(position.replace(/'/g, '"'))
 
-
-    const mapContainer = useRef(null);
-    const map = useRef(null);
-    const [lng, setLng] = useState(userPosition.lng);
-    const [lat, setLat] = useState(userPosition.lat);
-    const [zoom, setZoom] = useState(13);
-
-
+    const mapContainer = useRef(null)
+    const map = useRef(null)
+    const [lng, setLng] = useState(userPosition.lng)
+    const [lat, setLat] = useState(userPosition.lat)
+    const [zoom, setZoom] = useState(13)
 
     const buildLocationList = ({ features }) => {
-        console.log('STORE FEATURES', features)
-        //let features
         for (const { properties } of features) {
             /* Add a new listing section to the sidebar. */
             const listings = document.getElementById('listings');
@@ -260,27 +295,35 @@ export const DealerMap = (props) => {
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v11',
             center: [lng, lat],
-            //center: [-77.034084, 38.909671],
             zoom: zoom
         });
         map.current.on('load', () => {
-            /* Add the data to your map as a layer 
-            
-            map.current.addLayer({
-              id: 'locations',
-              type: 'circle',
-              // Add a GeoJSON source containing place coordinates and information.
-              source: {
-                type: 'geojson',
-                data: stores
-              }
-            });
-            */
+
             // This function is for to load custom markers
             map.current.addSource('places', {
                 type: 'geojson',
                 data: stores
             });
+
+            map.current.addLayer({
+                "id": "route",
+                "type": "line",
+
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [lng, lat],
+                                geoCoordinates.geometry?.coordinates
+                            ]
+                        }
+                    }
+                }
+            })
             buildLocationList(stores);
             addMarkers()
         });
@@ -299,6 +342,7 @@ export const DealerMap = (props) => {
                  * Create a marker using the div element
                  * defined above and add it to the map.
                  **/
+                console.log(marker.geometry.coordinates)
                 new mapboxgl.Marker(el, { offset: [0, -23] })
                     .setLngLat(marker.geometry.coordinates)
                     .addTo(map.current);
@@ -319,7 +363,7 @@ export const DealerMap = (props) => {
                 });
             }
         }
-   
+    });
 
     useEffect(() => {
         if (!map.current) return; // wait for map to initialize
@@ -333,30 +377,32 @@ export const DealerMap = (props) => {
 
     return (
         <>
-            <div className="mainContainerMapBox">
-                <div class='sidebarMapBox'>
-                    <div class='headingMapBox'>
+            <div>
+                <div class='sidebar'>
+                    <div class='heading'>
                         <h1>Dealer Orders</h1>
                     </div>
                     <div id='listings' className='listings'></div>
                 </div>
                 <div ref={mapContainer} className="map" />
-
             </div>
-
             <style jsx>{`
-                .mainContainerMapBox {
-                        position: absolute;
-                        top: 7rem;
-                        left: 3rem;
-                        width: 95%;
-                        height: 80%;    
-                    }
+			#route {
+				stroke-dasharray: 1000;
+				stroke-dashoffset: 1000;
+				animation: dash 1s linear alternate infinite;
+			}
 
-                    .map-z {    
-                    border: 1px solid black;
-                    }
-        `}</style>
+			@keyframes dash {
+				from {
+					stroke-dashoffset: 1000;
+				}
+				to {
+					stroke-dashoffset: 0;
+			}
+		    `}</style>
         </>
+
     );
 }
+

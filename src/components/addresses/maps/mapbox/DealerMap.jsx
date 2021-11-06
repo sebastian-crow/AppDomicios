@@ -23,7 +23,7 @@ export const DealerMap = () => {
 
   const currentOrders = [];
   orders.map((order) => {
-    if (order.domiciliario.id === user?._id) {
+    if (order.domiciliario?.id === user?._id) {
       currentOrders.push(order);
     }
   });
@@ -133,7 +133,6 @@ export const DealerMap = () => {
         background-color: blue;
         cursor: pointer;
       }
-
       .marker:before,
       .marker:after {
         content: ' ';
@@ -146,15 +145,12 @@ export const DealerMap = () => {
         border: 1px solid blue;
         border-radius: 50%
       }
-
       .marker:before {
         animation: ripple 2s Linear infinite;
       }
-
       .marker:after {
         animation: ripple 2s linear 1s infinite;
       }
-
       @keyframes ripple{
         0% {
           transform: scale(1);

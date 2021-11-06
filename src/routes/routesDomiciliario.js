@@ -1,8 +1,10 @@
 // Orders
 import OrderList from "../components/addresses/orders/OrderList";
 import UserPage from "views/User.js";
+
 // Maps
 import { DealerMap } from "../components/addresses/maps/mapbox/DealerMap";
+import { DealerMapProof } from "../components/addresses/maps/mapbox/proof/DealerMapProof"
 
 var routesDomiciliario = [
   {
@@ -20,7 +22,7 @@ var routesDomiciliario = [
     rol: ["domiciliario"],
     name: "Dealer map",
     icon: "nc-icon nc-pin-3",
-    component: DealerMap,
+    component: DealerMapProof,
     layout: "/domiciliario",
     visible: false,
   },

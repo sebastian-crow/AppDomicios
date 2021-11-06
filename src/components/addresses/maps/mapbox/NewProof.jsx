@@ -73,7 +73,7 @@ stores.features.forEach(function (store, i) {
 });
 
 
-export const MapBox = () => {
+export const NewProof = () => {
 
     const dispatch = useDispatch();
     const userID = useSelector((state) => state.login.usuario.user._id);
@@ -307,6 +307,5 @@ export const MapBox = () => {
         </div>
     );
 }
-//Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
 
 

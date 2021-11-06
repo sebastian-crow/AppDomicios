@@ -1,118 +1,182 @@
-import React, { useRef, useEffect, useState } from 'react';
-import './css/markersStyle.css'
-import './css/index.css'
+// React
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import '../css/markersStyle.css'
+import '../css/index.css'
 import ReactMapGL, { Layer } from 'react-map-gl';
 import mapboxgl from '!mapbox-gl';
+import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding'
+
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 
 // Actions
-import { 
-    updatePositionAction, 
-    getFromUserPositionAction, 
-    createPositionAction, 
-    getAllDomiciliarioAction 
-} from "../../../../store/reducer";
+import {
+    updatePositionAction,
+    getFromUserPositionAction,
+    createPositionAction,
+    //getAllDomiciliarioAction 
+    getAllOrderAction
+} from "../../../../../store/reducer";
 
 
-//console.log('MAPBOXGL', mapboxgl)
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXN0aWFuY3JvdyIsImEiOiJja3VnOW5yazUwanYwMm9waHY1NWdoaHRnIn0.kIsU3HWfUybUwU2DvavkwA';
 
 
-const stores = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    -75.512527,
-                    6.343636
-                ]
-            },
-            "properties": {
-                "phoneFormatted": "3195158887",
-                "phone": "2022347336",
-                "address": "Carrera 57A N# 48-43",
-                "city": "Copacabana",
-                "country": "Colombia",
-                "crossStreet": "at 15th St NW",
-                "postalCode": "050022",
-                //"state": "D.C."
-            }
-        },
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    -75.561148,
-                    6.259861
-                ]
-            },
-            "properties": {
-                "phoneFormatted": "21171157",
-                "phone": "21171157",
-                "address": "Calle 64 #154, Medellín, Antioquia",
-                "city": "Medellin",
-                "country": "Colombia",
-                "crossStreet": "at 15th St NW",
-                "postalCode": "050022",
-                //"state": "D.C."
-            }
-        },
-    ]
-}
-
-/* Assign a unique ID to each store */
-stores.features.forEach(function (store, i) {
-    store.properties.id = i;
-});
-
-
-export const PreviewMap = () => {
+// Dealer Map Component
+export const DealerMap = (props) => {
+    // Mapbox API Token5
+    mapboxgl.accesToken = process.env.REACT_APP_MAPBOX_API
 
     const dispatch = useDispatch();
     const userID = useSelector((state) => state.login.usuario.user._id);
     const position = useSelector((state) => state.ui.position);
     const positionId = useSelector((state) => state.ui.positionId);
     const user = useSelector((state) => state.login.usuario.user)
-  
+
+
+    const orderId = props.match.params.id;
+
+    const orders = useSelector((state) => state.ui.orders)
+
+    const storesDomiciliario = orders.map((order) => {
+        if (order.domiciliario.id === user._id) {
+            const esteStore = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -75.512527,
+                        6.343636
+                    ]
+                },
+                "properties": {
+                    "id": Math.floor(Math.random() * 100),
+                    "phoneFormatted": "3195158887",
+                    "phone": "2022347336",
+                    "address": order.direccion.address,
+                    "city": "Copacabana",
+                    "country": "Colombia",
+                    "crossStreet": "at 15th St NW",
+                    "postalCode": "050022",
+                    //"state": "D.C."
+                },
+            }
+            return esteStore
+        }
+
+    })
+
+    console.log('STORES DOMICILIO', storesDomiciliario)
+
+
+    const stores = {
+        "type": "FeatureCollection",
+        "features": storesDomiciliario
+    }
+    console.log('SEE FINAL STORE', stores)
+
+
+    const fetchData = useCallback(() => {
+        const geocodingClient = mbxGeocoding({
+            accesToken: process.env.REACT_API_MAPBOX_API,
+        })
+
+        // Geocoding with countries
+        return geocodingClient
+            .forwardGeocode({
+                query: 'Cr. 57A N# 48 - 43 Copacabana Antioquia',
+                countries: ['co'],
+                language: ['es'],
+                limit: 2,
+            })
+            .send()
+            .then((response) => {
+                const match = response.body
+                const coordinates = match.features[0].place_name
+                const center = match.features[0].center
+
+                return {
+                    type: 'Feature',
+                    center: center,
+                    geometry: {
+                        type: 'Point',
+                        coordinates: coordinates,
+                    },
+                    properties: {
+                        description: placeName
+                    }
+
+                }
+            })
+    }, [])
+
     useEffect(() => {
-      const timer = setInterval(() => {
-        dispatch(getFromUserPositionAction(userID));
-        const options = {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
-        };
-  
-        function success(pos) {
-          var crd = pos.coords;
-          if (positionId) {
-            dispatch(updatePositionAction({ lat: crd.latitude, lng: crd.longitude, positionId: positionId }));
-          } else {
-            dispatch(createPositionAction({ position: JSON.stringify({ lat: crd.latitude, lng: crd.longitude }), usuario: userID }));
-          }
-        };
-  
-        function error(err) {
-          console.warn('ERROR(' + err.code + '): ' + err.message);
-        };
-  
-        navigator.geolocation.getCurrentPosition(success, error, options);
-      }, 5000);
-  
-      return () => clearTimeout(timer);
+        if (!map.current) return // Waits for the map to initialise
+
+        const results = fetchData()
+
+        results.then((marker) => {
+            // Create a HTML document for each feature
+            let el = document.createElement('div')
+            el.className = 'marker'
+
+            // Make a marker for each feature and add it to the map
+            new mapboxgl.Marker(el)
+                .setLngLat(marker.geometry.coordinates)
+                .setPopup(
+                    new mapboxgl.Popup({ offset: 25 }) // Add Popups
+                        .setHTML('<p>' + marker.properties.description + '</p>')
+                )
+                .addTo(map.current)
+
+            map.current.on('load', async () => {
+                map.current.flyTo({
+                    center: marker.center,
+                })
+            })
+        }, fetchData)
+    })
+
+
+
+    useEffect(() => {
+        dispatch(getAllOrderAction())
+    }, [dispatch])
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            dispatch(getFromUserPositionAction(userID)); //  this line
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+
+            function success(pos) {
+                var crd = pos.coords;
+                if (positionId) {
+                    dispatch(updatePositionAction({ lat: crd.latitude, lng: crd.longitude, positionId: positionId }));
+                } else {
+                    dispatch(createPositionAction({ position: JSON.stringify({ lat: crd.latitude, lng: crd.longitude }), usuario: userID }));
+                }
+            };
+
+            function error(err) {
+                console.warn('ERROR(' + err.code + '): ' + err.message);
+            };
+
+            navigator.geolocation.getCurrentPosition(success, error, options);
+        }, 5000);
+
+        return () => clearTimeout(timer);
     }, [dispatch, position, positionId, userID]);
 
 
 
     //console.log('POSITION', position)
     const userPosition = JSON.parse(position.replace(/'/g, '"'))
-    
+
 
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -122,8 +186,9 @@ export const PreviewMap = () => {
 
 
 
-
     const buildLocationList = ({ features }) => {
+        console.log('STORE FEATURES', features)
+        //let features
         for (const { properties } of features) {
             /* Add a new listing section to the sidebar. */
             const listings = document.getElementById('listings');
@@ -253,53 +318,40 @@ export const PreviewMap = () => {
                 });
             }
         }
-        /*
-        map.current.on('click', ({ point }) => {
-          // Determine if a feature in the "locations" layer exists at that point. 
-          const features = map.current.queryRenderedFeatures(point, {
-            layers: ['locations']
-          });
-      
-          // If it does not exist, return 
-          if (!features.length) return;
-      
-          const clickedPoint = features[0];
-      
-          //Fly to the point 
-          flyToStore(clickedPoint);
-      
-          // Close all other popups and display popup for clicked store 
-          createPopUp(clickedPoint);
-      
-          // Highlight listing in sidebar (and remove highlight for all other listings) 
-          const activeItem = document.getElementsByClassName('active');
-          if (activeItem[0]) {
-            activeItem[0].classList.remove('active');
-          }
-          const listing = document.getElementById(
-            `listing-${clickedPoint.properties.id}`
-          );
-          listing.classList.add('active');
+
+
+        useEffect(() => {
+            if (!map.current) return; // wait for map to initialize
+            map.current.on('move', () => {
+                setLng(map.current.getCenter().lng.toFixed(4));
+                setLat(map.current.getCenter().lat.toFixed(4));
+
+                setZoom(map.current.getZoom().toFixed(2));
+            });
         });
-        */
-    });
 
-    useEffect(() => {
-        if (!map.current) return; // wait for map to initialize
-        map.current.on('move', () => {
-            setLng(map.current.getCenter().lng.toFixed(4));
-            setLat(map.current.getCenter().lat.toFixed(4));
+        return (
+            <>
+                <div className="mainContainerMapBox">
+                   
+                    <div ref={mapContainer} className="map" />
 
-            setZoom(map.current.getZoom().toFixed(2));
-        });
-    });
+                </div>
 
-    return (
-        <div>
-            <div ref={mapContainer} className="map-prev" />
-        </div>
-    );
+                <style jsx>{`
+                .mainContainerMapBox {
+                        position: absolute;
+                        top: 7rem;
+                        left: 3rem;
+                        width: 95%;
+                        height: 80%;    
+                    }
+
+                    .map-z {    
+                    border: 1px solid black;
+                 }
+        `}</style>
+            </>
+        );
+    })
 }
-//Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-
-
