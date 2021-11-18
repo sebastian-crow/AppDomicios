@@ -3,6 +3,9 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom'; // Librería react-router-dom
 import { push } from 'redux-first-history';
+``
+// CSS
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './assets/css/home.css';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +23,6 @@ import defaultRoutes from './routes/defaultRoutes';
 import { useLocation } from 'react-router-dom'
 
 
-
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.usuario.user);
@@ -33,7 +35,6 @@ function App() {
   }, [dispatch, user]);
 
   let location = useLocation();
-  console.log(location.pathname);
 
   return (
     <>

@@ -167,7 +167,7 @@ const TakeOrder = (props) => {
                 <Button size="sm" variant="primary" onClick={addListProduct}>
                   Añadir producto
                 </Button>{" "}
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th width="60%" scope="col">

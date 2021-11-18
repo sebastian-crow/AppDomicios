@@ -269,7 +269,6 @@ function* getAllProductSaga() {
     if (data.status === "200") {
       yield put(getAllProductDoneAction(data));
     } else {
-      console.log("No products");
     }
   } catch (error) {
   } finally {
@@ -311,7 +310,6 @@ function* updateProductSaga(action) {
 function* deleteProductSaga(action) {
   try {
     const data = yield call(api.deleteProduct, action.payload);
-    console.log(data);
     if (data.status === 200) {
       yield put(deleteProductDoneAction());
       yield put(getAllProductAction());
@@ -335,7 +333,6 @@ function* getAllOrderSaga() {
     if (data.status === "200") {
       yield put(getAllOrderDoneAction(data));
     } else {
-      console.log("No products");
     }
   } catch (error) {
   } finally {

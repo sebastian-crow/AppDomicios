@@ -16,8 +16,7 @@ import { ReverseCounter } from "../counter/ReverseCounter";
 // Reducers
 import { getAllOrderAction } from "../../../store/reducer";
 
-// DealerMap
-import { DealerMap } from "../maps/mapbox/DealerMap";
+
 
 // Component List Orders
 const ListOrders = () => {
@@ -36,7 +35,6 @@ const ListOrders = () => {
             ordersCurrentUser.push(order);
         }
     });
-    console.log("ORDERS CURRENT USER", ordersCurrentUser);
 
     const handleDelete = (event) => {
         event.preventDefault();
@@ -57,7 +55,7 @@ const ListOrders = () => {
     return (
         <>
             <div style={{ height: "800px", overflowY: "scroll" }}>
-                <table class="table">
+                <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">Order Name</th>

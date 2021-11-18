@@ -59,9 +59,7 @@ const TakeOrder = (props) => {
     if(productsAndAmount.length === 0){
       setProductsAndAmount(productosPreview);
     }
-    console.log(productosPreview);
   });
-  console.log(order);
   // Handle event onChange amount
   const handleAmountChange = (amount, index) => {
     productsAndAmount[index].amount = amount.target.value;
@@ -129,7 +127,6 @@ const TakeOrder = (props) => {
     if (productsAndAmount.length) {
       for (let index = 0; index <= productsAndAmount.length - 1; index++) {
         const element = productsAndAmount[index];
-        console.log(element);
         listProducs.push(element);
       }
       listProducs.push({});
@@ -192,7 +189,7 @@ const TakeOrder = (props) => {
                 <Button size="sm" variant="primary" onClick={addListProduct}>
                   Añadir producto
                 </Button>{" "}
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th width="60%" scope="col">

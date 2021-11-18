@@ -12,8 +12,7 @@ import ListProducts from "../components/addresses/products/ListProducts";
 import TakeOrder from "../components/addresses/orders/TakeOrder";
 import OrderList from "../components/addresses/orders/OrderList";
 
-// Maps
-import { ClientMap } from "../components/addresses/maps/mapbox/ClientMap";
+
 
 var routesAdmin = [
   // Default routes
@@ -86,7 +85,7 @@ var routesAdmin = [
     path: "/clientmap/:id",
     name: "Client Map",
     rol: ["domiciliario", "cliente", "admin"],
-    component: ClientMap,
+    //component: ClientMap,
     layout: "/admin",
     visible: false,
   },

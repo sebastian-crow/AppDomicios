@@ -3,8 +3,7 @@ import OrderList from "../components/addresses/orders/OrderList";
 import UserPage from "views/User.js";
 
 // Maps
-import { DealerMap } from "../components/addresses/maps/mapbox/DealerMap";
-import { DealerMapProof } from "../components/addresses/maps/mapbox/proof/DealerMapProof"
+import { Map } from "../components/addresses/maps/map/Map"
 
 var routesDomiciliario = [
   {
@@ -22,7 +21,9 @@ var routesDomiciliario = [
     rol: ["domiciliario"],
     name: "Dealer map",
     icon: "nc-icon nc-pin-3",
-    component: DealerMapProof,
+    //component: DealerMapProof,
+    //component: DealerMapAgainProof,
+    component: Map,
     layout: "/domiciliario",
     visible: false,
   },
@@ -35,5 +36,6 @@ var routesDomiciliario = [
     layout: "/domiciliario",
     visible: true,
   },
+
 ];
 export default routesDomiciliario;

@@ -25,7 +25,7 @@ const ListUsers = () => {
   return (
     <>
       <div style={{ height: "800px", overflowY: "scroll" }}>
-        <table class="table">
+        <table className="table">
           <thead>
             <tr>
               <th scope="col">Nombre</th>

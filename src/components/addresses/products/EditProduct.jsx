@@ -20,7 +20,6 @@ const EditProduct = (props) => {
   const product = useSelector((state) =>
     state.ui.products.find((product) => product._id === props.match.params.id),
   );
-  console.log(product);
   // Get Current User
   const user = useSelector((state) => state.login.usuario.user);
 

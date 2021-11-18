@@ -52,7 +52,7 @@ const ListOrders = () => {
           <Link to="/orderlist">Lista de Pedidos</Link>
         </div>
         {user.rol === "admin" && (
-          <table class="table">
+          <table className="table">
             <thead>
               <br />
               <Link
@@ -107,7 +107,7 @@ const ListOrders = () => {
         )}
         {user.rol == "domiciliario" && (
           <>
-            <table class="table">
+            <table className="table">
               <thead>
                 <tr>
                   <th scope="col">Cliente</th>

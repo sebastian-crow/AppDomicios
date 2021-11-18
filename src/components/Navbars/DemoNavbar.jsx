@@ -44,7 +44,6 @@ function Header(props) {
   };
   const logout = (e) => {
     e.preventDefault();
-    console.log("lgout");
     dispatch(logoutAction());
     dispatch(push("/"));
     //push(!dropdownOptionsOpen);
