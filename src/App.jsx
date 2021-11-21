@@ -6,6 +6,7 @@ import { push } from 'redux-first-history';
 ``
 // CSS
 import 'mapbox-gl/dist/mapbox-gl.css';
+import mapboxgl from '!mapbox-gl';
 import './assets/css/home.css';
 
 import { useDispatch, useSelector } from 'react-redux';

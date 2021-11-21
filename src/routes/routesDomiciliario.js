@@ -3,7 +3,7 @@ import OrderList from "../components/addresses/orders/OrderList";
 import UserPage from "views/User.js";
 
 // Maps
-import { Map } from "../components/addresses/maps/map/Map"
+import  { Map } from "../components/addresses/maps/map/Map";
 
 var routesDomiciliario = [
   {
@@ -36,6 +36,5 @@ var routesDomiciliario = [
     layout: "/domiciliario",
     visible: true,
   },
-
 ];
 export default routesDomiciliario;
