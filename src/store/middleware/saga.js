@@ -1,4 +1,5 @@
-import { takeLatest, put, call, cancelled } from "redux-saga/effects";
+import { takeLatest, takeEvery, put, call, cancelled } from "redux-saga/effects";
+
 import { push } from "redux-first-history";
 import { api } from "./api";
 import {
@@ -400,7 +401,7 @@ export function* rootSaga() {
 
   // Products
   yield takeLatest(getAllProductAction.type, getAllProductSaga);
-  yield takeLatest(createProductAction.type, createProductSaga);
+  yield takeEvery(createProductAction.type, createProductSaga);
   yield takeLatest(updateProductAction.type, updateProductSaga);
   yield takeLatest(deleteProductAction.type, deleteProductSaga);
 
@@ -412,7 +413,7 @@ export function* rootSaga() {
   // Dealers location
   yield takeLatest(
     getFromDomiciliarioPositionAction.type,
-    getFromDomiciliarioPositionSaga,
+    getFromDomiciliarioPositionSaga
   );
   yield takeLatest(getFromClientPositionAction.type, getFromClientPositionSaga);
 

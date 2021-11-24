@@ -13,6 +13,9 @@ import TakeOrder from "../components/addresses/orders/TakeOrder";
 import OrderList from "../components/addresses/orders/OrderList";
 
 
+// Excel
+import { Excel} from "../components/addresses/excel/Excel"
+
 
 var routesAdmin = [
   // Default routes
@@ -89,5 +92,17 @@ var routesAdmin = [
     layout: "/admin",
     visible: false,
   },
+  // Import Excell Data
+  {
+    path: "/importexceldata",
+    name: "Excel",
+    icon: "nc-icon nc-bank",
+    rol: ["admin"],
+    component: Excel,
+    layout: "/admin",
+    visible: true,
+  },
+
+
 ];
 export default routesAdmin;

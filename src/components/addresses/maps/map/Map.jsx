@@ -102,61 +102,75 @@ export const Map = (props) => {
   }, []);
 
   return (
-    <ReactMapGL
-      {...viewport}
-      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_API}
-      onViewportChange={(nextViewport) => setViewport(nextViewport)}
-      //mapStyle=""
-    >
-      {markers.map((marker) => (
-        <>
-          <Marker
-            latitude={marker.coordinates.lat}
-            longitude={marker.coordinates.lng}
-            offsetLeft={-20}
-            offsetTop={-10}
-          >
-            <Room
-              style={{ fontSize: viewport.zoom * 5, cursor: "pointer" }}
-              onClick={() => handleMarkerClick(marker.id)}
+    <>
+      <div className="mapboxNameRandom">
+        <ReactMapGL
+          {...viewport}
+          //vmapboxApiAccessToken={process.env.REACT_APP_MAPBOX_API}
+          onViewportChange={(nextViewport) => setViewport(nextViewport)}
+          //mapStyle=""
+        >
+          {markers.map((marker) => (
+            <>
+              <Marker
+                latitude={marker.coordinates.lat}
+                longitude={marker.coordinates.lng}
+                offsetLeft={-20}
+                offsetTop={-10}
+              >
+                <Room
+                  style={{ fontSize: viewport.zoom * 5, cursor: "pointer" }}
+                  onClick={() => handleMarkerClick(marker.id)}
+                />
+              </Marker>
+              {marker.id === currentMarkerId && (
+                <Popup
+                  latitude={marker.coordinates.lat}
+                  longitude={marker.coordinates.lng}
+                  closeButton={true}
+                  closeOnClick={false}
+                  anchor="left"
+                  onClose={() => setCurrentMarkerId(null)}
+                >
+                  <div className="card">
+                    {marker.type === "user" && (
+                      <label>Name: {marker.name}</label>
+                    )}
+                    {marker.type === "order" && (
+                      <label>Order Name: {marker.name}</label>
+                    )}
+                    <label>Address: {marker.address} </label>
+                    <label>Phone Number: {marker.phoneNumber} </label>
+                  </div>
+                </Popup>
+              )}
+            </>
+          ))}
+          <Source id="polylineLayer" type="geojson" data={Road}>
+            <Layer
+              id="lineLayer"
+              type="line"
+              source="my-data"
+              layout={{
+                "line-join": "round",
+                "line-cap": "round",
+              }}
+              paint={{
+                "line-color": "rgba(3, 170, 238, 0.5)",
+                "line-width": 5,
+              }}
             />
-          </Marker>
-          {marker.id === currentMarkerId && (
-            <Popup
-              latitude={marker.coordinates.lat}
-              longitude={marker.coordinates.lng}
-              closeButton={true}
-              closeOnClick={false}
-              anchor="left"
-              onClose={() => setCurrentMarkerId(null)}
-            >
-              <div className="card">
-                {marker.type === "user" && <label>Name: {marker.name}</label>}
-                {marker.type === "order" && (
-                  <label>Order Name: {marker.name}</label>
-                )}
-                <label>Address: {marker.address} </label>
-                <label>Phone Number: {marker.phoneNumber} </label>
-              </div>
-            </Popup>
-          )}
-        </>
-      ))}
-      <Source id="polylineLayer" type="geojson" data={Road}>
-        <Layer
-          id="lineLayer"
-          type="line"
-          source="my-data"
-          layout={{
-            "line-join": "round",
-            "line-cap": "round",
-          }}
-          paint={{
-            "line-color": "rgba(3, 170, 238, 0.5)",
-            "line-width": 5,
-          }}
-        />
-      </Source>
-    </ReactMapGL>
+          </Source>
+        </ReactMapGL>
+      </div>
+      <style jsx>{`
+        .mapboxNameRandom {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 100%;
+        }
+      `}</style>
+    </>
   );
 };
