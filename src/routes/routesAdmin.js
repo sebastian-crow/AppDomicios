@@ -12,16 +12,17 @@ import ListProducts from "../components/addresses/products/ListProducts";
 import TakeOrder from "../components/addresses/orders/TakeOrder";
 import OrderList from "../components/addresses/orders/OrderList";
 
-
 // Excel
-import { Excel} from "../components/addresses/excel/Excel"
+import { Excel } from "../components/addresses/excel/Excel";
 
+// Map
+import { Map } from "../components/addresses/maps/map/admin/Map";
 
 var routesAdmin = [
   // Default routes
   {
     path: "/dashboard",
-    rol: ["domiciliario", "cliente", "admin", "user"],
+    rol: ["admin"],
     name: "Dashboard",
     icon: "nc-icon nc-diamond",
     component: Dashboard,
@@ -60,7 +61,7 @@ var routesAdmin = [
     path: "/orderslist",
     name: "Listar ordenes",
     icon: "nc-icon nc-spaceship",
-    rol: ["domiciliario", "cliente", "admin"],
+    rol: ["admin"],
     component: OrderList,
     layout: "/admin",
     visible: true,
@@ -69,7 +70,7 @@ var routesAdmin = [
     path: "/createproduct",
     name: "Crear producto",
     icon: "nc-icon nc-app",
-    rol: ["domiciliario", "cliente", "admin"],
+    rol: ["admin"],
     component: CreateProduct,
     layout: "/admin",
     visible: true,
@@ -78,17 +79,17 @@ var routesAdmin = [
     path: "/listproducts",
     name: "Todos los productos",
     icon: "nc-icon nc-bank",
-    rol: ["domiciliario", "cliente", "admin"],
+    rol: ["admin"],
     component: ListProducts,
     layout: "/admin",
     visible: true,
   },
   // Maps
   {
-    path: "/clientmap/:id",
+    path: "/map/:id",
     name: "Client Map",
-    rol: ["domiciliario", "cliente", "admin"],
-    //component: ClientMap,
+    rol: ["admin"],
+    component: Map,
     layout: "/admin",
     visible: false,
   },
@@ -102,7 +103,5 @@ var routesAdmin = [
     layout: "/admin",
     visible: true,
   },
-
-
 ];
 export default routesAdmin;

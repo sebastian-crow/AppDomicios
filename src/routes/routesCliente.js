@@ -14,6 +14,8 @@ import TakeOrder from "../components/addresses/orders/TakeOrder";
 import EditOrder from "../components/addresses/orders/EditOrder";
 import UserOrderList from "../components/addresses/orders/UserOrderList";
 
+// Map
+import {Map} from "../components/addresses/maps/map/client/Map"
 
 
 var routesCliente = [
@@ -97,7 +99,7 @@ var routesCliente = [
     path: "/clientmap/:id",
     name: "Client Map",
     rol: ["cliente"],
-    //component: ClientMap,
+    component: Map,
     layout: "/cliente",
     visible: false,
   },

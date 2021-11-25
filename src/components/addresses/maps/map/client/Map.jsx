@@ -11,28 +11,19 @@ import {
   createPositionAction,
   getAllDomiciliarioAction,
   getAllOrderAction,
-} from "../../../../store/reducer";
+} from "../../../../../store/reducer";
 
 // Mapbox GL
 import ReactMapGL, { Marker, Popup, Source, Layer } from "react-map-gl";
+import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 
 // Material UI
 import { Room } from "@material-ui/icons";
 
 // CSS
-import "./style.css";
+import "../style.css";
 
 export const Map = (props) => {
-  // Component State
-  const [currentMarkerId, setCurrentMarkerId] = useState(null);
-  const [viewport, setViewport] = useState({
-    width: "100vw",
-    height: "50vw",
-    latitude: 6.343636,
-    longitude: -75.512529,
-    zoom: 8,
-  });
-
   // Redux Dispatch
   const dispatch = useDispatch();
 
@@ -40,6 +31,19 @@ export const Map = (props) => {
   const position = useSelector((state) => state.ui.position);
   const positionId = useSelector((state) => state.ui.positionId);
   const user = useSelector((state) => state.login.usuario.user);
+  const userID = useSelector((state) => state.login.usuario.user._id);
+  const userPosition = JSON.parse(position.replace(/'/g, '"'));
+
+  // Component State
+  const [geoCoordinates, setGeoCoordinates] = useState([]);
+  const [currentMarkerId, setCurrentMarkerId] = useState(null);
+  const [viewport, setViewport] = useState({
+    width: "100vw",
+    height: "50vw",
+    latitude: userPosition.lat,
+    longitude: userPosition.lng,
+    zoom: 8,
+  });
 
   // Orders and Current Order
   const orderId = props.match.params.id;
@@ -71,8 +75,8 @@ export const Map = (props) => {
       address: "Cr 57A N#48-43 Copacabana Antioquia",
       phoneNumber: 323234373,
       coordinates: {
-        lat: 6.343636,
-        lng: -75.512529,
+        lat: userPosition.lat,
+        lng: userPosition.lng,
       },
     },
   ];
@@ -100,6 +104,63 @@ export const Map = (props) => {
     dispatch(getAllOrderAction());
     dispatch(getAllDomiciliarioAction());
   }, []);
+
+  // Get Current Location to user
+  useEffect(() => {
+    const timer = setInterval(() => {
+      dispatch(getFromUserPositionAction(userID));
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      };
+
+      function success(pos) {
+        var crd = pos.coords;
+        if (positionId) {
+          dispatch(
+            updatePositionAction({
+              lat: crd.latitude,
+              lng: crd.longitude,
+              positionId: positionId,
+            })
+          );
+        } else {
+          dispatch(
+            createPositionAction({
+              position: JSON.stringify({
+                lat: crd.latitude,
+                lng: crd.longitude,
+              }),
+              usuario: userID,
+            })
+          );
+        }
+      }
+
+      function error(err) {
+        console.warn("ERROR(" + err.code + "): " + err.message);
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [dispatch, position, positionId, userID]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!geoCoordinates) {
+        setGeoCoordinates({
+          lat: 7848,
+          lng: -48137418,
+        });
+        console.log("geocoordinates", geoCoordinates);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  });
 
   return (
     <>
@@ -161,8 +222,8 @@ export const Map = (props) => {
                 "line-width": 5,
               }}
             />
-          </Source>
-          
+          </Source>  
+        
           */}
         </ReactMapGL>
       </div>
