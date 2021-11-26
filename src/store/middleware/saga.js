@@ -1,4 +1,10 @@
-import { takeLatest, takeEvery, put, call, cancelled } from "redux-saga/effects";
+import {
+  takeLatest,
+  takeEvery,
+  put,
+  call,
+  cancelled,
+} from "redux-saga/effects";
 
 import { push } from "redux-first-history";
 import { api } from "./api";
@@ -11,12 +17,22 @@ import {
   errorRegistro,
   actualizarUsuarioAction,
   actualizarUsuarioDoneAction,
-  updatePositionAction,
-  updatePositionDoneAction,
-  createPositionAction,
-  createPositionDoneAction,
-  getFromUserPositionAction,
-  getFromUserPositionDoneAction,
+
+  // Client Position
+  createPositionClientAction,
+  createPositionClientDoneAction,
+  updatePositionClientAction,
+  updatePositionClientDoneAction,
+  getFromClientPositionAction,
+  getFromClientPositionDoneAction,
+
+  // Dealer Position
+  createPositionDealerAction,
+  createPositionDealerDoneAction,
+  updatePositionDealerAction,
+  updatePositionDealerDoneAction,
+  getFromDealerPositionAction,
+  getFromDealerPositionDoneAction,
   getAllUserAction,
   getAllUserDoneAction,
 
@@ -55,14 +71,10 @@ import {
   // Clients
   getAllClientAction,
   getAllClientDoneAction,
-  getFromClientPositionAction,
-  getFromClientPositionDoneAction,
 
   // Dealers
   getAllDomiciliarioAction,
   getAllDomiciliarioDoneAction,
-  getFromDomiciliarioPositionAction,
-  getFromDomiciliarioPositionDoneAction,
   loginError,
 } from "../reducer";
 import { LOCATION_CHANGE } from "redux-first-history";
@@ -128,12 +140,12 @@ function* actualizarUsuarioSaga(action) {
   }
 }
 
-// All users position
-function* createPositionSaga(action) {
+// Client Position
+function* createPositionClientSaga(action) {
   try {
     const { data } = yield call(api.createPosition, action.payload);
     if (data.status === 200) {
-      yield put(createPositionDoneAction(data));
+      yield put(createPositionClientDoneAction(data));
     } else {
       yield put(loginError(data.message));
     }
@@ -145,11 +157,11 @@ function* createPositionSaga(action) {
   }
 }
 
-function* updatePositionSaga(action) {
+function* updatePositionClientSaga(action) {
   try {
     const { data } = yield call(api.updatePosition, action.payload);
     if (data.status === 200) {
-      yield put(updatePositionDoneAction(data));
+      yield put(updatePositionClientDoneAction(data));
     } else {
       yield put(loginError(data.message));
     }
@@ -161,45 +173,60 @@ function* updatePositionSaga(action) {
   }
 }
 
-function* getFromUserPositionSaga(action) {
-  try {
-    const { data } = yield call(api.getPositionFromUser, action.payload);
-    if (data.status === "200") {
-      yield put(getFromUserPositionDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-// Domiciliarios position
-function* getFromDomiciliarioPositionSaga(action) {
-  try {
-    const { data } = yield call(api.getPositionFromUser, action.payload);
-    if (data.status === "200") {
-      yield put(getFromDomiciliarioPositionDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-// Clients position
 function* getFromClientPositionSaga(action) {
   try {
     const { data } = yield call(api.getPositionFromUser, action.payload);
     if (data.status === "200") {
       yield put(getFromClientPositionDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+// Dealer Position
+function* createPositionDealerSaga(action) {
+  try {
+    const { data } = yield call(api.createPosition, action.payload);
+    if (data.status === 200) {
+      yield put(createPositionDealerDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* updatePositionDealerSaga(action) {
+  try {
+    const { data } = yield call(api.updatePosition, action.payload);
+    if (data.status === 200) {
+      yield put(updatePositionDealerDoneAction(data));
+    } else {
+      yield put(loginError(data.message));
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* getFromDealerPositionSaga(action) {
+  try {
+    const { data } = yield call(api.getPositionFromUser, action.payload);
+    if (data.status === "200") {
+      yield put(getFromDealerPositionDoneAction(data));
     } else {
       yield put(loginError(data.message));
     }
@@ -394,9 +421,17 @@ export function* rootSaga() {
   yield takeLatest(loginDoneAction.type, loginDoneSaga);
   yield takeLatest(actualizarUsuarioAction.type, actualizarUsuarioSaga);
   yield takeLatest(registerAction.type, registerSaga);
-  yield takeLatest(createPositionAction.type, createPositionSaga);
-  yield takeLatest(updatePositionAction.type, updatePositionSaga);
-  yield takeLatest(getFromUserPositionAction.type, getFromUserPositionSaga);
+
+  // Client Location
+  yield takeLatest(createPositionClientAction.type, createPositionClientSaga);
+  yield takeLatest(updatePositionClientAction.type, updatePositionClientSaga);
+  yield takeLatest(getFromClientPositionAction.type, getFromClientPositionSaga);
+  yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
+
+  // Dealer Location
+  yield takeLatest(createPositionDealerAction.type, createPositionDealerSaga);
+  yield takeLatest(updatePositionDealerAction.type, updatePositionDealerSaga);
+  yield takeLatest(getFromDealerPositionAction.type, getFromDealerPositionSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
 
   // Products
@@ -409,13 +444,6 @@ export function* rootSaga() {
   yield takeLatest(getAllUserAction.type, getAllUserSaga);
   yield takeLatest(getAllClientAction.type, getAllClientSaga);
   yield takeLatest(getAllDomiciliarioAction.type, getAllDomiciliarioSaga);
-
-  // Dealers location
-  yield takeLatest(
-    getFromDomiciliarioPositionAction.type,
-    getFromDomiciliarioPositionSaga
-  );
-  yield takeLatest(getFromClientPositionAction.type, getFromClientPositionSaga);
 
   // Orders
   yield takeLatest(getAllOrderAction.type, getAllOrderSaga);

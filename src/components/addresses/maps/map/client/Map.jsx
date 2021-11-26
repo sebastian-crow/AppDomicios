@@ -6,16 +6,18 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Actions
 import {
-  updatePositionAction,
-  getFromUserPositionAction,
-  createPositionAction,
+  createPositionClientAction,
+  updatePositionClientDoneAction,
+  getFromClientPositionDoneAction,
+  createPositionDealerAction,
+  updatePositionDealerAction,
+  getFromDealerPositionAction,
   getAllDomiciliarioAction,
   getAllOrderAction,
 } from "../../../../../store/reducer";
 
 // Mapbox GL
 import ReactMapGL, { Marker, Popup, Source, Layer } from "react-map-gl";
-import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 
 // Material UI
 import { Room } from "@material-ui/icons";
@@ -24,26 +26,46 @@ import { Room } from "@material-ui/icons";
 import "../style.css";
 
 export const Map = (props) => {
-  // Redux Dispatch
-  const dispatch = useDispatch();
-
-  // Position, current User and Domiciliarios
-  const position = useSelector((state) => state.ui.position);
-  const positionId = useSelector((state) => state.ui.positionId);
-  const user = useSelector((state) => state.login.usuario.user);
-  const userID = useSelector((state) => state.login.usuario.user._id);
-  const userPosition = JSON.parse(position.replace(/'/g, '"'));
-
   // Component State
-  const [geoCoordinates, setGeoCoordinates] = useState([]);
   const [currentMarkerId, setCurrentMarkerId] = useState(null);
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "50vw",
-    latitude: userPosition.lat,
-    longitude: userPosition.lng,
+    latitude: 6.343636,
+    longitude: -75.512529,
     zoom: 8,
   });
+
+  // Redux Dispatch
+  const dispatch = useDispatch();
+
+  // Position, current Dealer and Order
+
+  const positions = {
+    client: {
+      position: useSelector((state) => state.ui.position.client.positionClient),
+      positionId: useSelector(
+        (state) => state.ui.position.client.positionClientId
+      ),
+    },
+    dealer: {
+      position: useSelector((state) => state.ui.position.dealer.positionDealer),
+      positionId: useSelector(
+        (state) => state.ui.position.dealer.positionDealerId
+      ),
+    },
+  };
+
+  // Dealer
+  const dealer = useSelector((state) => state.login.usuario.user);
+  const dealerId = useSelector((state) => state.login.usuario.user._id);
+
+  const dealerPosition = JSON.parse(
+    positions.dealer.position.replace(/'/g, '"')
+  );
+  const clientPosition = JSON.parse(
+    positions.client.position.replace(/'/g, '"')
+  );
 
   // Orders and Current Order
   const orderId = props.match.params.id;
@@ -54,6 +76,7 @@ export const Map = (props) => {
       currentOrder.push(order);
     }
   });
+  const clientId = currentOrder[0].cliente.id;
 
   // Markers
   const markers = [
@@ -71,12 +94,12 @@ export const Map = (props) => {
     {
       id: 10,
       type: "user",
-      name: user.nombre,
+      name: dealer.nombre,
       address: "Cr 57A N#48-43 Copacabana Antioquia",
       phoneNumber: 323234373,
       coordinates: {
-        lat: userPosition.lat,
-        lng: userPosition.lng,
+        lat: 6.343636,
+        lng: -75.512529,
       },
     },
   ];
@@ -105,10 +128,10 @@ export const Map = (props) => {
     dispatch(getAllDomiciliarioAction());
   }, []);
 
-  // Get Current Location to user
+  // Get Current Location to Dealer
   useEffect(() => {
     const timer = setInterval(() => {
-      dispatch(getFromUserPositionAction(userID));
+      dispatch(getFromDealerPositionAction(dealerId));
       const options = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -117,22 +140,22 @@ export const Map = (props) => {
 
       function success(pos) {
         var crd = pos.coords;
-        if (positionId) {
+        if (positions.dealer.positionId) {
           dispatch(
-            updatePositionAction({
+            updatePositionDealerAction({
               lat: crd.latitude,
               lng: crd.longitude,
-              positionId: positionId,
+              positionId: positions.dealer.positionId,
             })
           );
         } else {
           dispatch(
-            createPositionAction({
+            createPositionDealerAction({
               position: JSON.stringify({
                 lat: crd.latitude,
                 lng: crd.longitude,
               }),
-              usuario: userID,
+              usuario: dealerId,
             })
           );
         }
@@ -146,9 +169,66 @@ export const Map = (props) => {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [dispatch, position, positionId, userID]);
+  }, [
+    dispatch,
+    positions.dealer.position,
+    positions.dealer.positionId,
+    dealerId,
+  ]);
 
+  // Get Current Location to Client
   useEffect(() => {
+    if (!positions.client.position) {
+      const timer = setInterval(() => {
+        dispatch(getFromClientPositionDoneAction(clientId));
+        const options = {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        };
+
+        function success(pos) {
+          var crd = pos.coords;
+          if (positions.client.positionId) {
+            dispatch(
+              updatePositionClientDoneAction({
+                lat: crd.latitude,
+                lng: crd.longitude,
+                positionId: positions.client.positionId,
+              })
+            );
+          } else {
+            dispatch(
+              createPositionClientAction({
+                position: JSON.stringify({
+                  lat: crd.latitude,
+                  lng: crd.longitude,
+                }),
+                usuario: clientId,
+              })
+            );
+          }
+        }
+
+        function error(err) {
+          console.warn("ERROR(" + err.code + "): " + err.message);
+        }
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [
+    dispatch,
+    positions.client.position,
+    positions.client.positionId,
+    clientId,
+  ]);
+
+  {
+    /* 
+   useEffect(() => {
     const timer = setInterval(() => {
       if (!geoCoordinates) {
         setGeoCoordinates({
@@ -161,6 +241,9 @@ export const Map = (props) => {
 
     return () => clearTimeout(timer);
   });
+
+*/
+  }
 
   return (
     <>
@@ -222,8 +305,8 @@ export const Map = (props) => {
                 "line-width": 5,
               }}
             />
-          </Source>  
-        
+          </Source>
+          
           */}
         </ReactMapGL>
       </div>
