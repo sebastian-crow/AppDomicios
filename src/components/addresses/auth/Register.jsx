@@ -1,41 +1,19 @@
-/*import React, { useState } from "react";
+// React
+import React, { useRef, useEffect, useState, useCallback } from "react";
+
+// Mdbreact
+import { MDBContainer, MDBRow, MDBCol, MDBBtn } from "mdbreact";
+
+// React Bootstrap
+import { Button } from "react-bootstrap";
+
+// Redux
 import { useDispatch, useSelector } from "react-redux";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Alert from "@material-ui/lab/Alert";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/styles";
-import Container from "@material-ui/core/Container";
-import { Select, MenuItem, InputLabel } from "@material-ui/core";
+
+// Reducers
 import { registerAction } from "../../../store/reducer";
 
-console.log(theme)
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
-function SignUp(props) {
+const SignUp = (props) => {
   const error = useSelector((state) => state.login.errorRegistro);
   const nombre = useFormInput("");
   const apellido = useFormInput("");
@@ -43,7 +21,6 @@ function SignUp(props) {
   const documentoIdentidad = useFormInput("");
   const password = useFormInput("");
   const fechaNacimiento = useFormInput("");
-  const classes = useStyles();
   const dispatch = useDispatch();
   const handleRegister = (event) => {
     event.preventDefault();
@@ -60,122 +37,112 @@ function SignUp(props) {
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar} />
-          <LockOutlinedIcon />
-          <Typography component="h1" variant="h5" /> Registrarse{" "}
-          <form
-            className={classes.form}
-            autoComplete="off"
-            onSubmit={handleRegister}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="fname"
-                  name="nombre"
-                  variant="outlined"
+      <div className="register-content">
+        <MDBContainer>
+          <MDBRow>
+            <MDBCol md="6">
+              <form autoComplete="off" onSubmit={handleRegister}>
+                <p className="h4 text-center mb-4">Registrarse</p>
+                <label
+                  htmlFor="defaultFormRegisterNameEx"
+                  className="grey-text"
+                >
+                  Tú nombre
+                </label>
+                <input
+                  type="text"
                   required
-                  fullWidth
                   id="nombre"
-                  label="Nombres"
-                  autoFocus
+                  name="nombre"
                   {...nombre}
+                  className="form-control"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
+                <br />
+                <label
+                  htmlFor="defaultFormRegisterNameEx"
+                  className="grey-text"
+                >
+                  Apellido
+                </label>
+                <input
+                  type="text"
                   required
-                  fullWidth
                   id="apellido"
-                  label="Apellidos"
                   name="apellido"
-                  autoComplete="apellido"
                   {...apellido}
+                  autoComplete="apellido"
+                  className="form-control"
                 />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputLabel name="tipo" id="tipo">
-                  Tipo de documento
-                </InputLabel>
-                <Select required labelId="tipo" {...tipoDocumento}>
-                  <MenuItem value="Cedula" selected>
-                    Cedula
-                  </MenuItem>
-                  <MenuItem value="TargetaIdentidad">
-                    Targeta de identidad
-                  </MenuItem>
-                  <MenuItem value="pasaporte">Pasaporte</MenuItem>
-                </Select>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="documentoIdentidad"
-                  label="Documento de identidad"
+                <br />
+                <label
+                  htmlFor="defaultFormRegisterEmailEx"
+                  className="grey-text"
+                >
+                  Documento Identidad
+                </label>
+                <input
+                  type="documentoIdentidad"
                   name="documentoIdentidad"
+                  id="documentoIdentidad"
                   autoComplete="documentoIdentidad"
                   {...documentoIdentidad}
+                  className="form-control"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Contraseña"
+                <br />
+                <br />
+                <label
+                  htmlFor="defaultFormRegisterPasswordEx"
+                  className="grey-text"
+                >
+                  Contraseña
+                </label>
+                <input
                   type="password"
+                  label="Contraseña"
                   id="password"
                   autoComplete="current-password"
                   {...password}
+                  id="defaultFormRegisterPasswordEx"
+                  className="form-control"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="date"
-                  label="Cumpleaños"
+                <br />
+                <label
+                  htmlFor="defaultFormRegisterPasswordEx"
+                  className="grey-text"
+                >
+                  Fecha De fechaNacimiento
+                </label>
+                <input
                   type="date"
+                  label="Fecha Nacimiento"
                   required
                   defaultValue="2017-05-24"
-                  className={classes.textField}
                   InputLabelProps={{
                     shrink: true,
                   }}
                   {...fechaNacimiento}
+                  className="form-control"
                 />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              {" "}
-              Registrarse{" "}
-            </Button>
-            <Grid item>
-              {error && (
-                <>
-                  <Alert severity="error">{error}</Alert>
-                  <br />
-                </>
-              )}
-              <br />
-            </Grid>
-          </form>
-        </div>
-      </Container>
+                <div className="text-center mt-4">
+                  <Button variant="secondary btn-block" type="submit">
+                    Registrarse
+                  </Button>
+                </div>
+              </form>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      </div>
+      <style jsx>{`
+        .register-content {
+          position: absolute;
+          right: 13%;
+          width: 50%;
+        }
+      `}</style>
     </>
   );
-}
+};
 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -190,12 +157,4 @@ const useFormInput = (initialValue) => {
 };
 
 export default SignUp;
-*/
 
- const SignUp = () => {
-  return(
-    <div>Hello madafaka</div>
-  )
-}
-
-export default SignUp

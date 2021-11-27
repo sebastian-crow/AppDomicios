@@ -1,8 +1,11 @@
 // React
 import React, { useRef, useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 
 // React Bootstrap
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
+
+import {MDBBtn} from "mdbreact";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -67,14 +70,22 @@ const LoginPage = () => {
                 />
               </Form.Group>
 
-              <Button variant="success btn-block" type="submit">
-                Login
+              <Button variant="secondary btn-block" type="submit">
+                Iniciar Sesión
+              </Button>
+
+              <Button 
+                variant="secondary btn-block" 
+                type="submit"
+                onClick={() => dispatch(push(`/register`))}
+                >
+                Registrarse
               </Button>
             </Form>
           </Col>
         </Row>
         <h6 className="mt-5 p-5 text-center text-secondary ">
-          Copyright © 2021 Masud Rana. All Rights Reserved.
+          Copyright © 2021 Raven Designs For Dummies. All Rights Reserved.
         </h6>
       </Container>
     </>
@@ -82,3 +93,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
