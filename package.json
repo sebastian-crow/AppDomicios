@@ -61,14 +61,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build && gulp licenses",
     "test": "react-scripts test",
-    "lint": "eslint src/**/*.js src/**/*.jsx",
+    "lint": "eslint --debug 'src/**/*.{js,jsx,ts,tsx}'",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "compile-sass": "node-sass src/assets/scss/paper-dashboard.scss src/assets/css/paper-dashboard.css",
     "minify-sass": "node-sass src/assets/scss/paper-dashboard.scss src/assets/css/paper-dashboard.min.css --output-style compressed",
     "map-sass": "node-sass src/assets/scss/paper-dashboard.scss src/assets/css/paper-dashboard.css --source-map true"
   },
-  "eslintConfig": {
+   "eslintConfig": {
     "extends": "react-app"
   },
   "browserslist": [

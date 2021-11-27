@@ -3,6 +3,7 @@ import UserPage from "views/User.js";
 
 // Users
 import UserProductList from "../components/addresses/products/UserProductList";
+import EditarUsuario from "../components/addresses/auth/EditarUsuario";
 
 // Products
 import CreateProduct from "../components/addresses/products/CreateProduct";
@@ -108,7 +109,7 @@ var routesCliente = [
     rol: ["cliente"],
     name: "Editar usuario",
     icon: "nc-icon nc-single-02",
-    component: UserPage,
+    component: EditarUsuario,
     layout: "/cliente",
     visible: true,
   },
