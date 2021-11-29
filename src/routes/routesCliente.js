@@ -28,7 +28,7 @@ var routesCliente = [
     icon: "nc-icon nc-diamond",
     component: Dashboard,
     layout: "/cliente",
-    visible: true,
+    visible: false,
   },
   // Auth routes
   {
