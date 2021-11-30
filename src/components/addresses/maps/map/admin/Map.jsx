@@ -19,8 +19,8 @@ import {
 // Mapbox GL
 import ReactMapGL, { Marker, Popup, Source, Layer } from "react-map-gl";
 
-// Material UI
-import { Room } from "@material-ui/icons";
+// React Icons
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 // CSS
 import "../style.css";
