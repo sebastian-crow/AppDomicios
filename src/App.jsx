@@ -21,7 +21,6 @@ import routesDomiciliario from './routes/routesDomiciliario';
 
 import defaultRoutes from './routes/defaultRoutes';
 
-import { useLocation } from 'react-router-dom'
 async function createNotificationSubscription() {
   //wait for service worker installation to be ready
   const serviceWorker = await navigator.serviceWorker.ready;
@@ -41,11 +40,11 @@ function App() {
     if (!user) {
       dispatch(push('/login'));
     } else {
-      console.log(await createNotificationSubscription());
+      const urlPush = await createNotificationSubscription();
+      dispatch(saveUrlPushAction({userId: user.id, urlPush}));
+      console.log(urlPush);
     }
   }, [dispatch, user]);
-
-  let location = useLocation();
 
   return (
     <>
