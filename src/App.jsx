@@ -22,16 +22,26 @@ import routesDomiciliario from './routes/routesDomiciliario';
 import defaultRoutes from './routes/defaultRoutes';
 
 import { useLocation } from 'react-router-dom'
-
+async function createNotificationSubscription() {
+  //wait for service worker installation to be ready
+  const serviceWorker = await navigator.serviceWorker.ready;
+  // subscribe and return the subscription
+  return await serviceWorker.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: pushServerPublicKey,
+  });
+}
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.usuario.user);
-  React.useEffect(() => {
+  React.useEffect(async () => {
     // on app start, restore state stored from local/session storage
     dispatch(restoreSessionStateAction());
     if (!user) {
       dispatch(push('/login'));
+    } else {
+      console.log(await createNotificationSubscription());
     }
   }, [dispatch, user]);
 
