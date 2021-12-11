@@ -69,4 +69,13 @@ self.addEventListener('message', (event) => {
   }
 });
 
+self.addEventListener('push', (event) => {
+  console.log(event);
+  /*
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  */
+});
+
 // Any other custom service worker logic can go here.

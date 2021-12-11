@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 // React Bootstrap
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 
-import {MDBBtn} from "mdbreact";
+import { MDBBtn } from "mdbreact";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -46,7 +46,7 @@ const LoginPage = () => {
             className="p-5 m-auto shadow-sm rounded-lg"
           >
             <Form autoComplete="on" onSubmit={handleLogin}>
-              <Form.Group controlId="formBasicEmail">
+              <Form.Group>
                 <Form.Label>Documento Identidad</Form.Label>
                 <Form.Control
                   type="text"
@@ -54,11 +54,10 @@ const LoginPage = () => {
                   id="documentoIdentidad"
                   name="documentoIdentidad"
                   onChange={handleChangeEmail}
-                  autofocus
+                  autoFocus
                 />
               </Form.Group>
-
-              <Form.Group controlId="formBasicPassword">
+              <Form.Group>
                 <Form.Label>Contraseña</Form.Label>
                 <Form.Control
                   type="password"
@@ -74,11 +73,11 @@ const LoginPage = () => {
                 Iniciar Sesión
               </Button>
 
-              <Button 
-                variant="secondary btn-block" 
+              <Button
+                variant="secondary btn-block"
                 type="submit"
                 onClick={() => dispatch(push(`/register`))}
-                >
+              >
                 Registrarse
               </Button>
             </Form>
@@ -93,4 +92,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

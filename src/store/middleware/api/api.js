@@ -147,7 +147,6 @@ export function deleteProduct(params) {
 }
 
 // Orders
-
 export function getAllOrders() {
   return callAPI({
     method: "GET",
@@ -176,5 +175,13 @@ export function deleteOrder(params) {
     method: "DELETE",
     url: `/orders/delete/` + params.id,
     data: params.data,
+  });
+}
+
+export function savePushUrl(params) {
+  return callAPI({
+    method: "POST",
+    url: `/users/saveUrlPush/` + params.userId,
+    data: { urlPush: params.urlPush },
   });
 }

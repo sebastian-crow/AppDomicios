@@ -60,7 +60,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && gulp licenses",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint --debug 'src/**/*.{js,jsx,ts,tsx}'",
     "eject": "react-scripts eject",

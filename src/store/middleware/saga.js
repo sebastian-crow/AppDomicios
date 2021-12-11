@@ -76,6 +76,8 @@ import {
   getAllDomiciliarioAction,
   getAllDomiciliarioDoneAction,
   loginError,
+  saveUrlPushAction,
+  saveUrlPushDoneAction,
 } from "../reducer";
 import { LOCATION_CHANGE } from "redux-first-history";
 
@@ -415,6 +417,23 @@ function* deleteOrderSaga(action) {
     }
   }
 }
+function* saveUrlPushSaga(action) {
+  try {
+    const { data } = yield call(api.savePushUrl, action.payload);
+    if (data.status === 200) {
+      yield put(saveUrlPushDoneAction(data));
+    } else {
+      //yield put(errorDeleteOrder(data.status));
+    }
+  } catch (error) {
+    yield put(errorDeleteOrder("Error inesperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
 
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
@@ -450,4 +469,5 @@ export function* rootSaga() {
   yield takeLatest(createOrderAction.type, createOrderSaga);
   yield takeLatest(updateOrderAction.type, updateOrderSaga);
   yield takeLatest(deleteOrderAction.type, deleteOrderSaga);
+  yield takeLatest(saveUrlPushAction.type, saveUrlPushSaga);
 }

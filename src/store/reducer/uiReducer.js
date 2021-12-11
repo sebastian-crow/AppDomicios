@@ -71,6 +71,11 @@ export const getAllOrderAction = createAction("GET_ALL_ORDER_ACTION");
 
 export const getAllOrderDoneAction = createAction("GET_ALL_ORDER_DONE_ACTION");
 
+// urlPush
+export const saveUrlPushAction = createAction("SAVE_URL_PUSH_ACTION");
+
+export const saveUrlPushDoneAction = createAction("SAVE_URL_PUSH_DONE_ACTION");
+
 // UI state reducers
 const initialState = {
   position: {
@@ -141,6 +146,10 @@ const uiReducer = createReducer(initialState, {
   },
   [getAllOrderDoneAction]: (state, action) => {
     state.orders = action.payload.data.Orders;
+  },
+  [saveUrlPushDoneAction]: (state, action) => {
+    console.log(state);
+    //state.urlPush = action.payload.data.Orders;
   },
 });
 
