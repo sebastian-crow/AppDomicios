@@ -16,7 +16,7 @@ import EditOrder from "../components/addresses/orders/EditOrder";
 import UserOrderList from "../components/addresses/orders/UserOrderList";
 
 // Map
-import {Map} from "../components/addresses/maps/map/client/Map"
+import {Map} from "../components/addresses/maps/map/client/Map";
 
 
 var routesCliente = [

@@ -99,13 +99,13 @@ const uiReducer = createReducer(initialState, {
   // Create Position Client
   [createPositionClientDoneAction]: (state, action) => {
     state.position.client.positionClient = action.payload.data[0].position;
-    state.position.client.positionClientId = action.payload.data[0]._id;
+    state.position.client.positionClientId = action.payload.data._id;
   },
 
   // Create Position Dealer
   [createPositionDealerDoneAction]: (state, action) => {
     state.position.dealer.positionDealer = action.payload.data[0].position;
-    state.position.dealer.positionDealerId = action.payload.data[0]._id;
+    state.position.dealer.positionDealerId = action.payload.data._id;
   },
 
   // Update Position Client
@@ -128,8 +128,8 @@ const uiReducer = createReducer(initialState, {
 
   // Get Position Dealer
   [getFromDealerPositionDoneAction]: (state, action) => {
-    state.position.dealer.positionDealerId = action.payload.data[0].position;
-    state.position.dealer.positionDealerId = action.payload.data[0]._id;
+    state.position.dealer.positionDealerId = action.payload.data.position;
+    state.position.dealer.positionDealerId = action.payload.data._id;
   },
 
   [getAllUserDoneAction]: (state, action) => {

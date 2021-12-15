@@ -23,15 +23,27 @@ import { Button } from "react-bootstrap";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
+// Cities JSON
+import { cities, departments } from "./lib/cities";
+
+// Map
+import { MapGeocode } from "./lib/MapGeocode";
+
 const animatedComponents = makeAnimated();
 
 // Take Order Component
 const TakeOrder = (props) => {
   const dispatch = useDispatch();
 
-  const [dealerData, setDealerData] = React.useState({});
-  const [orderName, setOrderName] = React.useState(null);
+  const [nameLastName, setNameLastName] = React.useState(null);
+  const [documentNumber, setDocumentNumber] = React.useState(null);
+  const [phoneNumber, setPhoneNumber] = React.useState(null);
+  const [department, setDepartment] = React.useState([]);
+  const [city, setCity] = React.useState([]);
   const [address, setAddress] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
+  const [paymentMethod, setPaymentMethod] = React.useState([]);
+  const [dealerData, setDealerData] = React.useState({});
 
   const [productsAndAmount, setProductsAndAmount] = React.useState([]);
 
@@ -61,14 +73,112 @@ const TakeOrder = (props) => {
     setDealerData(dealerData);
   };
 
-  // Handle event onChange to orderName
-  const handleOrderNameChange = (orderName) => {
-    setOrderName(orderName.target.value);
+  // Handle names and last names
+  const handleNameChange = (nameLastName) => {
+    setNameLastName(nameLastName.target.value);
+  };
+
+  // Handle document number
+  const handleDocumentNumber = (documentNumber) => {
+    setDocumentNumber(documentNumber.target.value);
+  };
+
+  // Handle names and last names
+  const handlePhoneChange = (phoneNumber) => {
+    setPhoneNumber(phoneNumber.target.value);
+  };
+
+  // Hanlde the event onChange to multi select department
+  const handleDepartmentChange = (departmentData, index) => {
+    department[index] = departmentData;
+    setDepartment(departmentData);
+  };
+
+  const departmentSimpleInfo = [];
+  let number = 0;
+  Object.keys(department).forEach((key) => {
+    departmentSimpleInfo[number] = department[key];
+    number++;
+  });
+
+  // Hanlde the event onChange to multi select city
+  const getCities = cities.map((city) => {
+    let citie = {};
+    if (city.id == departmentSimpleInfo[0]) {
+      citie = city.ciudades.map((citi) => {
+        return {
+          value: city.id,
+          label: citi,
+        };
+      });
+    }
+    return citie;
+  });
+
+  let finalCitiesData = [];
+  const finalCities = getCities.map((citie) => {
+    if (citie.length > 1) {
+      finalCitiesData.push(citie);
+    }
+  });
+
+  let finalInfoCitiesData = [
+    {
+      value: 3,
+      label: "Medellín",
+    },
+    {
+      value: 4,
+      label: "Bello",
+    },
+  ];
+
+  let temporalfinalInfoCitiesData = finalCitiesData.map((finalData) => {
+    let object = finalData.map((final) => {
+      return {
+        value: Math.floor(Math.random() * 100),
+        label: final.label,
+      };
+    });
+    return object.map((obj) => {
+      return obj;
+    });
+  });
+
+  if (temporalfinalInfoCitiesData.length > 0) {
+    finalInfoCitiesData = temporalfinalInfoCitiesData;
+  }
+
+  const handleCityChange = (cityData, index) => {
+    city[index] = cityData;
+    setCity(city);
+  };
+
+  // Hanlde evnet onChange to Email
+  const handleEmailChange = (emailData) => {
+    setEmail(emailData.target.value);
+  };
+
+  // Hanlde event onChange to payMethod
+  const paymentMethods = [
+    {
+      method: "Efectivo",
+      id: Math.floor(Math.random() * 100),
+    },
+    {
+      method: "Transferencia Bancaria",
+      id: Math.floor(Math.random() * 100),
+    },
+  ];
+
+  const handePayMethodChange = (paymentData, index) => {
+    paymentMethod[index] = paymentData;
+    setPaymentMethod(paymentData);
   };
 
   // Handle event onChange to Address
-  const handleAddressChange = (address) => {
-    setAddress(address.target.value);
+  const handleAddressChange = (addressData) => {
+    setAddress(addressData.target.value);
   };
 
   // Handle  Update
@@ -143,9 +253,86 @@ const TakeOrder = (props) => {
                 <Col sm={10}>
                   <Input
                     type="text"
+                    id="nameLastName"
+                    placeholder="Nombres y Apellidos"
+                    onChange={handleNameChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="documentNumber"
+                    placeholder="Cédula"
+                    onChange={handleDocumentNumber}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
                     id="orderName"
-                    placeholder="Titulo del pedido"
-                    onChange={handleOrderNameChange}
+                    placeholder="Telefono"
+                    onChange={handlePhoneChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Select
+                    onChange={handleDepartmentChange}
+                    placeholder="Departamento"
+                    options={departments.map((department) => {
+                      return {
+                        value: department.id,
+                        label: department.departamento,
+                      };
+                    })}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Select
+                    onChange={handleCityChange}
+                    placeholder="Ciudad"
+                    options={finalInfoCitiesData[0]}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="orderName"
+                    placeholder="Dirección"
+                    onChange={handleAddressChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="orderName"
+                    placeholder="Correo Electronico"
+                    onChange={handleEmailChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Select
+                    onChange={handePayMethodChange}
+                    placeholder="Método De Pago"
+                    options={paymentMethods.map((method) => {
+                      return {
+                        value: method.id,
+                        label: method.method,
+                      };
+                    })}
                   />
                 </Col>
               </FormGroup>
@@ -163,86 +350,10 @@ const TakeOrder = (props) => {
                   />
                 </Col>
               </FormGroup>
-              <FormGroup row>
-                <Button size="sm" variant="primary" onClick={addListProduct}>
-                  Añadir producto
-                </Button>{" "}
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th width="60%" scope="col">
-                        Producto
-                      </th>
-                      <th width="30%" scope="col">
-                        Cantidad
-                      </th>
-                      <th width="10%" scope="col">
-                        Borrar
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {productsAndAmount.map((productsAndAmountElement, key) => (
-                      <tr key={key}>
-                        <td>
-                          {" "}
-                          <Col sm={12}>
-                            <Select
-                              onChange={(data) =>
-                                handleProductChange(data, key)
-                              }
-                              closeMenuOnSelect={false}
-                              components={animatedComponents}
-                              options={products.map((product) => {
-                                return {
-                                  value: product._id,
-                                  label: product.nombre,
-                                };
-                              })}
-                              placeholder="Productos"
-                            />
-                          </Col>
-                        </td>
-                        <td>
-                          <Col sm={12}>
-                            <Input
-                              type="number"
-                              id="counter"
-                              placeholder="Cantidad"
-                              onChange={(data) => handleAmountChange(data, key)}
-                            />
-                          </Col>
-                        </td>
-                        <td>
-                          <Col sm={12}>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={(e) => deleteProducto(e, key)}
-                            >
-                              Borrar
-                            </Button>
-                          </Col>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </FormGroup>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="address"
-                    placeholder="Dirección"
-                    onChange={handleAddressChange}
-                  />
-                </Col>
-              </FormGroup>
               <FormGroup className="">
-                <div className="">
+                <div className="positionButton">
                   <Button variant="success" size="lg" onClick={handleSave}>
-                    Guardar
+                    Crear Orden
                   </Button>{" "}
                   {``}
                 </div>
@@ -250,8 +361,25 @@ const TakeOrder = (props) => {
             </Col>
             <Col></Col>
           </Form>
+          <div className="mapContainerForm">
+            <MapGeocode />
+          </div>
         </Container>
       </div>
+      <style jsx>{`
+        .positionButton {
+          position: absolute;
+          left: 58rem;
+          top: -28rem;
+        }
+
+        .mapContainerForm {
+          width: 100%;
+          height: 600px;
+          z-index: -10;
+          border: 2px solid black;
+        }
+      `}</style>
     </>
   );
 };
