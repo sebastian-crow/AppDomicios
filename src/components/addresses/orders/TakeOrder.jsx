@@ -2,13 +2,11 @@
 import * as React from "react";
 
 // Redux
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
 // Reducers
 import {
-  getAllProductAction,
   getAllDomiciliarioAction,
   createOrderAction,
 } from "../../../store/reducer";
@@ -27,7 +25,7 @@ import makeAnimated from "react-select/animated";
 import { cities, departments } from "./lib/cities";
 
 // Map
-import { MapGeocode } from "./lib/MapGeocode";
+import { MapSelectUbication } from "./lib/MapSelectUbication";
 
 const animatedComponents = makeAnimated();
 
@@ -212,34 +210,8 @@ const TakeOrder = (props) => {
     dispatch(push("/orderlist"));
   };
 
-  const addListProduct = () => {
-    const listProducs = [];
-    if (productsAndAmount.length) {
-      for (let index = 0; index <= productsAndAmount.length - 1; index++) {
-        const element = productsAndAmount[index];
-        listProducs.push(element);
-      }
-      listProducs.push({});
-    } else {
-      listProducs.push({});
-    }
-    setProductsAndAmount(listProducs);
-  };
-
-  const deleteProducto = (e, index) => {
-    e.preventDefault();
-    const listProducs = [];
-    productsAndAmount.forEach((indexProducto, key) => {
-      if (index !== key) {
-        listProducs.push(indexProducto);
-      }
-    });
-    setProductsAndAmount(listProducs);
-  };
-
   // Get Products Array
   React.useEffect(() => {
-    dispatch(getAllProductAction());
     dispatch(getAllDomiciliarioAction());
   }, [dispatch]);
 
@@ -362,7 +334,7 @@ const TakeOrder = (props) => {
             <Col></Col>
           </Form>
           <div className="mapContainerForm">
-            <MapGeocode />
+            <MapSelectUbication />
           </div>
         </Container>
       </div>
@@ -376,7 +348,6 @@ const TakeOrder = (props) => {
         .mapContainerForm {
           width: 100%;
           height: 600px;
-          z-index: -10;
           border: 2px solid black;
         }
       `}</style>

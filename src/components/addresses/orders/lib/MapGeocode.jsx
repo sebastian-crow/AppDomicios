@@ -14,8 +14,6 @@ import {
   getFromClientPositionAction,
 } from "../../../../store/reducer";
 
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_API;
-
 export const MapGeocode = () => {
   const positionClient = {
     position: useSelector((state) => state.ui.position.client.positionClient),
@@ -52,6 +50,8 @@ export const MapGeocode = () => {
       lng: clientPosition.lng,
     },
   };
+
+  const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_API;
 
   // if you are happy with Geocoder default settings, you can just use handleViewportChange directly
   const handleGeocoderViewportChange = useCallback(

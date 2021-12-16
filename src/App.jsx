@@ -5,7 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'; // Librería react-r
 import { push } from 'redux-first-history';
 ``
 // CSS
-import 'mapbox-gl/dist/mapbox-gl.css';
+//import 'mapbox-gl/dist/mapbox-gl.css';
 //import mapboxgl from '!mapbox-gl';
 import './assets/css/home.css';
 

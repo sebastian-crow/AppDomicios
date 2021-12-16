@@ -16,8 +16,11 @@ import EditOrder from "../components/addresses/orders/EditOrder";
 import UserOrderList from "../components/addresses/orders/UserOrderList";
 
 // Map
-import {Map} from "../components/addresses/maps/map/client/Map";
+import { Map } from "../components/addresses/maps/map/client/Map";
+import { MapSelectUbication } from "../components/addresses/orders/lib/MapSelectUbication";
 
+// Google Sheets Connection
+import { GoogleSheetsConnect } from "../components/addresses/excel/googleSheetsConnect"
 
 var routesCliente = [
   // Default routes
@@ -56,7 +59,7 @@ var routesCliente = [
     rol: ["cliente"],
     component: CreateProduct,
     layout: "/cliente",
-    visible: true,
+    visible: false,
   },
   {
     path: "/editarproducto/:id",
@@ -74,7 +77,7 @@ var routesCliente = [
     rol: ["cliente"],
     component: UserProductList,
     layout: "/cliente",
-    visible: true,
+    visible: false,
   },
   {
     path: "/listproducts",
@@ -83,7 +86,7 @@ var routesCliente = [
     rol: ["cliente"],
     component: ListProducts,
     layout: "/cliente",
-    visible: true,
+    visible: false,
   },
   // Orders
   {
@@ -110,6 +113,15 @@ var routesCliente = [
     name: "Editar usuario",
     icon: "nc-icon nc-single-02",
     component: EditarUsuario,
+    layout: "/cliente",
+    visible: true,
+  },
+  {
+    path: "/googlesheetsconnection",
+    rol: ["cliente"],
+    name: "Google Sheets",
+    icon: "nc-icon nc-single-02",
+    component: GoogleSheetsConnect,
     layout: "/cliente",
     visible: true,
   },

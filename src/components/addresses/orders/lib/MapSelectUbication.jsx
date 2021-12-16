@@ -1,28 +1,24 @@
-import React, { useRef, useEffect, useState } from "react";
-
-import mapboxgl from "!mapbox-gl";
-
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
-
-// Mapbox GL
-import ReactMapGL, { Marker, Popup, Source, Layer } from "react-map-gl";
-
-// Redux
+import "mapbox-gl/dist/mapbox-gl.css";
+import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { MapGeocode } from "./MapGeocode";
+import MapGL from "react-map-gl";
+import Geocoder from "react-map-gl-geocoder";
 
-// Actions
 import {
   createPositionClientAction,
   updatePositionClientAction,
   getFromClientPositionAction,
 } from "../../../../store/reducer";
 
-// React Icons
-import { FaMapMarkerAlt } from "react-icons/fa";
+//const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_API;
+const MAPBOX_TOKEN =
+  "pk.eyJ1Ijoic2ViYXN0aWFuY3JvdyIsImEiOiJja3g4MTNydmwzMHY3MnZvYnd0NDZ1aW4xIn0.3SAjHYekpbQzAjJWfGlHug";
 
-export const MapOrderUbication = () => {
+const MARKER_OPTIONS = { color: "#00C805" };
+
+export const MapSelectUbication = () => {
   const positionClient = {
     position: useSelector((state) => state.ui.position.client.positionClient),
     positionId: useSelector(
@@ -31,29 +27,33 @@ export const MapOrderUbication = () => {
   };
 
   const clientPosition = JSON.parse(positionClient.position.replace(/'/g, '"'));
-
   const dispatch = useDispatch();
-
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [lng, setLng] = useState(clientPosition.lng);
-  const [lat, setLat] = useState(clientPosition.lat);
-  const [zoom, setZoom] = useState(9);
-
   const clientId = useSelector((state) => state.login.usuario.user._id);
 
-  // Markers
-  const marker = {
-    id: 20,
-    type: "currentUser",
-    name: useSelector((state) => state.login.usuario.user.nombre),
-    address: "direction xd",
-    phoneNumber: 3413443482,
-    coordinates: {
-      lat: clientPosition.lat,
-      lng: clientPosition.lng,
+  const [viewport, setViewport] = useState({
+    latitude: clientPosition.lat,
+    longitude: clientPosition.lng,
+    zoom: 8,
+  });
+  const geocoderContainerRef = useRef();
+  const mapRef = useRef();
+  const handleViewportChange = useCallback(
+    (newViewport) => setViewport(newViewport),
+    []
+  );
+
+  // if you are happy with Geocoder default settings, you can just use handleViewportChange directly
+  const handleGeocoderViewportChange = useCallback(
+    (newViewport) => {
+      const geocoderDefaultOverrides = { transitionDuration: 1000 };
+
+      return handleViewportChange({
+        ...newViewport,
+        ...geocoderDefaultOverrides,
+      });
     },
-  };
+    [handleViewportChange]
+  );
 
   // Get Current Location to Client
   useEffect(() => {
@@ -100,34 +100,29 @@ export const MapOrderUbication = () => {
     }
   }, [dispatch, positionClient.position, positionClient.positionId, clientId]);
 
-  useEffect(() => {
-    if (map.current) return; // initialize map only once
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [lng, lat],
-      zoom: zoom,
-    });
-  });
-
   return (
-    <>
-      <H1>hello</H1>
-    </>
+    <div style={{ height: "60vh" }}>
+      <div
+        ref={geocoderContainerRef}
+        style={{ position: "absolute", top: 535, left: 55, zIndex: 1 }}
+      />
+      <MapGL
+        ref={mapRef}
+        {...viewport}
+        width="100%"
+        height="100%"
+        onViewportChange={handleViewportChange}
+        mapboxApiAccessToken={MAPBOX_TOKEN}
+      >
+        <Geocoder
+          mapRef={mapRef}
+          containerRef={geocoderContainerRef}
+          //onViewportChange={handleGeocoderViewportChange}
+          onViewportChange={handleViewportChange}
+          mapboxApiAccessToken={MAPBOX_TOKEN}
+          position="top-left"
+        />
+      </MapGL>
+    </div>
   );
 };
-
-/* 
-<div>
-        <div ref={mapContainer} className="map-container" />
-      </div>
-      <style jsx>{`
-        .map-container {
-          border-radius: 8px;
-          height: 600px;
-          border: 1px solid black;
-        }
-      `}</style>
-
-
-*/
