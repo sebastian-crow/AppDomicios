@@ -5,6 +5,9 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
+// Axios
+import axios from "axios";
+
 // Reducers
 import {
   getAllDomiciliarioAction,
@@ -33,6 +36,8 @@ const animatedComponents = makeAnimated();
 const TakeOrder = (props) => {
   const dispatch = useDispatch();
 
+  const [orderNumber, setorderNumber] = React.useState(null);
+  const [orderText, setOrderText] = React.useState(null);
   const [nameLastName, setNameLastName] = React.useState(null);
   const [documentNumber, setDocumentNumber] = React.useState(null);
   const [phoneNumber, setPhoneNumber] = React.useState(null);
@@ -42,8 +47,9 @@ const TakeOrder = (props) => {
   const [email, setEmail] = React.useState(null);
   const [paymentMethod, setPaymentMethod] = React.useState([]);
   const [dealerData, setDealerData] = React.useState({});
-
-  const [productsAndAmount, setProductsAndAmount] = React.useState([]);
+  const [dealerDataGoogleSheets, setDealerDataGoogleSheets] = React.useState(
+    {}
+  );
 
   // Get Current User
   const user = useSelector((state) => state.login.usuario.user);
@@ -54,26 +60,19 @@ const TakeOrder = (props) => {
   // Products from store
   const products = useSelector((state) => state.ui.products);
 
-  // Handle event onChange amount
-  const handleAmountChange = (amount, index) => {
-    productsAndAmount[index].amount = amount.target.value;
-    setProductsAndAmount(productsAndAmount);
-  };
-
-  // Hanlde the event onChange to the Product multi select
-  const handleProductChange = (productData, index) => {
-    productsAndAmount[index] = productData;
-    setProductsAndAmount(productsAndAmount);
-  };
-
-  // Handle event onChange to dealer multii select
-  const handleDealerChange = (dealerData) => {
-    setDealerData(dealerData);
-  };
-
   // Handle names and last names
   const handleNameChange = (nameLastName) => {
     setNameLastName(nameLastName.target.value);
+  };
+
+  // Handle the number of order
+  const handleOrderNumber = (orderNumberData) => {
+    setorderNumber(orderNumberData.target.value);
+  };
+
+  // Handle the order like text
+  const handleOrderText = (orderTextData) => {
+    setOrderText(orderTextData.target.value);
   };
 
   // Handle document number
@@ -152,12 +151,17 @@ const TakeOrder = (props) => {
     setCity(city);
   };
 
+  // Handle event onChange to Address
+  const handleAddressChange = (addressData) => {
+    setAddress(addressData.target.value);
+  };
+
   // Hanlde evnet onChange to Email
   const handleEmailChange = (emailData) => {
     setEmail(emailData.target.value);
   };
 
-  // Hanlde event onChange to payMethod
+  // Payment Methods
   const paymentMethods = [
     {
       method: "Efectivo",
@@ -169,48 +173,69 @@ const TakeOrder = (props) => {
     },
   ];
 
+  // Hanlde event onChange to payMethod
   const handePayMethodChange = (paymentData, index) => {
     paymentMethod[index] = paymentData;
     setPaymentMethod(paymentData);
   };
 
-  // Handle event onChange to Address
-  const handleAddressChange = (addressData) => {
-    setAddress(addressData.target.value);
+  // Handle event onChange to dealer multii select
+  const handleDealerChange = (dealerData) => {
+    setDealerData(dealerData);
   };
 
-  // Handle  Update
-  const handleSave = () => {
-    const productDone = [];
-    productsAndAmount.map((info) => {
-      productDone.push({
-        nombre: info.label,
-        id: info.value,
-        cantidad: info.amount,
-      });
-    });
-    const remaining = 180000; // Time remaining since the order was created.
+  const openWhatsapp = () => {
+    const url =
+      "https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0";
+    window.open(url, "_blank");
+  };
 
+  // Handle Save
+  const handleSave = () => {
     let data = {
-      orderName,
-      fecha: new Date(),
-      cliente: {
-        id: user._id,
-        name: user.nombre,
-      },
+      orderNumber: orderNumber,
+      pedido: orderText,
+      nombresYApellidos: nameLastName,
+      cedula: documentNumber,
+      telefono: phoneNumber,
+      departamento: department,
+      ciudad: city,
+      direccion: address,
+      correoElectronico: email,
+      metodoDePago: paymentMethod,
       domiciliario: {
         id: dealerData.value,
         name: dealerData.label,
       },
-      productos: productDone,
-      direccion: address,
-      remaining,
+      fecha: Date.now(),
+      cliente: {
+        nombre: user.nombre,
+        id: user._id,
+      },
+      estado: "En proceso",
     };
+
     dispatch(createOrderAction(data));
     dispatch(push("/orderlist"));
+    //dispatch(push("/whatsappNotification"));
+    console.log("data", data);
+    openWhatsapp();
+
+    let pedido = {
+      nombresYApellidos: nameLastName,
+      cedula: documentNumber,
+      celular: phoneNumber,
+      departamento: department,
+      ciudad: city,
+      direccion: address,
+      correoElectronico: email,
+      metodoDePago: paymentMethod,
+      domiciliario: dealerData,
+    };
+    console.log("Pedido", pedido);
   };
 
-  // Get Products Array
+  // Get Dealers Array
   React.useEffect(() => {
     dispatch(getAllDomiciliarioAction());
   }, [dispatch]);
@@ -218,9 +243,30 @@ const TakeOrder = (props) => {
   return (
     <>
       <div>
-        <Container className="themed-container" fluid="sm">
+        <Container className="themed-container containerProof" fluid="sm">
           <Form className="form">
+            <h2 className="takeOrderTitle">Tomar Orden</h2>
             <Col>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="orderNumber"
+                    placeholder="N° de Orden de tu pedido"
+                    onChange={handleOrderNumber}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="orderText"
+                    placeholder="Pega tu pedido aquí"
+                    onChange={handleOrderText}
+                  />
+                </Col>
+              </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
                   <Input
@@ -341,14 +387,27 @@ const TakeOrder = (props) => {
       <style jsx>{`
         .positionButton {
           position: absolute;
-          left: 58rem;
-          top: -28rem;
+          left: 42rem;
+          top: -38rem;
         }
 
         .mapContainerForm {
-          width: 100%;
+          width: 84%;
           height: 600px;
           border: 2px solid black;
+        }
+
+        .containerProof {
+          position: relative;
+          top: 2rem;
+          left: 3rem;
+
+        }
+
+        .takeOrderTitle {
+          font-size: 44px;
+          font-family: monospace;
+          font-weight: bold;
         }
       `}</style>
     </>

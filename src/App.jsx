@@ -1,25 +1,27 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable linebreak-style */
-import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom'; // Librería react-router-dom
-import { push } from 'redux-first-history';
-``
+import React from "react";
+import { Switch, Route, Redirect } from "react-router-dom"; // Librería react-router-dom
+import { push } from "redux-first-history";
+``;
 // CSS
 //import 'mapbox-gl/dist/mapbox-gl.css';
 //import mapboxgl from '!mapbox-gl';
-import './assets/css/home.css';
+import "./assets/css/home.css";
 
-import { useDispatch, useSelector } from 'react-redux';
-import AdminLayout from 'layouts/Admin';
-import NoAuth from 'layouts/NoAuth';
-import { restoreSessionStateAction } from './store/reducer';
-import Login from './components/addresses/auth/Login';
-import Register from './components/addresses/auth/Register';
-import routesCliente from './routes/routesCliente';
-import routesAdmin from './routes/routesAdmin';
-import routesDomiciliario from './routes/routesDomiciliario';
+import { useDispatch, useSelector } from "react-redux";
+import AdminLayout from "layouts/Admin";
+import NoAuth from "layouts/NoAuth";
+import { restoreSessionStateAction } from "./store/reducer";
+import Login from "./components/addresses/auth/Login";
+import Register from "./components/addresses/auth/Register";
+import routesCliente from "./routes/routesCliente";
+import routesAdmin from "./routes/routesAdmin";
+import routesDomiciliario from "./routes/routesDomiciliario";
 
-import defaultRoutes from './routes/defaultRoutes';
+import defaultRoutes from "./routes/defaultRoutes";
+
+import TakeOrder from "./components/addresses/orders/TakeOrder";
 
 async function createNotificationSubscription() {
   //wait for service worker installation to be ready
@@ -38,10 +40,10 @@ function App() {
     // on app start, restore state stored from local/session storage
     dispatch(restoreSessionStateAction());
     if (!user) {
-      dispatch(push('/login'));
+      dispatch(push("/login"));
     } else {
       const urlPush = await createNotificationSubscription();
-      dispatch(saveUrlPushAction({userId: user.id, urlPush}));
+      dispatch(saveUrlPushAction({ userId: user.id, urlPush }));
       console.log(urlPush);
     }
   }, [dispatch, user]);
@@ -61,26 +63,40 @@ function App() {
           />
           <Route
             path="/domiciliario"
-            render={(props) => <AdminLayout {...props} routes={routesDomiciliario} />}
+            render={(props) => (
+              <AdminLayout {...props} routes={routesDomiciliario} />
+            )}
           />
           <Route
             path="/cliente"
-            render={(props) => <AdminLayout {...props} routes={routesCliente} />}
+            render={(props) => (
+              <AdminLayout {...props} routes={routesCliente} />
+            )}
           />
+          <Route
+            restricted
+            path="/clienteForm"
+            render={(props) => <NoAuth {...props} routes={routesCliente} />}
+          />
+
           <Route
             path="/user"
             render={(props) => <NoAuth {...props} routes={defaultRoutes} />}
           />
           <Route restricted path="/login" component={Login} />
           <Route restricted path="/register" component={Register} />
-
-          {user?.rol === 'cliente' && (
-            <Redirect to="/cliente/dashboard" />
-          )}
-          {user?.rol === 'admin' && (
-            <Redirect to="/admin/dashboard" />
-          )}
-          {user?.rol === 'domiciliario' && (
+          <Route
+            path="/whatsappNotification"
+            component={() => {
+              window.location.href =
+                "https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0";
+              window.location.target = "_blank";
+              return null;
+            }}
+          />
+          {user?.rol === "cliente" && <Redirect to="/cliente/dashboard" />}
+          {user?.rol === "admin" && <Redirect to="/admin/dashboard" />}
+          {user?.rol === "domiciliario" && (
             <Redirect to="/domiciliario/dashboard" />
           )}
         </Switch>
@@ -90,4 +106,3 @@ function App() {
 }
 
 export default App;
-

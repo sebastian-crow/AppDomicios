@@ -45,7 +45,7 @@ var routesCliente = [
   },
   {
     path: "/takeorder",
-    name: "Hacer un pedido",
+    name: "Cordinar Entrega",
     icon: "nc-icon nc-cart-simple",
     rol: ["cliente"],
     component: TakeOrder,
@@ -123,6 +123,15 @@ var routesCliente = [
     icon: "nc-icon nc-single-02",
     component: GoogleSheetsConnect,
     layout: "/cliente",
+    visible: true,
+  },
+  {
+    path: "/clienteFormulario",
+    rol: ["cliente"],
+    name: "Order Form",
+    icon: "nc-icon nc-single-02",
+    component: TakeOrder,
+    layout: "/clienteForm",
     visible: true,
   },
 ];

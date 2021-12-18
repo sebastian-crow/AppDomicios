@@ -1,5 +1,6 @@
 // React
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -22,14 +23,19 @@ export const GoogleSheetsConnect = (props) => {
   const dispatch = useDispatch();
 
   const usuario = useSelector((state) => state.login.usuario.user);
-  const googleSheets = useFormInput("");
   const [error, setError] = useState(null);
+  const [googleSheets, setGoogleSheets] = useState(null);
+
+  // Hanlde evnet onChange to Email
+  const handleGoogleSheetsChange = (googleSheetsData) => {
+    setGoogleSheets(googleSheetsData.target.value);
+  };
 
   const handleRegister = (event) => {
     event.preventDefault();
     setError(null);
     let data = {
-      googleSheets: googleSheets.value,
+      googleSheets: googleSheets,
     };
     dispatch(actualizarUsuarioAction({ data, id: usuario._id }));
     dispatch(push("/"));
@@ -48,6 +54,7 @@ export const GoogleSheetsConnect = (props) => {
                     id="sheet.besUrl"
                     autofocus
                     placeholder="Agrega tu link de sheet.bes para conectar tu perfil con tu cuenta de google sheets"
+                    onChange={handleGoogleSheetsChange}
                   />
                 </Col>
               </FormGroup>
@@ -59,23 +66,41 @@ export const GoogleSheetsConnect = (props) => {
                   {``}
                 </div>
               </FormGroup>
+              <FormGroup className="">
+                <div className="sheetBsRePosition">
+                  <Button variant="success" size="lg" type="submit">
+                    <a
+                      href="https://sheet.best/"
+                      target="_blank"
+                      className="aLink"
+                    >
+                      Ir a Sheet.bes
+                    </a>
+                  </Button>{" "}
+                  {``}
+                </div>
+              </FormGroup>
             </Col>
             <Col></Col>
           </Form>
         </Container>
       </div>
+      <style jsx>{`
+        .aLink {
+          text-decoration: none;
+          color: white;
+        }
+
+        .aLink:hover {
+          color: white;
+        }
+
+        .sheetBsRePosition {
+          position: absolute;
+          left: 13rem;
+          top: -5.1rem;
+        }
+      `}</style>
     </>
   );
-};
-
-const useFormInput = (initialValue) => {
-  const [value, setValue] = useState(initialValue);
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
-  return {
-    value,
-    onChange: handleChange,
-  };
 };
