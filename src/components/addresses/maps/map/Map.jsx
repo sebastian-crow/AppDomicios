@@ -45,13 +45,13 @@ export const Map = (props) => {
     client: {
       position: useSelector((state) => state.ui.position.client.positionClient),
       positionId: useSelector(
-        (state) => state.ui.position.client.positionClientId
+        (state) => state.ui.position.client.positionClientId,
       ),
     },
     dealer: {
       position: useSelector((state) => state.ui.position.dealer.positionDealer),
       positionId: useSelector(
-        (state) => state.ui.position.dealer.positionDealerId
+        (state) => state.ui.position.dealer.positionDealerId,
       ),
     },
   };
@@ -61,10 +61,10 @@ export const Map = (props) => {
   const dealerId = useSelector((state) => state.login.usuario.user._id);
 
   const dealerPosition = JSON.parse(
-    positions.dealer.position.replace(/'/g, '"')
+    positions.dealer.position.replace(/'/g, '"'),
   );
   const clientPosition = JSON.parse(
-    positions.client.position.replace(/'/g, '"')
+    positions.client.position.replace(/'/g, '"'),
   );
 
   // Orders and Current Order
@@ -146,7 +146,7 @@ export const Map = (props) => {
               lat: crd.latitude,
               lng: crd.longitude,
               positionId: positions.dealer.positionId,
-            })
+            }),
           );
         } else {
           dispatch(
@@ -156,7 +156,7 @@ export const Map = (props) => {
                 lng: crd.longitude,
               }),
               usuario: dealerId,
-            })
+            }),
           );
         }
       }
@@ -195,7 +195,7 @@ export const Map = (props) => {
                 lat: crd.latitude,
                 lng: crd.longitude,
                 positionId: positions.client.positionId,
-              })
+              }),
             );
           } else {
             dispatch(
@@ -205,7 +205,7 @@ export const Map = (props) => {
                   lng: crd.longitude,
                 }),
                 usuario: clientId,
-              })
+              }),
             );
           }
         }
@@ -271,24 +271,6 @@ export const Map = (props) => {
               )}
             </>
           ))}
-          {/* 
-            <Source id="polylineLayer" type="geojson" data={Road}>
-            <Layer
-              id="lineLayer"
-              type="line"
-              source="my-data"
-              layout={{
-                "line-join": "round",
-                "line-cap": "round",
-              }}
-              paint={{
-                "line-color": "rgba(3, 170, 238, 0.5)",
-                "line-width": 5,
-              }}
-            />
-          </Source>
-          
-          */}
         </ReactMapGL>
       </div>
       <style jsx>{`

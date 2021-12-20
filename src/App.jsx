@@ -21,18 +21,6 @@ import routesDomiciliario from "./routes/routesDomiciliario";
 
 import defaultRoutes from "./routes/defaultRoutes";
 
-import TakeOrder from "./components/addresses/orders/TakeOrder";
-
-async function createNotificationSubscription() {
-  //wait for service worker installation to be ready
-  const serviceWorker = await navigator.serviceWorker.ready;
-  // subscribe and return the subscription
-  return await serviceWorker.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: pushServerPublicKey,
-  });
-}
-
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.usuario.user);
@@ -41,10 +29,6 @@ function App() {
     dispatch(restoreSessionStateAction());
     if (!user) {
       dispatch(push("/login"));
-    } else {
-      const urlPush = await createNotificationSubscription();
-      dispatch(saveUrlPushAction({ userId: user.id, urlPush }));
-      console.log(urlPush);
     }
   }, [dispatch, user]);
 
