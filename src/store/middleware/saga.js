@@ -419,7 +419,9 @@ function* deleteOrderSaga(action) {
 }
 function* saveUrlPushSaga(action) {
   try {
+    console.log(action);
     const { data } = yield call(api.savePushUrl, action.payload);
+    
     if (data.status === 200) {
       yield put(saveUrlPushDoneAction(data));
     } else {

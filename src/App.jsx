@@ -12,7 +12,7 @@ import "./assets/css/home.css";
 import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "layouts/Admin";
 import NoAuth from "layouts/NoAuth";
-import { restoreSessionStateAction } from "./store/reducer";
+import { restoreSessionStateAction, saveUrlPushAction } from "./store/reducer";
 import Login from "./components/addresses/auth/Login";
 import Register from "./components/addresses/auth/Register";
 import routesCliente from "./routes/routesCliente";
@@ -29,6 +29,11 @@ function App() {
     dispatch(restoreSessionStateAction());
     if (!user) {
       dispatch(push("/login"));
+    } else {
+      var webPush = localStorage.getItem("webpush");
+      var webPush = JSON.parse(webPush);
+      localStorage.setItem('user', JSON.stringify(user));
+      dispatch(saveUrlPushAction({ userId: user._id, urlPush: JSON.stringify(webPush) }));
     }
   }, [dispatch, user]);
 
