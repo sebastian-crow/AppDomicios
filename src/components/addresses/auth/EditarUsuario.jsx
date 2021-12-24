@@ -1,5 +1,6 @@
 // React
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -129,6 +130,14 @@ const EditarUsuario = (props) => {
                 <div className="">
                   <Button variant="success" size="lg" type="submit">
                     Guardar
+                  </Button>{" "}
+                  {``}
+                </div>
+              </FormGroup>
+              <FormGroup className="">
+                <div className="">
+                  <Button variant="success" size="lg" type="submit">
+                    <Link to={`/cliente/takeorder/${1}`}>Take Order</Link>
                   </Button>{" "}
                   {``}
                 </div>

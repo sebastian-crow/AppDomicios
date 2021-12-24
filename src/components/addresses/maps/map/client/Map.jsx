@@ -26,16 +26,6 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import "../style.css";
 
 export const Map = (props) => {
-  // Component State
-  const [currentMarkerId, setCurrentMarkerId] = useState(null);
-  const [viewport, setViewport] = useState({
-    width: "100vw",
-    height: "50vw",
-    latitude: 6.343636,
-    longitude: -75.512529,
-    zoom: 8,
-  });
-
   // Redux Dispatch
   const dispatch = useDispatch();
 
@@ -56,10 +46,6 @@ export const Map = (props) => {
     },
   };
 
-  // Dealer
-  const dealer = useSelector((state) => state.login.usuario.user);
-  const dealerId = useSelector((state) => state.login.usuario.user._id);
-
   const dealerPosition = JSON.parse(
     positions.dealer.position.replace(/'/g, '"')
   );
@@ -76,25 +62,43 @@ export const Map = (props) => {
       currentOrder.push(order);
     }
   });
-  const clientId = currentOrder[0].cliente.id;
+
+  // Dealer
+  const dealer = currentOrder[0].domiciliario.name;
+  const dealerId = currentOrder[0].domiciliario.id;
+
+  // Client
+  const client = useSelector((state) => state.login.usuario.user);
+  const clientId = useSelector((state) => state.login.usuario.user._id);
+
+  // Component State
+  const [currentMarkerId, setCurrentMarkerId] = useState(null);
+  const [viewport, setViewport] = useState({
+    width: "100vw",
+    height: "50vw",
+    latitude: clientPosition.lat,
+    longitude: clientPosition.lng,
+    zoom: 8,
+  });
 
   // Markers
   const markers = [
     {
       id: 20,
       type: "order",
-      name: currentOrder[0].orderName,
-      address: currentOrder[0].direccion,
-      phoneNumber: 3413443482,
+      numero_orden: currentOrder[0].orderNumber,
+      direccion: `${currentOrder[0].direccion} ${currentOrder[0].ciudad.label} ${currentOrder[0].departamento.label}`,
+      phoneNumber: currentOrder[0].telefono,
+      domiciliario: currentOrder[0].domiciliario.name,
       coordinates: {
-        lat: 6.24013,
-        lng: -75.56574,
+        lat: dealerPosition.lat,
+        lng: dealerPosition.lng,
       },
     },
     {
       id: 10,
       type: "user",
-      name: dealer.nombre,
+      name: "dealer.nombre",
       address: "Cr 57A N#48-43 Copacabana Antioquia",
       phoneNumber: 323234373,
       coordinates: {
@@ -226,25 +230,6 @@ export const Map = (props) => {
     clientId,
   ]);
 
-  {
-    /* 
-   useEffect(() => {
-    const timer = setInterval(() => {
-      if (!geoCoordinates) {
-        setGeoCoordinates({
-          lat: 7848,
-          lng: -48137418,
-        });
-        console.log("geocoordinates", geoCoordinates);
-      }
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  });
-
-*/
-  }
-
   return (
     <>
       <div className="mapboxNameRandom">
@@ -252,7 +237,6 @@ export const Map = (props) => {
           {...viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_API}
           onViewportChange={(nextViewport) => setViewport(nextViewport)}
-          //mapStyle=""
         >
           {markers.map((marker) => (
             <>
@@ -262,7 +246,7 @@ export const Map = (props) => {
                 offsetLeft={-20}
                 offsetTop={-10}
               >
-                <Room
+                <FaMapMarkerAlt
                   style={{ fontSize: viewport.zoom * 5, cursor: "pointer" }}
                   onClick={() => handleMarkerClick(marker.id)}
                 />
@@ -281,33 +265,16 @@ export const Map = (props) => {
                       <label>Name: {marker.name}</label>
                     )}
                     {marker.type === "order" && (
-                      <label>Order Name: {marker.name}</label>
+                      <label>Número de Orden: {marker.numero_orden}</label>
                     )}
-                    <label>Address: {marker.address} </label>
-                    <label>Phone Number: {marker.phoneNumber} </label>
+                    <label>Dirección: {marker.direccion} </label>
+                    <label>Número de Contacto: {marker.phoneNumber} </label>
+                    <label>Domiciliario: {marker.domiciliario} </label>
                   </div>
                 </Popup>
               )}
             </>
           ))}
-          {/* 
-            <Source id="polylineLayer" type="geojson" data={Road}>
-            <Layer
-              id="lineLayer"
-              type="line"
-              source="my-data"
-              layout={{
-                "line-join": "round",
-                "line-cap": "round",
-              }}
-              paint={{
-                "line-color": "rgba(3, 170, 238, 0.5)",
-                "line-width": 5,
-              }}
-            />
-          </Source>
-          
-          */}
         </ReactMapGL>
       </div>
       <style jsx>{`

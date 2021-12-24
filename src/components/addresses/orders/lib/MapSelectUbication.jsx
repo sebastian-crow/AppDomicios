@@ -104,7 +104,7 @@ export const MapSelectUbication = () => {
     <div style={{ height: "60vh" }}>
       <div
         ref={geocoderContainerRef}
-        style={{ position: "absolute", top: 620, left: 30, zIndex: 1 }}
+        style={{ position: "absolute", top: 20, left: 16, zIndex: 1 }}
       />
       <MapGL
         ref={mapRef}
@@ -113,6 +113,7 @@ export const MapSelectUbication = () => {
         height="100%"
         onViewportChange={handleViewportChange}
         mapboxApiAccessToken={MAPBOX_TOKEN}
+        className="positionMap"
       >
         <Geocoder
           mapRef={mapRef}

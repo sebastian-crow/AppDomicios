@@ -76,6 +76,12 @@ export const saveUrlPushAction = createAction("SAVE_URL_PUSH_ACTION");
 
 export const saveUrlPushDoneAction = createAction("SAVE_URL_PUSH_DONE_ACTION");
 
+// Get Sheets Orders
+export const getSheetsOrderAction = createAction("GET_SHEETS_ORDER_ACTION");
+export const getSheetsOrderDoneAction = createAction(
+  "GET_SHEETS_ORDER_DONE_ACTION"
+);
+
 // UI state reducers
 const initialState = {
   position: {
@@ -93,6 +99,7 @@ const initialState = {
   clients: [],
   domiciliarios: [],
   orders: [],
+  sheetsOrder: [],
 };
 
 const uiReducer = createReducer(initialState, {
@@ -132,24 +139,40 @@ const uiReducer = createReducer(initialState, {
     state.position.dealer.positionDealerId = action.payload.data._id;
   },
 
+  // Get ALl Users
   [getAllUserDoneAction]: (state, action) => {
     state.users = action.payload.data.Users;
   },
+
+  // Get All Products
   [getAllProductDoneAction]: (state, action) => {
     state.products = action.payload.data.Products;
   },
+
+  // Get All Clients
   [getAllClientDoneAction]: (state, action) => {
     state.clients = action.payload.data.Clients;
   },
+
+  // Get All Domiciliarios
   [getAllDomiciliarioDoneAction]: (state, action) => {
     state.domiciliarios = action.payload.data.Domiciliarios;
   },
+
+  // Get All Orders
   [getAllOrderDoneAction]: (state, action) => {
     state.orders = action.payload.data.Orders;
   },
+
+  // Save URL to push notification
   [saveUrlPushDoneAction]: (state, action) => {
     console.log(state);
     //state.urlPush = action.payload.data.Orders;
+  },
+
+  // Get All Google Sheets by User
+  [getSheetsOrderDoneAction]: (state, action) => {
+    state.sheetsOrder = action.payload.data.SheetsOrder;
   },
 });
 

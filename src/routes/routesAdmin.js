@@ -3,6 +3,7 @@ import UserPage from "views/User.js";
 
 // Users
 import ListClientes from "../components/addresses/listUsers/ListClientes";
+import EditarUsuario from "../components/addresses/auth/EditarUsuario";
 
 // Products
 import CreateProduct from "../components/addresses/products/CreateProduct";
@@ -34,7 +35,7 @@ var routesAdmin = [
     rol: ["admin"],
     name: "User Profile",
     icon: "nc-icon nc-single-02",
-    component: UserPage,
+    component: EditarUsuario,
     layout: "/admin",
     visible: true,
   },
@@ -73,7 +74,7 @@ var routesAdmin = [
     rol: ["admin"],
     component: CreateProduct,
     layout: "/admin",
-    visible: true,
+    visible: false,
   },
   {
     path: "/listproducts",
@@ -82,7 +83,7 @@ var routesAdmin = [
     rol: ["admin"],
     component: ListProducts,
     layout: "/admin",
-    visible: true,
+    visible: false,
   },
   // Maps
   {

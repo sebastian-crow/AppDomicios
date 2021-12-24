@@ -20,7 +20,7 @@ import { Map } from "../components/addresses/maps/map/client/Map";
 import { MapSelectUbication } from "../components/addresses/orders/lib/MapSelectUbication";
 
 // Google Sheets Connection
-import { GoogleSheetsConnect } from "../components/addresses/excel/googleSheetsConnect"
+import { GoogleSheetsConnect } from "../components/addresses/excel/googleSheetsConnect";
 
 var routesCliente = [
   // Default routes
@@ -44,7 +44,7 @@ var routesCliente = [
     visible: true,
   },
   {
-    path: "/takeorder",
+    path: "/takeorder/:orderNumberSheets",
     name: "Cordinar Entrega",
     icon: "nc-icon nc-cart-simple",
     rol: ["cliente"],

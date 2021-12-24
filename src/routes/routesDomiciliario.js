@@ -1,6 +1,7 @@
 // Orders
 import OrderList from "../components/addresses/orders/OrderList";
 import UserPage from "views/User.js";
+import EditarUsuario from "../components/addresses/auth/EditarUsuario";
 
 // Maps
 import  { Map } from "../components/addresses/maps/map/Map";
@@ -30,9 +31,9 @@ var routesDomiciliario = [
   {
     path: "/user-page",
     rol: ["domiciliario"],
-    name: "Editar Usuario",
+    name: "Editar usuario",
     icon: "nc-icon nc-single-02",
-    component: UserPage,
+    component: EditarUsuario,
     layout: "/domiciliario",
     visible: true,
   },

@@ -178,6 +178,14 @@ export function deleteOrder(params) {
   });
 }
 
+// Sheets Orders
+export function getSheetsOrder(params) {
+  return callAPI({
+    method: "GET",
+    url: `/sheetsOrders/` + params,
+  });
+}
+
 export function savePushUrl(params) {
   return callAPI({
     method: "POST",

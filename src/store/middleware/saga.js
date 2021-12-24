@@ -78,7 +78,12 @@ import {
   loginError,
   saveUrlPushAction,
   saveUrlPushDoneAction,
+
+  // Sheets Orders
+  getSheetsOrderAction,
+  getSheetsOrderDoneAction,
 } from "../reducer";
+
 import { LOCATION_CHANGE } from "redux-first-history";
 
 function* loginSaga(action) {
@@ -417,11 +422,29 @@ function* deleteOrderSaga(action) {
     }
   }
 }
+
+// Sheets Orders
+function* getSheetsOrderSaga(action) {
+  try {
+    const { data } = yield call(api.getSheetsOrder, action.payload);
+    if (data.status === 200) {
+      yield put(getSheetsOrderDoneAction(data));
+    } else {
+      console.log("This is the data", data);
+      console.log("You have many errors");
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
 function* saveUrlPushSaga(action) {
   try {
-    console.log(action);
     const { data } = yield call(api.savePushUrl, action.payload);
-    
+
     if (data.status === 200) {
       yield put(saveUrlPushDoneAction(data));
     } else {
@@ -435,7 +458,6 @@ function* saveUrlPushSaga(action) {
     }
   }
 }
-
 
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
@@ -472,4 +494,7 @@ export function* rootSaga() {
   yield takeLatest(updateOrderAction.type, updateOrderSaga);
   yield takeLatest(deleteOrderAction.type, deleteOrderSaga);
   yield takeLatest(saveUrlPushAction.type, saveUrlPushSaga);
+
+  // Sheets Orders
+  yield takeLatest(getSheetsOrderAction.type, getSheetsOrderSaga);
 }
