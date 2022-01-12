@@ -6,6 +6,10 @@ export const setSessionCookie = session => {
   Cookies.set("session", session, { expires: 14 });
 }
 
+export const RemoveSessionCookie = session => {
+  Cookies.remove("session");
+}
+
 export const getSessionCookie = () => {
   const sessionCookie = Cookies.get("session");
 

@@ -4,6 +4,7 @@ import {
   put,
   call,
   cancelled,
+  select,
 } from "redux-saga/effects";
 
 import { push } from "redux-first-history";
@@ -11,6 +12,8 @@ import { api } from "./api";
 import {
   loginAction,
   loginDoneAction,
+  logoutAction,
+  cleanSessionStateAcion,
   saveSessionStateAction,
   registerAction,
   registerDoneAction,
@@ -51,7 +54,7 @@ import {
   deleteProductAction,
   deleteProductDoneAction,
   errorDeleteProduct,
-
+  restoreSessionStateAction,
   // Orders
   // eslint-disable-next-line
   errorGetOrders,
@@ -86,29 +89,63 @@ import {
 
 import { LOCATION_CHANGE } from "redux-first-history";
 
-// Set Cookies
-import Cookies from "js-cookie";
-import { setSessionCookie } from "../../session";
-
 function* loginSaga(action) {
   try {
     const { data } = yield call(api.login, action.payload);
     if (data.status === 200) {
-      let userCookie = {
-        id: data.data.user._id,
-        rol: data.data.user.rol,
-        token: data.data.token,
-      };
-      let userLocal = data.data.user;
-      //setSessionCookie({ userCookie });
-      //localStorage.setItem("user", JSON.stringify(userLocal));
-      //localStorage.setItem("data", JSON.stringify(data));
+      var webPush = localStorage.getItem("webpush");
+      var webPush = JSON.parse(webPush);
+      if (webPush) {
+        yield put(
+          saveUrlPushAction({
+            userId: data.data.user._id,
+            urlPush: JSON.stringify(webPush),
+          })
+        );
+      }
+      yield put(loginDoneAction(data));
       yield put(push("/"));
     } else {
       yield put(loginError(data.message));
       console.log("All Wrong, check me and find the problem...");
     }
   } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* loginDoneSaga(action) {
+  try {
+    yield put(saveSessionStateAction());
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* restoreSessionStateSaga(action) {
+  try {
+    const pathname = action.payload.location.pathname;
+    yield put(push(pathname));
+  } catch (error) {
+    console.log(error);
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* logoutSagas(action) {
+  try {
+    yield put(cleanSessionStateAcion());
+  } catch (error) {
+    console.log(error);
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -133,8 +170,27 @@ function* registerSaga(action) {
   }
 }
 
-function* locationChangeSaga() {
-  yield put(saveSessionStateAction());
+function* locationChangeSaga(action) {
+  console.log(action.payload.location.pathname);
+  const user = yield select((state) => state.login.usuario.user);
+  if (user) {
+    const pathname = action.payload.location.pathname;
+    if (pathname === "/") {
+      switch (user.rol) {
+        case "cliente":
+          yield put(push("/cliente/dashboard"));
+          break;
+        case "admin":
+          yield put(push("/admin/dashboard"));
+          break;
+        case "domiciliario":
+          yield put(push("/domiciliario/dashboard"));
+          break;
+        default:
+          break;
+      }
+    }
+  }
 }
 
 function* actualizarUsuarioSaga(action) {
@@ -462,19 +518,23 @@ function* saveUrlPushSaga(action) {
 
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
+  yield takeLatest(loginDoneAction.type, loginDoneSaga);
   yield takeLatest(actualizarUsuarioAction.type, actualizarUsuarioSaga);
   yield takeLatest(registerAction.type, registerSaga);
+
+  yield takeEvery(restoreSessionStateAction.type, restoreSessionStateSaga);
+  yield takeEvery(logoutAction.type, logoutSagas);
 
   // Client Location
   yield takeLatest(createPositionClientAction.type, createPositionClientSaga);
   yield takeLatest(updatePositionClientAction.type, updatePositionClientSaga);
   yield takeLatest(getFromClientPositionAction.type, getFromClientPositionSaga);
-  yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
 
   // Dealer Location
   yield takeLatest(createPositionDealerAction.type, createPositionDealerSaga);
   yield takeLatest(updatePositionDealerAction.type, updatePositionDealerSaga);
   yield takeLatest(getFromDealerPositionAction.type, getFromDealerPositionSaga);
+  //yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
 
   // Products

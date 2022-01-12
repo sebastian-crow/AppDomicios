@@ -33,7 +33,6 @@ const ListOrders = () => {
     }
   });
 
-  console.log("Orders Current User", ordersCurrentUser);
 
   const handleDelete = (event) => {
     event.preventDefault();

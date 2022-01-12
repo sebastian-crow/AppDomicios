@@ -53,14 +53,11 @@ export function register(config) {
               applicationServerKey: urlBase64ToUint8Array(keyGoogle),
             })
             .then((subscription) => {
-              console.log(subscription);
               localStorage.setItem("webpush", JSON.stringify(subscription));
             });
           window.addEventListener("push", (event) => {
             var user = localStorage.getItem("user");
             var user = JSON.parse(user);
-            console.log(user);
-            console.log(event);
           });
         });
       } else {

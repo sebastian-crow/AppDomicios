@@ -1,10 +1,10 @@
 // React
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory } from "history";
 
 // React Bootstrap
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Alert } from "react-bootstrap";
 
 import { MDBBtn } from "mdbreact";
 
@@ -81,6 +81,7 @@ const LoginPage = () => {
               >
                 Registrarse
               </Button>
+              {error && <Alert variant="danger">{error}</Alert>}
             </Form>
           </Col>
         </Row>

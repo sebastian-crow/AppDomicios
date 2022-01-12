@@ -48,7 +48,7 @@ function Header(props) {
     e.preventDefault();
     dispatch(logoutAction());
     Cookies.remove("session");
-    dispatch(push("/"));
+    dispatch(push("/login"));
     //push(!dropdownOptionsOpen);
   };
   const getBrand = () => {

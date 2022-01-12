@@ -5,14 +5,21 @@ import { LOCATION_CHANGE } from "redux-first-history";
 
 export const restoreSessionStateAction = createAction("SESSION_RESTORE_STATE");
 export const saveSessionStateAction = createAction("SESSION_SAVE_STATE");
+export const cleanSessionStateAcion = createAction("CLEAN_SESSION_STATE_ACION");
+
+import {
+  setSessionCookie,
+  RemoveSessionCookie,
+  getSessionCookie,
+} from "../../session";
 
 function saveUiState(state) {
-  //const store = window.localStorage;
   const data = {
     ui: state.ui,
     login: state.login,
   };
   try {
+    setSessionCookie(data);
     console.log(data);
     localStorage.setItem("store", JSON.stringify(data));
   } catch (err) {
@@ -21,18 +28,22 @@ function saveUiState(state) {
 }
 
 function loadUiState(state) {
-  //const store = window.localStorage;
-  //console.log("Store", store);
   try {
-    //const data = JSON.parse(store.getItem("store"));
-    const data = JSON.parse(localStorage.getItem("store"));
+    const data = getSessionCookie();
     if (data) {
       state.ui = data.ui;
       state.login = data.login;
-      store.removeItem("store");
     }
   } catch (err) {
-    // console.error("Unable to restore state", err);
+    console.error("Unable to restore state", err);
+  }
+}
+
+function cleanUiState(state) {
+  try {
+    RemoveSessionCookie();
+  } catch (err) {
+    console.error("Unable to restore state", err);
   }
 }
 
@@ -41,6 +52,9 @@ export const sessionStateReducer = createReducer(
   {
     [restoreSessionStateAction]: (state) => {
       loadUiState(state);
+    },
+    [cleanSessionStateAcion]: (state) => {
+      cleanUiState(state);
     },
     [saveSessionStateAction]: (state) => {
       saveUiState(state);
