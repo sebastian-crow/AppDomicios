@@ -86,26 +86,28 @@ import {
 
 import { LOCATION_CHANGE } from "redux-first-history";
 
+// Set Cookies
+import Cookies from "js-cookie";
+import { setSessionCookie } from "../../session";
+
 function* loginSaga(action) {
   try {
     const { data } = yield call(api.login, action.payload);
     if (data.status === 200) {
-      yield put(loginDoneAction(data));
+      let userCookie = {
+        id: data.data.user._id,
+        rol: data.data.user.rol,
+        token: data.data.token,
+      };
+      let userLocal = data.data.user;
+      //setSessionCookie({ userCookie });
+      //localStorage.setItem("user", JSON.stringify(userLocal));
+      //localStorage.setItem("data", JSON.stringify(data));
       yield put(push("/"));
     } else {
       yield put(loginError(data.message));
+      console.log("All Wrong, check me and find the problem...");
     }
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-function* loginDoneSaga() {
-  try {
-    yield put(saveSessionStateAction());
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -427,10 +429,9 @@ function* deleteOrderSaga(action) {
 function* getSheetsOrderSaga(action) {
   try {
     const { data } = yield call(api.getSheetsOrder, action.payload);
-    if (data.status === 200) {
+    if (data) {
       yield put(getSheetsOrderDoneAction(data));
     } else {
-      console.log("This is the data", data);
       console.log("You have many errors");
     }
   } catch (error) {
@@ -461,7 +462,6 @@ function* saveUrlPushSaga(action) {
 
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
-  yield takeLatest(loginDoneAction.type, loginDoneSaga);
   yield takeLatest(actualizarUsuarioAction.type, actualizarUsuarioSaga);
   yield takeLatest(registerAction.type, registerSaga);
 

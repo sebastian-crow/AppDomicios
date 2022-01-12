@@ -20,6 +20,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
 import { logoutAction } from "../../store/reducer";
+import Cookies from 'js-cookie';
+
 function Header(props) {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -45,6 +47,7 @@ function Header(props) {
   const logout = (e) => {
     e.preventDefault();
     dispatch(logoutAction());
+    Cookies.remove("session");
     dispatch(push("/"));
     //push(!dropdownOptionsOpen);
   };

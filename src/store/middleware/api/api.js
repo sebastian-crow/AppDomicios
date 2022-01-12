@@ -182,7 +182,7 @@ export function deleteOrder(params) {
 export function getSheetsOrder(params) {
   return callAPI({
     method: "GET",
-    url: `/sheetsOrders/` + params,
+    url: params,
   });
 }
 

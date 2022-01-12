@@ -100,6 +100,10 @@ export const MapSelectUbication = () => {
     }
   }, [dispatch, positionClient.position, positionClient.positionId, clientId]);
 
+  useEffect(() => {
+    dispatch(getFromClientPositionAction());
+  });
+
   return (
     <div style={{ height: "60vh" }}>
       <div

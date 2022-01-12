@@ -106,13 +106,13 @@ const uiReducer = createReducer(initialState, {
   // Create Position Client
   [createPositionClientDoneAction]: (state, action) => {
     state.position.client.positionClient = action.payload.data[0].position;
-    state.position.client.positionClientId = action.payload.data._id;
+    state.position.client.positionClientId = action.payload.data[0]._id;
   },
 
   // Create Position Dealer
   [createPositionDealerDoneAction]: (state, action) => {
     state.position.dealer.positionDealer = action.payload.data[0].position;
-    state.position.dealer.positionDealerId = action.payload.data._id;
+    state.position.dealer.positionDealerId = action.payload.data[0]._id;
   },
 
   // Update Position Client
@@ -135,8 +135,8 @@ const uiReducer = createReducer(initialState, {
 
   // Get Position Dealer
   [getFromDealerPositionDoneAction]: (state, action) => {
-    state.position.dealer.positionDealerId = action.payload.data.position;
-    state.position.dealer.positionDealerId = action.payload.data._id;
+    state.position.dealer.positionDealerId = action.payload.data[0].position;
+    state.position.dealer.positionDealerId = action.payload.data[0]._id;
   },
 
   // Get ALl Users
@@ -172,7 +172,7 @@ const uiReducer = createReducer(initialState, {
 
   // Get All Google Sheets by User
   [getSheetsOrderDoneAction]: (state, action) => {
-    state.sheetsOrder = action.payload.data.SheetsOrder;
+    state.sheetsOrder = action.payload;
   },
 });
 

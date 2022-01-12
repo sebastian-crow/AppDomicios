@@ -2,26 +2,30 @@
 // on page reload.
 import { createAction, createReducer } from "@reduxjs/toolkit";
 import { LOCATION_CHANGE } from "redux-first-history";
+
 export const restoreSessionStateAction = createAction("SESSION_RESTORE_STATE");
 export const saveSessionStateAction = createAction("SESSION_SAVE_STATE");
 
 function saveUiState(state) {
-  const store = window.sessionStorage;
+  //const store = window.localStorage;
   const data = {
     ui: state.ui,
     login: state.login,
   };
   try {
-    store.setItem("store", JSON.stringify(data));
+    console.log(data);
+    localStorage.setItem("store", JSON.stringify(data));
   } catch (err) {
     // console.error("Unable to store state", err);
   }
 }
 
 function loadUiState(state) {
-  const store = window.sessionStorage;
+  //const store = window.localStorage;
+  //console.log("Store", store);
   try {
-    const data = JSON.parse(store.getItem("store"));
+    //const data = JSON.parse(store.getItem("store"));
+    const data = JSON.parse(localStorage.getItem("store"));
     if (data) {
       state.ui = data.ui;
       state.login = data.login;
@@ -42,5 +46,5 @@ export const sessionStateReducer = createReducer(
       saveUiState(state);
     },
     [LOCATION_CHANGE]: () => {},
-  },
+  }
 );

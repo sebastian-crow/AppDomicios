@@ -10,13 +10,17 @@ import { push } from "redux-first-history";
 import { Button } from "react-bootstrap";
 
 // Reverse counter for kwnow the time we need to remaining
-import { ReverseCounter } from "../counter/ReverseCounter";
+import { ReverseCounter } from "../../counter/ReverseCounter";
 
 // Reducers
-import { getAllOrderAction, deleteOrderAction } from "../../../store/reducer";
+import {
+  getAllOrderAction,
+  deleteOrderAction,
+  getSheetsOrderAction,
+} from "../../../../store/reducer";
 import moment from "moment";
 
-const UserOrderList = () => {
+const UserProductOrderList = () => {
   const dispatch = useDispatch();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -29,8 +33,10 @@ const UserOrderList = () => {
   // Get All Orders from store
   const orders = useSelector((state) => state.ui.orders);
 
-  // Filter orders by users
+  // Get All Sheets Orders by user from local storage
+  const sheetsOrders = useSelector((state) => state.ui.sheetsOrder);
 
+  // Filter orders by users
   const ordersCurrentUser = [];
   orders.map((order) => {
     if (order.cliente.id === user._id) {
@@ -55,8 +61,9 @@ const UserOrderList = () => {
     dispatch(push("/orderslist"));
   };
 
-  // Update List
+  let proof_id = Math.floor(Math.random() * 100);
 
+  // Update List
   React.useEffect(() => {
     dispatch(getAllOrderAction());
   }, [dispatch]);
@@ -72,6 +79,11 @@ const UserOrderList = () => {
       }
     }, []);
   });
+
+  // Get Google sheets from sheet.best by user data googlesheets field
+  React.useEffect(() => {
+    dispatch(getSheetsOrderAction(user.googleSheets));
+  }, []);
   return (
     <>
       <div style={{ height: "800px", overflowY: "scroll" }}>
@@ -79,30 +91,48 @@ const UserOrderList = () => {
           <thead>
             <tr>
               <th scope="col">Número de Orden</th>
-              <th scope="col">Pedido</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Dirección Recogida</th>
+              <th scope="col">Fecha Creación</th>
+              <th scope="col">Nombres y Apellidos</th>
+              <th scope="col">Telefono Cliente</th>
               <th scope="col">Dirección Entrega</th>
-              <th scope="col">Estado</th>
+              <th scope="col">Ciudad</th>
+              <th scope="col">Barrio</th>
+              <th scope="col">Nombre Conjunto Residencial</th>
+              <th scope="col">Nota Entrega</th>
+              <th scope="col">Paquete A Entregar</th>
+              <th scope="col">Estado Pedido </th>
               <th scope="col">Domiciliario</th>
-              <th scope="col">Ubication</th>
+              <th scope="col">Dirección Recogida</th>
+              <th scope="col">Hora Entrega</th>
+              <th scope="col">Ubicación Entrega</th>
+              <th scope="col">Foto Entrega</th>
+              <th scope="col">Nota Entrega</th>
+              <th scope="col">Ubicación en Mapa</th>
               <th scope="col">Editar</th>
               <th scope="col">Cancelar</th>
+              <th scope="col">Tomar Orden</th>
             </tr>
           </thead>
           <tbody>
-            {ordersCurrentUser.map((order) => (
-              <tr key={order._id}>
-                <td>{order.orderNumber}</td>
-                <td>{order.pedido}</td>
-                <td>
-                  {moment(order.fecha).format("YYYY-MM-DD HH:mm:ss")} <br></br>
-                  <ReverseCounter />
-                </td>
-                <td>{order.direccionRecogida}</td>
-                <td>{order.direccionEntrega}</td>
-                <td>{order.estado}</td>
-                <td>{order.domiciliario.name}</td>
+            {sheetsOrders.map((order) => (
+              <tr key={proof_id}>
+                <td>{order["# de Orden"]}</td>
+                <td>{order["Fecha Creacion"]}</td>
+                <td>{order["Nombres y Apellidos"]}</td>
+                <td>{order["Telefono cliente"]}</td>
+                <td>{order["Direccion entrega"]}</td>
+                <td>{order["Ciudad"]}</td>
+                <td>{order["Barrio"]}</td>
+                <td>{order["Nombre Conjunto Residencial"]}</td>
+                <td>{order["Nota entrega"]}</td>
+                <td>{order["# Paquete a entregar"]}</td>
+                <td>{order["Estado Pedido"]}</td>
+                <td>{order["Domiciliario"]}</td>
+                <td>{order["Direccion Recogida"]}</td>
+                <td>{order["Hora entrega"]}</td>
+                <td>{order["Ubicacion entrega"]}</td>
+                <td>{order["Foto entrega"]}</td>
+                <td>{order["Nota entrega"]}</td>
                 <td>
                   <Button
                     onClick={(e) => {
@@ -130,6 +160,21 @@ const UserOrderList = () => {
                     Cancelar Orden
                   </Button>
                 </td>
+                <td>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault;
+                      dispatch(
+                        push(
+                          `/cliente/takeorder/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`
+                        )
+                      );
+                    }}
+                    variant="success"
+                  >
+                    Crear Link{" "}
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -139,4 +184,4 @@ const UserOrderList = () => {
   );
 };
 
-export default UserOrderList;
+export default UserProductOrderList;

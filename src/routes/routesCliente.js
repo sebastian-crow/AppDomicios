@@ -10,7 +10,11 @@ import CreateProduct from "../components/addresses/products/CreateProduct";
 import ListProducts from "../components/addresses/products/UserProductList";
 import EditProduct from "../components/addresses/products/EditProduct";
 
-// Orders
+// Product Orders
+import EditProductOrder from "../components/addresses/orders/productOrders/EditProductOrder";
+import UserProductOrderList from "../components/addresses/orders/productOrders/UserProductOrderList";
+
+// Delivery Orders
 import TakeOrder from "../components/addresses/orders/TakeOrder";
 import EditOrder from "../components/addresses/orders/EditOrder";
 import UserOrderList from "../components/addresses/orders/UserOrderList";
@@ -23,17 +27,16 @@ import { MapSelectUbication } from "../components/addresses/orders/lib/MapSelect
 import { GoogleSheetsConnect } from "../components/addresses/excel/googleSheetsConnect";
 
 var routesCliente = [
-  // Default routes
+  // Orders
   {
-    path: "/dashboard",
+    path: "/pedidos",
     rol: ["cliente"],
-    name: "Dashboard",
-    icon: "nc-icon nc-diamond",
-    component: Dashboard,
+    name: "Listar Pedidos",
+    icon: "nc-icon nc-cart-simple",
+    component: UserProductOrderList,
     layout: "/cliente",
-    visible: false,
+    visible: true,
   },
-  // Auth routes
   {
     path: "/orderslist",
     name: "Listar ordenes",
@@ -44,51 +47,14 @@ var routesCliente = [
     visible: true,
   },
   {
-    path: "/takeorder/:orderNumberSheets",
+    path: "/takeorder/:orderNumberSheets/:userid",
     name: "Cordinar Entrega",
     icon: "nc-icon nc-cart-simple",
     rol: ["cliente"],
     component: TakeOrder,
     layout: "/cliente",
-    visible: true,
-  },
-  {
-    path: "/createproduct",
-    name: "Crear producto",
-    icon: "nc-icon nc-app",
-    rol: ["cliente"],
-    component: CreateProduct,
-    layout: "/cliente",
     visible: false,
   },
-  {
-    path: "/editarproducto/:id",
-    name: "Editar producto",
-    icon: "nc-icon nc-app",
-    rol: ["cliente"],
-    component: EditProduct,
-    layout: "/cliente",
-    visible: false,
-  },
-  {
-    path: "/userproductlist",
-    name: "Mis productos",
-    icon: "nc-icon nc-box-2",
-    rol: ["cliente"],
-    component: UserProductList,
-    layout: "/cliente",
-    visible: false,
-  },
-  {
-    path: "/listproducts",
-    name: "Todos los productos",
-    icon: "nc-icon nc-bank",
-    rol: ["cliente"],
-    component: ListProducts,
-    layout: "/cliente",
-    visible: false,
-  },
-  // Orders
   {
     path: "/editorder/:id",
     name: "Edit Order",
@@ -107,6 +73,8 @@ var routesCliente = [
     layout: "/cliente",
     visible: false,
   },
+
+  // User's Pages
   {
     path: "/user-page",
     rol: ["cliente"],
@@ -132,7 +100,16 @@ var routesCliente = [
     icon: "nc-icon nc-single-02",
     component: TakeOrder,
     layout: "/clienteForm",
-    visible: true,
+    visible: false,
+  },
+  {
+    path: "/clienteFormulario",
+    rol: ["cliente"],
+    name: "Order Form",
+    icon: "nc-icon nc-single-02",
+    component: EditProductOrder,
+    layout: "/clienteForm",
+    visible: false,
   },
 ];
 export default routesCliente;

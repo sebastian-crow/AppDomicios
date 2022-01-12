@@ -9,9 +9,13 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import FixedPlugin from '../components/FixedPlugin/FixedPlugin';
 import DemoNavbar from '../components/Navbars/DemoNavbar';
 
+// Cookies
+import { getSessionCookie } from '../session';
+
 let ps;
 
 function Dashboard(props) {
+  const [userInfoSession, setUserInfoSession] = React.useState(getSessionCookie());
   const user = useSelector((state) => state.login.usuario.user);
   const [backgroundColor, setBackgroundColor] = React.useState('black');
   const [activeColor, setActiveColor] = React.useState('info');
@@ -54,7 +58,7 @@ function Dashboard(props) {
             {props.routes.map((prop, key) => {
               let validateRol = false;
               prop.rol.forEach((rol) => {
-                if (rol === user?.rol) {
+                if (rol === userInfoSession.userCookie?.rol) {
                   validateRol = true;
                 }
               });

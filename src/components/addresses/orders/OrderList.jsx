@@ -33,6 +33,8 @@ const ListOrders = () => {
     }
   });
 
+  console.log("Orders Current User", ordersCurrentUser);
+
   const handleDelete = (event) => {
     event.preventDefault();
     const data = {};
@@ -61,11 +63,14 @@ const ListOrders = () => {
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">Order Name</th>
-              <th scope="col">Address</th>
-              <th scope="col">User</th>
-              <th scope="col">Date</th>
-              <th scope="col">Remaining</th>
+              <th scope="col">Número de Orden</th>
+              <th scope="col">Quien Ordeno?</th>
+              <th scope="col">Pedido</th>
+              <th scope="col">Dirección Recogida</th>
+              <th scope="col">Dirección Entrega</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Tiempo</th>
+              <th scope="col">Estado</th>
               {user.rol === "admin" && <th scope="col">State</th>}
 
               {user.rol === "admin" && (
@@ -133,15 +138,18 @@ const ListOrders = () => {
             <tbody>
               {ordersCurrentUser.map((order) => (
                 <tr key={order._id}>
-                  <td>{order.orderName}</td>
-                  <td>{order.direccion.address}</td>
+                  <td>{order.orderNumber}</td>
+                  <td>{order.nombresYApellidos}</td>
+                  <td>{order.pedido}</td>
+                  <td>{order.pedido /* Dirección de recogida */}</td>
+                  <td>{order.pedido /* Dirección de entrega */}</td>
+                  <td>{order.telefono}</td>
                   <td>
                     {order.fecha} <br></br>
                     <strong>Ordered two minutes ago</strong>
-                  </td>
-                  <td>
                     <ReverseCounter />
                   </td>
+                  <td>{order.estado}</td>
 
                   <td>
                     <Button variant="success">

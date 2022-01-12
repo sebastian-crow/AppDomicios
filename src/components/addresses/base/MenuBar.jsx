@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutAction } from "../../../store/reducer";
 import { push } from "redux-first-history";
+import Cookies from 'js-cookies';
 
 const MenuBar = () => {
   const dispatch = useDispatch();
@@ -10,6 +11,7 @@ const MenuBar = () => {
   const user = useSelector((state) => state.login.usuario.user);
   const handleLogout = () => {
     dispatch(logoutAction());
+    Cookies.remove("session");
     dispatch(push("/login"));
   };
   return (

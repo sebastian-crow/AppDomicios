@@ -6,9 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Actions
 import {
-  createPositionClientAction,
-  updatePositionClientDoneAction,
-  getFromClientPositionDoneAction,
   createPositionDealerAction,
   updatePositionDealerAction,
   getFromDealerPositionAction,
@@ -21,6 +18,9 @@ import ReactMapGL, { Marker, Popup, Source, Layer } from "react-map-gl";
 
 // React Icons
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { RiMapPinUserFill } from "react-icons/ri"; // To User
+import { RiTreasureMapLine } from "react-icons/ri"; // Frist Address
+import { RiTreasureMapFill } from "react-icons/ri"; // Final Address
 
 // CSS
 import "../style.css";
@@ -31,13 +31,7 @@ export const Map = (props) => {
 
   // Position, current Dealer and Order
 
-  const positions = {
-    client: {
-      position: useSelector((state) => state.ui.position.client.positionClient),
-      positionId: useSelector(
-        (state) => state.ui.position.client.positionClientId
-      ),
-    },
+  const position = {
     dealer: {
       position: useSelector((state) => state.ui.position.dealer.positionDealer),
       positionId: useSelector(
@@ -47,10 +41,7 @@ export const Map = (props) => {
   };
 
   const dealerPosition = JSON.parse(
-    positions.dealer.position.replace(/'/g, '"')
-  );
-  const clientPosition = JSON.parse(
-    positions.client.position.replace(/'/g, '"')
+    position.dealer.position.replace(/'/g, '"')
   );
 
   // Orders and Current Order
@@ -66,18 +57,19 @@ export const Map = (props) => {
   // Dealer
   const dealer = currentOrder[0].domiciliario.name;
   const dealerId = currentOrder[0].domiciliario.id;
-
-  // Client
-  const client = useSelector((state) => state.login.usuario.user);
-  const clientId = useSelector((state) => state.login.usuario.user._id);
+  console.log("Current Order", currentOrder);
 
   // Component State
   const [currentMarkerId, setCurrentMarkerId] = useState(null);
+  const [currentMarkerFirstAddressId, setCurrentMarkerFirstAddressId] =
+    useState(null);
+  const [currentMarkerFinalAddressId, setCurrentMarkerFinalAddressId] =
+    useState(null);
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "50vw",
-    latitude: clientPosition.lat,
-    longitude: clientPosition.lng,
+    latitude: dealerPosition.lat,
+    longitude: dealerPosition.lng,
     zoom: 8,
   });
 
@@ -85,7 +77,7 @@ export const Map = (props) => {
   const markers = [
     {
       id: 20,
-      type: "order",
+      type: "User",
       numero_orden: currentOrder[0].orderNumber,
       direccion: `${currentOrder[0].direccion} ${currentOrder[0].ciudad.label} ${currentOrder[0].departamento.label}`,
       phoneNumber: currentOrder[0].telefono,
@@ -95,22 +87,49 @@ export const Map = (props) => {
         lng: dealerPosition.lng,
       },
     },
+  ];
+
+  const recodigaMarker = [
     {
-      id: 10,
-      type: "user",
-      name: "dealer.nombre",
-      address: "Cr 57A N#48-43 Copacabana Antioquia",
-      phoneNumber: 323234373,
+      id: 20,
+      type: "recolección",
+      numero_orden: currentOrder[0].orderNumber,
+      direccion: currentOrder[0].direccionRecogida, // Use geocoding function here
+      phoneNumber: currentOrder[0].telefono,
       coordinates: {
-        lat: 6.343636,
-        lng: -75.512529,
+        lat: 6.4898312448,
+        lng: -75.1498344,
       },
     },
   ];
 
-  // Handles
+  const finalMarker = [
+    {
+      id: 20,
+      type: "Entrega",
+      numero_orden: currentOrder[0].orderNumber,
+      direccion: currentOrder[0].direccionEntrega, // Use geocoding function here
+      phoneNumber: currentOrder[0].telefono,
+      coordinates: {
+        lat: 6.48787842147,
+        lng: -75.94987,
+      },
+    },
+  ];
+
+  // Handle Dealer Marker
   const handleMarkerClick = (id) => {
     setCurrentMarkerId(id);
+  };
+
+  // Handle First Address
+  const handleMarkerFristAddressClick = (id) => {
+    setCurrentMarkerFirstAddressId(id);
+  };
+
+  // Handle Final Address
+  const handleMarkerFinalAddressClick = (id) => {
+    setCurrentMarkerFinalAddressId(id);
   };
 
   // Road Between both points
@@ -130,6 +149,7 @@ export const Map = (props) => {
   useEffect(() => {
     dispatch(getAllOrderAction());
     dispatch(getAllDomiciliarioAction());
+    dispatch(getFromDealerPositionAction());
   }, []);
 
   // Get Current Location to Dealer
@@ -144,12 +164,12 @@ export const Map = (props) => {
 
       function success(pos) {
         var crd = pos.coords;
-        if (positions.dealer.positionId) {
+        if (position.dealer.positionId) {
           dispatch(
             updatePositionDealerAction({
               lat: crd.latitude,
               lng: crd.longitude,
-              positionId: positions.dealer.positionId,
+              positionId: position.dealer.positionId,
             })
           );
         } else {
@@ -175,59 +195,9 @@ export const Map = (props) => {
     return () => clearTimeout(timer);
   }, [
     dispatch,
-    positions.dealer.position,
-    positions.dealer.positionId,
+    position.dealer.position,
+    position.dealer.positionId,
     dealerId,
-  ]);
-
-  // Get Current Location to Client
-  useEffect(() => {
-    if (!positions.client.position) {
-      const timer = setInterval(() => {
-        dispatch(getFromClientPositionDoneAction(clientId));
-        const options = {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        };
-
-        function success(pos) {
-          var crd = pos.coords;
-          if (positions.client.positionId) {
-            dispatch(
-              updatePositionClientDoneAction({
-                lat: crd.latitude,
-                lng: crd.longitude,
-                positionId: positions.client.positionId,
-              })
-            );
-          } else {
-            dispatch(
-              createPositionClientAction({
-                position: JSON.stringify({
-                  lat: crd.latitude,
-                  lng: crd.longitude,
-                }),
-                usuario: clientId,
-              })
-            );
-          }
-        }
-
-        function error(err) {
-          console.warn("ERROR(" + err.code + "): " + err.message);
-        }
-
-        navigator.geolocation.getCurrentPosition(success, error, options);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [
-    dispatch,
-    positions.client.position,
-    positions.client.positionId,
-    clientId,
   ]);
 
   return (
@@ -246,7 +216,7 @@ export const Map = (props) => {
                 offsetLeft={-20}
                 offsetTop={-10}
               >
-                <FaMapMarkerAlt
+                <RiMapPinUserFill
                   style={{ fontSize: viewport.zoom * 5, cursor: "pointer" }}
                   onClick={() => handleMarkerClick(marker.id)}
                 />
@@ -261,15 +231,82 @@ export const Map = (props) => {
                   onClose={() => setCurrentMarkerId(null)}
                 >
                   <div className="card">
-                    {marker.type === "user" && (
-                      <label>Name: {marker.name}</label>
-                    )}
-                    {marker.type === "order" && (
-                      <label>Número de Orden: {marker.numero_orden}</label>
-                    )}
                     <label>Dirección: {marker.direccion} </label>
-                    <label>Número de Contacto: {marker.phoneNumber} </label>
+                    <label>Número Domiciliario: {marker.phoneNumber} </label>
                     <label>Domiciliario: {marker.domiciliario} </label>
+                  </div>
+                </Popup>
+              )}
+            </>
+          ))}
+
+          {recodigaMarker.map((marker) => (
+            <>
+              <Marker
+                latitude={marker.coordinates.lat}
+                longitude={marker.coordinates.lng}
+                offsetLeft={-20}
+                offsetTop={-10}
+              >
+                <RiTreasureMapLine
+                  style={{ fontSize: viewport.zoom * 5, cursor: "pointer" }}
+                  onClick={() => handleMarkerFristAddressClick(marker.id)}
+                />
+              </Marker>
+              {marker.id === currentMarkerFirstAddressId && (
+                <Popup
+                  latitude={marker.coordinates.lat}
+                  longitude={marker.coordinates.lng}
+                  closeButton={true}
+                  closeOnClick={false}
+                  anchor="left"
+                  onClose={() => setCurrentMarkerFirstAddressId(null)}
+                >
+                  <div className="card">
+                    <label>
+                      Quien Entrega?:{" "}
+                      <input type="text" placeholder="Nombre quien recibe" />
+                    </label>
+                    <label>Dirección: {marker.direccion} </label>
+                    <label>
+                      Número de quien entrega:{" "}
+                      <input type="text" placeholder="Nombre quien recibe" />{" "}
+                    </label>
+                  </div>
+                </Popup>
+              )}
+            </>
+          ))}
+
+          {finalMarker.map((marker) => (
+            <>
+              <Marker
+                latitude={marker.coordinates.lat}
+                longitude={marker.coordinates.lng}
+                offsetLeft={-20}
+                offsetTop={-10}
+              >
+                <RiTreasureMapFill
+                  style={{ fontSize: viewport.zoom * 5, cursor: "pointer" }}
+                  onClick={() => handleMarkerFinalAddressClick(marker.id)}
+                />
+              </Marker>
+              {marker.id === currentMarkerFinalAddressId && (
+                <Popup
+                  latitude={marker.coordinates.lat}
+                  longitude={marker.coordinates.lng}
+                  closeButton={true}
+                  closeOnClick={false}
+                  anchor="left"
+                  onClose={() => setCurrentMarkerFinalAddressId(null)}
+                >
+                  <div className="card">
+                    <label>
+                      Quien Recibe?:{" "}
+                      <input type="text" placeholder="Nombre quien recibe" />
+                    </label>
+                    <label>Dirección: {marker.direccion} </label>
+                    <label>Número de quien Recibe: {}</label>
                   </div>
                 </Popup>
               )}
