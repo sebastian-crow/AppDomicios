@@ -134,14 +134,6 @@ const EditarUsuario = (props) => {
                   {``}
                 </div>
               </FormGroup>
-              <FormGroup className="">
-                <div className="">
-                  <Button variant="success" size="lg" type="submit">
-                    <Link to={`/cliente/takeorder/${1}`}>Take Order</Link>
-                  </Button>{" "}
-                  {``}
-                </div>
-              </FormGroup>
             </Col>
             <Col></Col>
           </Form>

@@ -162,7 +162,7 @@ function* registerSaga(action) {
       yield put(errorRegistro(data.status));
     }
   } catch (error) {
-    yield put(errorRegistro("Error inesperado"));
+    yield put(errorRegistro("Error al procesar el registro"));
   } finally {
     if (yield cancelled()) {
       // Do nothing

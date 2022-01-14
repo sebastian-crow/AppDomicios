@@ -40,6 +40,7 @@ function App(props) {
       if (Object.keys(userSessionInfo).length) {
         dispatch(restoreSessionStateAction());
       } else {
+        //  Preguntar is existe una ruta guardada antes de redirigir al login
         dispatch(push("/login"));
       }
     }
@@ -83,7 +84,7 @@ function App(props) {
               path="/user"
               render={(props) => <NoAuth {...props} routes={defaultRoutes} />}
             />
-            
+
             <Route restricted path="/login" component={Login} />
             <Route restricted path="/register" component={Register} />
             <Route

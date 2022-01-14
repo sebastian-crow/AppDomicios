@@ -45,7 +45,7 @@ const TakeOrder = (props) => {
 
   // Sheets Orders
 
-  const { orderNumberSheets } = useParams();
+  const { orderNumberSheets, idClienteEmpresa } = useParams();
 
   const sheetsOrder = useSelector((state) => state.ui.sheetsOrder);
 
@@ -244,6 +244,7 @@ const TakeOrder = (props) => {
         nombre: user.nombre,
         id: user._id,
       },
+      clienteEmpresa: idClienteEmpresa,
       estado: "En proceso",
     };
 

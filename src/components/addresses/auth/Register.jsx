@@ -4,6 +4,8 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 // Mdbreact
 import { MDBContainer, MDBRow, MDBCol, MDBBtn } from "mdbreact";
 
+import { Alert } from "react-bootstrap";
+
 // React Bootstrap
 import { Button } from "react-bootstrap";
 
@@ -127,6 +129,7 @@ const SignUp = (props) => {
                   <Button variant="secondary btn-block" type="submit">
                     Registrarse
                   </Button>
+                  {error && <Alert variant="danger">{error}</Alert>}
                 </div>
               </form>
             </MDBCol>
@@ -157,4 +160,3 @@ const useFormInput = (initialValue) => {
 };
 
 export default SignUp;
-

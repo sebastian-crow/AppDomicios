@@ -84,7 +84,7 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "http://localhost:3006",
+  "proxy": "http://192.168.1.8:3006",
   "optionalDependencies": {
     "typescript": "4.2.4"
   },

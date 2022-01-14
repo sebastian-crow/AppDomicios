@@ -166,7 +166,7 @@ const UserProductOrderList = () => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/cliente/takeorder/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`
+                          `/cliente/takeorder/${user._id}/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`
                         )
                       );
                     }}

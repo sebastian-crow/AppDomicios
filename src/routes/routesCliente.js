@@ -47,7 +47,7 @@ var routesCliente = [
     visible: true,
   },
   {
-    path: "/takeorder/:orderNumberSheets/:userid",
+    path: "/takeorder/:idClienteEmpresa/:orderNumberSheets/:nombreYApellidoCliente",
     name: "Cordinar Entrega",
     icon: "nc-icon nc-cart-simple",
     rol: ["cliente"],
