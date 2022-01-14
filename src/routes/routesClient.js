@@ -1,14 +1,7 @@
 import Dashboard from "views/Dashboard.js";
 import UserPage from "views/User.js";
 
-// Users
-import UserProductList from "../components/addresses/products/UserProductList";
 import EditUser from "../components/addresses/auth/EditUser";
-
-// Products
-import CreateProduct from "../components/addresses/products/CreateProduct";
-import ListProducts from "../components/addresses/products/UserProductList";
-import EditProduct from "../components/addresses/products/EditProduct";
 
 // Product Orders
 import EditProductOrder from "../components/addresses/orders/productOrders/EditProductOrder";

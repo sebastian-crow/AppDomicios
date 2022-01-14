@@ -29,6 +29,7 @@ import { cities, departments } from "./lib/cities";
 // Map to Select User's current location
 import { MapSelectUbication } from "./lib/MapSelectUbication";
 import { ConsoleSqlOutlined } from "@ant-design/icons";
+import moment from "moment";
 
 const animatedComponents = makeAnimated();
 
@@ -56,34 +57,34 @@ const TakeOrder = (props) => {
   })[0];
 
   const [orderNumber, setorderNumber] = React.useState(
-    currentSheetsOrder?.["# de Orden"]
+    currentSheetsOrder?.["# de Orden"],
   );
 
   const [orderText, setOrderText] = React.useState(
-    currentSheetsOrder?.["# Paquete a entregar"]
+    currentSheetsOrder?.["# Paquete a entregar"],
   );
   const [nameLastName, setNameLastName] = React.useState(
-    currentSheetsOrder?.["Nombres y Apellidos"]
+    currentSheetsOrder?.["Nombres y Apellidos"],
   );
   const [documentNumber, setDocumentNumber] = React.useState(null);
   const [phoneNumber, setPhoneNumber] = React.useState(
-    currentSheetsOrder?.["Telefono client"]
+    currentSheetsOrder?.["Telefono client"],
   );
   const [department, setDepartment] = React.useState([]);
   const [city, setCity] = React.useState([]);
 
   const [firstAddress, setFirstAddress] = React.useState(
-    currentSheetsOrder?.["Direccion Recogida"]
+    currentSheetsOrder?.["Direccion Recogida"],
   );
   const [finalAddress, setFinalAddress] = React.useState(
-    currentSheetsOrder?.['"Direccion entrega "']
+    currentSheetsOrder?.['"Direccion entrega "'],
   );
 
   const [email, setEmail] = React.useState(null);
   const [paymentMethod, setPaymentMethod] = React.useState([]);
   const [dealerData, setDealerData] = React.useState({});
   const [dealerDataGoogleSheets, setDealerDataGoogleSheets] = React.useState(
-    {}
+    {},
   );
 
   // Handle Events OnChange
@@ -225,27 +226,21 @@ const TakeOrder = (props) => {
   const handleSave = () => {
     let data = {
       orderNumber: orderNumber,
-      pedido: orderText,
-      namesYApellidos: nameLastName,
-      cedula: documentNumber,
-      telefono: phoneNumber,
-      departamento: department,
-      ciudad: city,
-      direccionRecogida: firstAddress,
-      direccionEntrega: finalAddress,
-      correoElectronico: email,
-      metodoDePago: paymentMethod,
-      domiciliary: {
-        id: dealerData.value,
-        name: dealerData.label,
-      },
-      fecha: Date.now(),
-      client: {
-        name: user.name,
-        id: user.uid,
-      },
-      clientEmpresa: idClientEmpresa,
-      estado: "En proceso",
+      ticket: orderText,
+      nameLasName: nameLastName,
+      document: documentNumber,
+      phone: phoneNumber,
+      departament: department.label.toString(),
+      city: city.length ? city.label : "DEFAULT",
+      fistAddress: firstAddress,
+      lastAddress: finalAddress,
+      //correoElectronico: email,
+      paymentMethod: paymentMethod.label,
+      domiciliary: dealerData.value.toString(),
+      date: moment(Date.now()).format("DD/MM/YYYY"),
+      client: user.uid.toString(),
+      clientCompany: idClientEmpresa ? idClientEmpresa : "0",
+      state: "En proceso",
     };
 
     dispatch(createOrderAction(data));
@@ -420,7 +415,7 @@ const TakeOrder = (props) => {
                     placeholder="Domiciliary"
                     options={dealers.map((dealer) => {
                       return {
-                        value: dealer._id,
+                        value: dealer.uid,
                         label: dealer.name,
                       };
                     })}
@@ -452,7 +447,7 @@ const TakeOrder = (props) => {
 
         .mapContainerForm {
           position: absolute;
-          top: 42rem;
+          top: 50rem;
           width: 84%;
           height: 600px;
           border: 2px solid black;

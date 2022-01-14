@@ -1,5 +1,5 @@
 // Orders
-import OrderList from "../components/addresses/orders/OrderList";
+import OrderList from "../components/addresses/orders/ListOrders";
 import UserPage from "views/User.js";
 import EditUser from "../components/addresses/auth/EditUser";
 

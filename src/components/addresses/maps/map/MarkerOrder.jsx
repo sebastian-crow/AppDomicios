@@ -1,10 +1,3 @@
-
-
-
 export const MarkerOrder = () => {
-    
-
-    return (
-        <div>Marker</div>
-    )
-}
+  return <div>Marker</div>;
+};

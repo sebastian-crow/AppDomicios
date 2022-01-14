@@ -24,8 +24,6 @@ import {
   // Client Position
   createPositionClientAction,
   createPositionClientDoneAction,
-  updatePositionClientAction,
-  updatePositionClientDoneAction,
   getFromClientPositionAction,
   getFromClientPositionDoneAction,
 
@@ -224,30 +222,10 @@ function* createPositionClientSaga(action) {
   }
 }
 
-function* updatePositionClientSaga(action) {
-  try {
-    const { data } = yield call(api.updatePosition, action.payload);
-    if (data.status === 200) {
-      yield put(updatePositionClientDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
 function* getFromClientPositionSaga(action) {
   try {
     const { data } = yield call(api.getPositionFromUser, action.payload);
-    if (data.status === "200") {
-      yield put(getFromClientPositionDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
+    yield put(getFromClientPositionDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -292,11 +270,7 @@ function* updatePositionDealerSaga(action) {
 function* getFromDealerPositionSaga(action) {
   try {
     const { data } = yield call(api.getPositionFromUser, action.payload);
-    if (data.status === "200") {
-      yield put(getFromDealerPositionDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
+    yield put(getFromDealerPositionDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -309,11 +283,7 @@ function* getFromDealerPositionSaga(action) {
 function* getAllUserSaga() {
   try {
     const { data } = yield call(api.getAllUsers);
-    if (data.status === "200") {
-      yield put(getAllUserDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
+    yield put(getAllUserDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -326,11 +296,7 @@ function* getAllUserSaga() {
 function* getAllClientSaga() {
   try {
     const { data } = yield call(api.getAllClients);
-    if (data.status === "200") {
-      yield put(getAllClientDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
+    yield put(getAllClientDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -343,11 +309,7 @@ function* getAllClientSaga() {
 function* getAllDomiciliarySaga() {
   try {
     const { data } = yield call(api.getAllDomiciliarys);
-    if (data.status === "200") {
-      yield put(getAllDomiciliaryDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
+    yield put(getAllDomiciliaryDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -361,10 +323,7 @@ function* getAllDomiciliarySaga() {
 function* getAllProductSaga() {
   try {
     const { data } = yield call(api.getAllProducts);
-    if (data.status === "200") {
-      yield put(getAllProductDoneAction(data));
-    } else {
-    }
+    yield put(getAllProductDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -425,10 +384,7 @@ function* deleteProductSaga(action) {
 function* getAllOrderSaga() {
   try {
     const { data } = yield call(api.getAllOrders);
-    if (data.status === "200") {
-      yield put(getAllOrderDoneAction(data));
-    } else {
-    }
+    yield put(getAllOrderDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -440,11 +396,7 @@ function* getAllOrderSaga() {
 function* createOrderSaga(action) {
   try {
     const { data } = yield call(api.createOrder, action.payload);
-    if (data.status === 200) {
-      yield put(createOrderDoneAction(data));
-    } else {
-      yield put(errorCreateOrder(data.status));
-    }
+    yield put(createOrderDoneAction(data));
   } catch (error) {
     yield put(errorCreateOrder("Error inesperado"));
   } finally {
@@ -511,7 +463,6 @@ export function* rootSaga() {
 
   // Client Location
   yield takeLatest(createPositionClientAction.type, createPositionClientSaga);
-  yield takeLatest(updatePositionClientAction.type, updatePositionClientSaga);
   yield takeLatest(getFromClientPositionAction.type, getFromClientPositionSaga);
 
   // Dealer Location

@@ -6,14 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Actions
 import {
-  createPositionClientAction,
-  updatePositionClientDoneAction,
-  getFromClientPositionDoneAction,
-  createPositionDealerAction,
-  updatePositionDealerAction,
   getFromDealerPositionAction,
-  getAllDomiciliaryAction,
-  getAllOrderAction,
 } from "../../../../store/reducer";
 
 // Mapbox GL
@@ -39,68 +32,15 @@ export const Map = (props) => {
   // Redux Dispatch
   const dispatch = useDispatch();
 
-  // Position, current Dealer and Order
-
-  const positions = {
-    client: {
-      position: useSelector((state) => state.ui.position.client.positionClient),
-      positionId: useSelector(
-        (state) => state.ui.position.client.positionClientId,
-      ),
-    },
-    dealer: {
-      position: useSelector((state) => state.ui.position.dealer.positionDealer),
-      positionId: useSelector(
-        (state) => state.ui.position.dealer.positionDealerId,
-      ),
-    },
-  };
-
-  // Dealer
-  const dealer = useSelector((state) => state.login.user);
-  const dealerId = useSelector((state) => state.login.user.uid);
-
-  const dealerPosition = JSON.parse(
-    positions.dealer.position.replace(/'/g, '"'),
-  );
-  const clientPosition = JSON.parse(
-    positions.client.position.replace(/'/g, '"'),
-  );
-
-  // Orders and Current Order
-  const orderId = props.match.params.id;
-  const orders = useSelector((state) => state.ui.orders);
-  const currentOrder = [];
-  orders.map((order) => {
-    if (order._id === orderId) {
-      currentOrder.push(order);
-    }
-  });
-  const clientId = currentOrder[0].client.id;
-
   // Markers
   const markers = [
-    {
-      id: 20,
-      type: "order",
-      name: currentOrder[0].orderName,
-      address: currentOrder[0].direccion,
-      phoneNumber: 3413443482,
-      coordinates: {
-        lat: 6.24013,
-        lng: -75.56574,
-      },
-    },
     {
       id: 10,
       type: "user",
       name: dealer.name,
       address: "Cr 57A N#48-43 Copacabana Antioquia",
       phoneNumber: 323234373,
-      coordinates: {
-        lat: 6.343636,
-        lng: -75.512529,
-      },
+      coordinates: state.ui.position.dealer.positionDealer,
     },
   ];
 
@@ -109,123 +49,14 @@ export const Map = (props) => {
     setCurrentMarkerId(id);
   };
 
-  // Road Between both points
-  const Road = {
-    type: "Feature",
-    properties: {},
-    geometry: {
-      type: "LineString",
-      coordinates: [
-        [-75.56574, 6.24013],
-        [-75.512529, 6.343636],
-      ],
-    },
-  };
-
-  // UseEffect's
-  useEffect(() => {
-    dispatch(getAllOrderAction());
-    dispatch(getAllDomiciliaryAction());
-  }, []);
-
   // Get Current Location to Dealer
   useEffect(() => {
     const timer = setInterval(() => {
       dispatch(getFromDealerPositionAction(dealerId));
-      const options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      };
-
-      function success(pos) {
-        var crd = pos.coords;
-        if (positions.dealer.positionId) {
-          dispatch(
-            updatePositionDealerAction({
-              lat: crd.latitude,
-              lng: crd.longitude,
-              positionId: positions.dealer.positionId,
-            }),
-          );
-        } else {
-          dispatch(
-            createPositionDealerAction({
-              position: JSON.stringify({
-                lat: crd.latitude,
-                lng: crd.longitude,
-              }),
-              user: dealerId,
-            }),
-          );
-        }
-      }
-
-      function error(err) {
-        console.warn("ERROR(" + err.code + "): " + err.message);
-      }
-
-      navigator.geolocation.getCurrentPosition(success, error, options);
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [
-    dispatch,
-    positions.dealer.position,
-    positions.dealer.positionId,
-    dealerId,
-  ]);
-
-  // Get Current Location to Client
-  useEffect(() => {
-    if (!positions.client.position) {
-      const timer = setInterval(() => {
-        dispatch(getFromClientPositionDoneAction(clientId));
-        const options = {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        };
-
-        function success(pos) {
-          var crd = pos.coords;
-          if (positions.client.positionId) {
-            dispatch(
-              updatePositionClientDoneAction({
-                lat: crd.latitude,
-                lng: crd.longitude,
-                positionId: positions.client.positionId,
-              }),
-            );
-          } else {
-            dispatch(
-              createPositionClientAction({
-                position: JSON.stringify({
-                  lat: crd.latitude,
-                  lng: crd.longitude,
-                }),
-                user: clientId,
-              }),
-            );
-          }
-        }
-
-        function error(err) {
-          console.warn("ERROR(" + err.code + "): " + err.message);
-        }
-
-        navigator.geolocation.getCurrentPosition(success, error, options);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [
-    dispatch,
-    positions.client.position,
-    positions.client.positionId,
-    clientId,
-  ]);
-
+  }, [dispatch]);
   return (
     <>
       <div className="mapboxNameRandom">

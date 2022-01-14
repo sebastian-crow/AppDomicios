@@ -5,13 +5,9 @@ import UserPage from "views/User.js";
 import ListClientss from "../components/addresses/listUsers/ListClients";
 import EditUser from "../components/addresses/auth/EditUser";
 
-// Products
-import CreateProduct from "../components/addresses/products/CreateProduct";
-import ListProducts from "../components/addresses/products/ListProducts";
-
 // Orders
 import TakeOrder from "../components/addresses/orders/TakeOrder";
-import OrderList from "../components/addresses/orders/OrderList";
+import OrderList from "../components/addresses/orders/ListOrders";
 
 // Excel
 import { Excel } from "../components/addresses/excel/Excel";
@@ -66,24 +62,6 @@ var routesAdmin = [
     component: OrderList,
     layout: "/admin",
     visible: true,
-  },
-  {
-    path: "/createproduct",
-    name: "Crear producto",
-    icon: "nc-icon nc-app",
-    rol: ["admin"],
-    component: CreateProduct,
-    layout: "/admin",
-    visible: false,
-  },
-  {
-    path: "/listproducts",
-    name: "Todos los productos",
-    icon: "nc-icon nc-bank",
-    rol: ["admin"],
-    component: ListProducts,
-    layout: "/admin",
-    visible: false,
   },
   // Maps
   {

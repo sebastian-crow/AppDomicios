@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-const ListClients = () => {
+const ListDomiciliary = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.ui.domiciliarys);
   // Actualizar la lista
@@ -60,4 +60,4 @@ const ListClients = () => {
   );
 }
 
-export default ListClients;
+export default ListDomiciliary;

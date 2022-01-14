@@ -4,42 +4,40 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 
 // Client Position
 export const createPositionClientAction = createAction(
-  "CREATE_POSITION_CLIENT_ACTION"
+  "CREATE_POSITION_CLIENT_ACTION",
 );
 export const createPositionClientDoneAction = createAction(
-  "CREATE_POSITION_CLIENT_DONE_ACTION"
+  "CREATE_POSITION_CLIENT_DONE_ACTION",
 );
-export const updatePositionClientAction = createAction(
-  "UPDATE_POSITION_ACTION"
+export const saveMyPositionClientAction = createAction(
+  "SAVE_MY_POSITION_CLIENT_ACTION",
 );
-export const updatePositionClientDoneAction = createAction(
-  "UPDATE_POSITION_CLIENT_DONE_ACTION"
-);
+
 export const getFromClientPositionAction = createAction(
-  "GET_FROM_CLIENT_POSITION_ACTION"
+  "GET_FROM_CLIENT_POSITION_ACTION",
 );
 export const getFromClientPositionDoneAction = createAction(
-  "GET_FROM_CLIENT_POSITION_DONE_ACTION"
+  "GET_FROM_CLIENT_POSITION_DONE_ACTION",
 );
 
 // Dealer Position
 export const createPositionDealerAction = createAction(
-  "CREATE_POSITION_DEALER_ACTION"
+  "CREATE_POSITION_DEALER_ACTION",
 );
 export const createPositionDealerDoneAction = createAction(
-  "CREATE_POSITION_DEALER_DONE_ACTION"
+  "CREATE_POSITION_DEALER_DONE_ACTION",
 );
 export const updatePositionDealerAction = createAction(
-  "UPDATE_POSITION_DEALER_ACTION"
+  "UPDATE_POSITION_DEALER_ACTION",
 );
 export const updatePositionDealerDoneAction = createAction(
-  "UPDATE_POSITION_DEALER_DONE_ACTION"
+  "UPDATE_POSITION_DEALER_DONE_ACTION",
 );
 export const getFromDealerPositionAction = createAction(
-  "GET_FROM_DEALER_POSITION_ACTION"
+  "GET_FROM_DEALER_POSITION_ACTION",
 );
 export const getFromDealerPositionDoneAction = createAction(
-  "GET_FROM_DEALER_POSITION_DONE_ACTION"
+  "GET_FROM_DEALER_POSITION_DONE_ACTION",
 );
 
 export const getAllUserAction = createAction("GET_ALL_USER_ACTION");
@@ -47,23 +45,23 @@ export const getAllUserAction = createAction("GET_ALL_USER_ACTION");
 export const getAllUserDoneAction = createAction("GET_ALL_USER_DONE_ACTION");
 export const getAllProductAction = createAction("GET_ALL_PRODUCT_ACTION");
 export const getAllProductDoneAction = createAction(
-  "GET_ALL_PRODUCT_DONE_ACTION"
+  "GET_ALL_PRODUCT_DONE_ACTION",
 );
 
 // Clients
 export const getAllClientAction = createAction("GET_ALL_CLIENT_ACTION");
 
 export const getAllClientDoneAction = createAction(
-  "GET_ALL_CLIENT_DONE_ACTION"
+  "GET_ALL_CLIENT_DONE_ACTION",
 );
 
 // Domiciliarys
 export const getAllDomiciliaryAction = createAction(
-  "GET_ALL_DOMICILIARIO_ACTION"
+  "GET_ALL_DOMICILIARIO_ACTION",
 );
 
 export const getAllDomiciliaryDoneAction = createAction(
-  "GET_ALL_DOMICILIARIO_DONE_ACTION"
+  "GET_ALL_DOMICILIARIO_DONE_ACTION",
 );
 
 // Orders
@@ -74,20 +72,14 @@ export const getAllOrderDoneAction = createAction("GET_ALL_ORDER_DONE_ACTION");
 // Get Sheets Orders
 export const getSheetsOrderAction = createAction("GET_SHEETS_ORDER_ACTION");
 export const getSheetsOrderDoneAction = createAction(
-  "GET_SHEETS_ORDER_DONE_ACTION"
+  "GET_SHEETS_ORDER_DONE_ACTION",
 );
 
 // UI state reducers
 const initialState = {
   position: {
-    client: {
-      positionClient: '{ "lat": 6.208376299999999, "lng": -75.5658174 }',
-      positionClientId: null,
-    },
-    dealer: {
-      positionDealer: '{ "lat": 6.208376299999999, "lng": -75.5658174 }',
-      positionDealerId: null,
-    },
+    client: { lat: 6.208376299999999, lng: -75.5658174 },
+    dealer: { lat: 6.208376299999999, lng: -75.5658174 },
   },
   users: [],
   products: [],
@@ -111,9 +103,8 @@ const uiReducer = createReducer(initialState, {
   },
 
   // Update Position Client
-  [updatePositionClientDoneAction]: (state, action) => {
-    state.position.client.positionClient = action.payload.data[0].position;
-    state.position.client.positionClientId = action.payload.data[0]._id;
+  [saveMyPositionClientAction]: (state, action) => {
+    state.position.client = action.payload;
   },
 
   // Update Position Dealer
@@ -139,24 +130,19 @@ const uiReducer = createReducer(initialState, {
     state.users = action.payload.data.Users;
   },
 
-  // Get All Products
-  [getAllProductDoneAction]: (state, action) => {
-    state.products = action.payload.data.Products;
-  },
-
   // Get All Clients
   [getAllClientDoneAction]: (state, action) => {
-    state.clients = action.payload.data.Clients;
+    state.clients = action.payload;
   },
 
   // Get All Domiciliarys
   [getAllDomiciliaryDoneAction]: (state, action) => {
-    state.domiciliarys = action.payload.data;
+    state.domiciliarys = action.payload;
   },
 
   // Get All Orders
   [getAllOrderDoneAction]: (state, action) => {
-    state.orders = action.payload.data.Orders;
+    state.orders = action.payload;
   },
   // Get All Google Sheets by User
   [getSheetsOrderDoneAction]: (state, action) => {

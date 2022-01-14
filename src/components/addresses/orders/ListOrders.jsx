@@ -1,13 +1,12 @@
 // React
 import * as React from "react";
-import { Link } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
 // React Bootstrap
-import { Button, Stack } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 // Reverse counter for know the time we need to remaining
 import { ReverseCounter } from "../counter/ReverseCounter";
@@ -23,16 +22,7 @@ const ListOrders = () => {
   const user = useSelector((state) => state.login.user);
 
   // Get all orders from store
-  const orders = useSelector((state) => state.ui.orders);
-
-  // Filter orders by user
-  const ordersCurrentUser = [];
-  orders.map((order) => {
-    if (order.domiciliary.id === user.uid) {
-      ordersCurrentUser.push(order);
-    }
-  });
-
+  const orders = useSelector((state) => state.ui.orders.filter((order) => order.domiciliary.id === user.id));
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -50,11 +40,6 @@ const ListOrders = () => {
     if (!orders.length) dispatch(getAllOrderAction());
   });
 
-  // Get Delaer's Location
-  React.useEffect(() => {
-    if (user.rol === "domiciliary") {
-    }
-  });
 
   return (
     <>
@@ -90,10 +75,10 @@ const ListOrders = () => {
           {user.rol === "admin" && (
             <tbody>
               {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order.orderName}</td>
-                  <td>{order.direccion}</td>
-                  <td>{order.client.name}</td>
+                <tr key={order.uid}>
+                  <td>{order.orderNumber}</td>
+                  <td>{order.clientCompany}</td>
+                  <td>{order.client}</td>
                   <td>
                     {order.fecha} <br></br>
                     <strong>Ordered two minutes ago</strong>
@@ -106,7 +91,7 @@ const ListOrders = () => {
                     <Button
                       onClick={(e) => {
                         e.preventDefault;
-                        dispatch(push(`/admin/map/${order._id}`));
+                        dispatch(push(`/admin/map/${order.uid}`));
                       }}
                       variant="contained"
                     >
@@ -117,7 +102,7 @@ const ListOrders = () => {
                     <Button
                       onClick={(e) => {
                         e.preventDefault;
-                        dispatch(push(`/editOrder/${order._id}`));
+                        dispatch(push(`/editOrder/${order.uid}`));
                       }}
                       variant="warning"
                     >
@@ -136,19 +121,19 @@ const ListOrders = () => {
           {user.rol === "domiciliary" && (
             <tbody>
               {ordersCurrentUser.map((order) => (
-                <tr key={order._id}>
+                <tr key={order.uid}>
                   <td>{order.orderNumber}</td>
-                  <td>{order.namesYApellidos}</td>
-                  <td>{order.pedido}</td>
-                  <td>{order.pedido /* Dirección de recogida */}</td>
-                  <td>{order.pedido /* Dirección de entrega */}</td>
-                  <td>{order.telefono}</td>
+                  <td>{order.nameLasName}</td>
+                  <td>{order.ticket}</td>
+                  <td>{order.fistAddress}</td>
+                  <td>{order.lastAddress}</td>
+                  <td>{order.phone}</td>
                   <td>
-                    {order.fecha} <br></br>
+                    {order.date} <br></br>
                     <strong>Ordered two minutes ago</strong>
                     <ReverseCounter />
                   </td>
-                  <td>{order.estado}</td>
+                  <td>{order.state}</td>
 
                   <td>
                     <Button variant="success">
@@ -172,5 +157,3 @@ const ListOrders = () => {
   );
 };
 export default ListOrders;
-
-//<Link to={`/domiciliary/dealermap/${order._id}`}>+</Link>

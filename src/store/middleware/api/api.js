@@ -95,14 +95,14 @@ export function getAllUsers() {
 export function getAllClients() {
   return callAPI({
     method: "GET",
-    url: `/users/clients`,
+    url: `/user/client`,
   });
 }
 
 export function getAllDomiciliarys() {
   return callAPI({
     method: "GET",
-    url: `/users/domiciliarys`,
+    url: `/user/domiciliary`,
   });
 }
 

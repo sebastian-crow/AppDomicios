@@ -6,9 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Actions
 import {
-  createPositionClientAction,
-  updatePositionClientDoneAction,
-  getFromClientPositionDoneAction,
   createPositionDealerAction,
   updatePositionDealerAction,
   getFromDealerPositionAction,
@@ -45,13 +42,13 @@ export const Map = (props) => {
     client: {
       position: useSelector((state) => state.ui.position.client.positionClient),
       positionId: useSelector(
-        (state) => state.ui.position.client.positionClientId
+        (state) => state.ui.position.client.positionClientId,
       ),
     },
     dealer: {
       position: useSelector((state) => state.ui.position.dealer.positionDealer),
       positionId: useSelector(
-        (state) => state.ui.position.dealer.positionDealerId
+        (state) => state.ui.position.dealer.positionDealerId,
       ),
     },
   };
@@ -61,10 +58,10 @@ export const Map = (props) => {
   const dealerId = useSelector((state) => state.login.user.uid);
 
   const dealerPosition = JSON.parse(
-    positions.dealer.position.replace(/'/g, '"')
+    positions.dealer.position.replace(/'/g, '"'),
   );
   const clientPosition = JSON.parse(
-    positions.client.position.replace(/'/g, '"')
+    positions.client.position.replace(/'/g, '"'),
   );
 
   // Orders and Current Order
@@ -132,40 +129,6 @@ export const Map = (props) => {
   useEffect(() => {
     const timer = setInterval(() => {
       dispatch(getFromDealerPositionAction(dealerId));
-      const options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      };
-
-      function success(pos) {
-        var crd = pos.coords;
-        if (positions.dealer.positionId) {
-          dispatch(
-            updatePositionDealerAction({
-              lat: crd.latitude,
-              lng: crd.longitude,
-              positionId: positions.dealer.positionId,
-            })
-          );
-        } else {
-          dispatch(
-            createPositionDealerAction({
-              position: JSON.stringify({
-                lat: crd.latitude,
-                lng: crd.longitude,
-              }),
-              user: dealerId,
-            })
-          );
-        }
-      }
-
-      function error(err) {
-        console.warn("ERROR(" + err.code + "): " + err.message);
-      }
-
-      navigator.geolocation.getCurrentPosition(success, error, options);
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -175,75 +138,6 @@ export const Map = (props) => {
     positions.dealer.positionId,
     dealerId,
   ]);
-
-  // Get Current Location to Client
-  useEffect(() => {
-    if (!positions.client.position) {
-      const timer = setInterval(() => {
-        dispatch(getFromClientPositionDoneAction(clientId));
-        const options = {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        };
-
-        function success(pos) {
-          var crd = pos.coords;
-          if (positions.client.positionId) {
-            dispatch(
-              updatePositionClientDoneAction({
-                lat: crd.latitude,
-                lng: crd.longitude,
-                positionId: positions.client.positionId,
-              })
-            );
-          } else {
-            dispatch(
-              createPositionClientAction({
-                position: JSON.stringify({
-                  lat: crd.latitude,
-                  lng: crd.longitude,
-                }),
-                user: clientId,
-              })
-            );
-          }
-        }
-
-        function error(err) {
-          console.warn("ERROR(" + err.code + "): " + err.message);
-        }
-
-        navigator.geolocation.getCurrentPosition(success, error, options);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [
-    dispatch,
-    positions.client.position,
-    positions.client.positionId,
-    clientId,
-  ]);
-
-  {
-    /* 
-   useEffect(() => {
-    const timer = setInterval(() => {
-      if (!geoCoordinates) {
-        setGeoCoordinates({
-          lat: 7848,
-          lng: -48137418,
-        });
-        console.log("geocoordinates", geoCoordinates);
-      }
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  });
-
-*/
-  }
 
   return (
     <>
