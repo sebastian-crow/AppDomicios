@@ -10,7 +10,7 @@ import addresses_red from '../../assets/img/logo.svg';
 var ps;
 
 function Sidebar(props) {
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
   const sidebar = React.useRef();
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {

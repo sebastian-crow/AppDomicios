@@ -17,22 +17,24 @@ import { registerAction } from "../../../store/reducer";
 
 const SignUp = (props) => {
   const error = useSelector((state) => state.login.errorRegistro);
-  const nombre = useFormInput("");
-  const apellido = useFormInput("");
-  const tipoDocumento = useFormInput("Cedula");
-  const documentoIdentidad = useFormInput("");
+  const name = useFormInput("");
+  const lastName = useFormInput("");
+  const typeDocument = useFormInput("cc");
+  const documentNumber = useFormInput("");
   const password = useFormInput("");
-  const fechaNacimiento = useFormInput("");
+  const bornDate = useFormInput("");
+  const email = useFormInput("");
   const dispatch = useDispatch();
   const handleRegister = (event) => {
     event.preventDefault();
     let data = {
-      nombre: nombre.value,
-      apellido: apellido.value,
-      tipoDocumento: tipoDocumento.value,
-      documentoIdentidad: documentoIdentidad.value,
+      name: name.value,
+      lastName: lastName.value,
+      typeDocument: typeDocument.value,
+      documentNumber: documentNumber.value,
+      email: email.value,
       password: password.value,
-      fechaNacimiento: fechaNacimiento.value,
+      bornDate: bornDate.value,
     };
     dispatch(registerAction(data));
   };
@@ -49,14 +51,14 @@ const SignUp = (props) => {
                   htmlFor="defaultFormRegisterNameEx"
                   className="grey-text"
                 >
-                  Tú nombre
+                  Tú name
                 </label>
                 <input
                   type="text"
                   required
-                  id="nombre"
-                  name="nombre"
-                  {...nombre}
+                  id="name"
+                  name="name"
+                  {...name}
                   className="form-control"
                 />
                 <br />
@@ -69,10 +71,25 @@ const SignUp = (props) => {
                 <input
                   type="text"
                   required
-                  id="apellido"
-                  name="apellido"
-                  {...apellido}
-                  autoComplete="apellido"
+                  id="lastName"
+                  name="lastName"
+                  {...lastName}
+                  autoComplete="lastName"
+                  className="form-control"
+                />
+                 <br />
+                <label
+                  htmlFor="defaultFormRegisterEmailEx"
+                  className="grey-text"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  autoComplete="email"
+                  {...email}
                   className="form-control"
                 />
                 <br />
@@ -83,11 +100,11 @@ const SignUp = (props) => {
                   Documento Identidad
                 </label>
                 <input
-                  type="documentoIdentidad"
-                  name="documentoIdentidad"
-                  id="documentoIdentidad"
-                  autoComplete="documentoIdentidad"
-                  {...documentoIdentidad}
+                  type="documentNumber"
+                  name="documentNumber"
+                  id="documentNumber"
+                  autoComplete="documentNumber"
+                  {...documentNumber}
                   className="form-control"
                 />
                 <br />
@@ -112,7 +129,7 @@ const SignUp = (props) => {
                   htmlFor="defaultFormRegisterPasswordEx"
                   className="grey-text"
                 >
-                  Fecha De fechaNacimiento
+                  Fecha De bornDate
                 </label>
                 <input
                   type="date"
@@ -122,7 +139,7 @@ const SignUp = (props) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  {...fechaNacimiento}
+                  {...bornDate}
                   className="form-control"
                 />
                 <div className="text-center mt-4">

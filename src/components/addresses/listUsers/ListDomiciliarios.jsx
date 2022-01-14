@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { getAllDomiciliarioAction, getFromUserPositionAction } from "../../../store/reducer";
+import { getAllDomiciliaryAction, getFromUserPositionAction } from "../../../store/reducer";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/styles';
 import { push } from "redux-first-history";
@@ -11,12 +11,12 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-const ListUsers = () => {
+const ListClients = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.ui.domiciliarios);
+  const users = useSelector((state) => state.ui.domiciliarys);
   // Actualizar la lista
   React.useEffect(() => {
-    dispatch(getAllDomiciliarioAction());
+    dispatch(getAllDomiciliaryAction());
   }, [dispatch]);
   const classes = useStyles();
   const viewMap = (id) => {
@@ -37,12 +37,12 @@ const ListUsers = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user.nombre} {user.apellido}</td>
-                <td>{user.documentoIdentidad}</td>
+              <tr key={user.uid}>
+                <td>{user.name} {user.lastName}</td>
+                <td>{user.documentNumber}</td>
                 <td>
                   <Button
-                    onClick={() => viewMap(user._id)}
+                    onClick={() => viewMap(user.uid)}
                     fullWidth
                     variant="contained"
                     color="primary"
@@ -60,4 +60,4 @@ const ListUsers = () => {
   );
 }
 
-export default ListUsers;
+export default ListClients;

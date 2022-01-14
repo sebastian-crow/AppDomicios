@@ -26,9 +26,9 @@ const UserProductOrderList = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // Get Current User
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
-  const rol = user.rol === "cliente" || user.rol === "admin";
+  const rol = user.rol === "client" || user.rol === "admin";
 
   // Get All Orders from store
   const orders = useSelector((state) => state.ui.orders);
@@ -39,7 +39,7 @@ const UserProductOrderList = () => {
   // Filter orders by users
   const ordersCurrentUser = [];
   orders.map((order) => {
-    if (order.cliente.id === user._id) {
+    if (order.client.id === user.uid) {
       return ordersCurrentUser.push(order);
     }
   });
@@ -74,7 +74,7 @@ const UserProductOrderList = () => {
 
   React.useEffect(() => {
     orders.map((order) => {
-      if (order.cliente.id === user._id) {
+      if (order.client.id === user.uid) {
         return ordersCurrentUser.push(order);
       }
     }, []);
@@ -93,7 +93,7 @@ const UserProductOrderList = () => {
               <th scope="col">Número de Orden</th>
               <th scope="col">Fecha Creación</th>
               <th scope="col">Nombres y Apellidos</th>
-              <th scope="col">Telefono Cliente</th>
+              <th scope="col">Telefono Client</th>
               <th scope="col">Dirección Entrega</th>
               <th scope="col">Ciudad</th>
               <th scope="col">Barrio</th>
@@ -101,7 +101,7 @@ const UserProductOrderList = () => {
               <th scope="col">Nota Entrega</th>
               <th scope="col">Paquete A Entregar</th>
               <th scope="col">Estado Pedido </th>
-              <th scope="col">Domiciliario</th>
+              <th scope="col">Domiciliary</th>
               <th scope="col">Dirección Recogida</th>
               <th scope="col">Hora Entrega</th>
               <th scope="col">Ubicación Entrega</th>
@@ -119,7 +119,7 @@ const UserProductOrderList = () => {
                 <td>{order["# de Orden"]}</td>
                 <td>{order["Fecha Creacion"]}</td>
                 <td>{order["Nombres y Apellidos"]}</td>
-                <td>{order["Telefono cliente"]}</td>
+                <td>{order["Telefono client"]}</td>
                 <td>{order["Direccion entrega"]}</td>
                 <td>{order["Ciudad"]}</td>
                 <td>{order["Barrio"]}</td>
@@ -127,7 +127,7 @@ const UserProductOrderList = () => {
                 <td>{order["Nota entrega"]}</td>
                 <td>{order["# Paquete a entregar"]}</td>
                 <td>{order["Estado Pedido"]}</td>
-                <td>{order["Domiciliario"]}</td>
+                <td>{order["Domiciliary"]}</td>
                 <td>{order["Direccion Recogida"]}</td>
                 <td>{order["Hora entrega"]}</td>
                 <td>{order["Ubicacion entrega"]}</td>
@@ -137,7 +137,7 @@ const UserProductOrderList = () => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault;
-                      dispatch(push(`/cliente/clientmap/${order._id}`));
+                      dispatch(push(`/client/clientmap/${order._id}`));
                     }}
                     variant="primary"
                   >
@@ -148,7 +148,7 @@ const UserProductOrderList = () => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault;
-                      dispatch(push(`/cliente/editorder/${order._id}`));
+                      dispatch(push(`/client/editorder/${order._id}`));
                     }}
                     variant="warning"
                   >
@@ -166,7 +166,7 @@ const UserProductOrderList = () => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/cliente/takeorder/${user._id}/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`
+                          `/client/takeorder/${user.uid}/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`
                         )
                       );
                     }}

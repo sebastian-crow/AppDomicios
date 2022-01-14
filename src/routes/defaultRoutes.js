@@ -11,7 +11,7 @@ import UpgradeToPro from "views/Upgrade.js";
 var routes = [
   {
     path: "/dashboard",
-    rol: ["domiciliario", "cliente", "admin"],
+    rol: ["domiciliary", "client", "admin"],
     name: "Dashboard",
     icon: "nc-icon nc-diamond",
     component: Dashboard,
@@ -19,7 +19,7 @@ var routes = [
   },
   {
     path: "/icons",
-    rol: ["admin", "cliente"],
+    rol: ["admin", "client"],
     name: "Icons",
     icon: "nc-icon nc-pin-3",
     component: Icons,

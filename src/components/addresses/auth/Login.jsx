@@ -18,20 +18,22 @@ import { loginAction } from "../../../store/reducer";
 // Login Page Component
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const [documentoIdentidad, setDocumentoIdentidad] = useState(null);
+  const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const error = useSelector((state) => state.login.errorInicio);
 
   const handleLogin = (event) => {
     event.preventDefault();
-    dispatch(loginAction({ documentoIdentidad, password }));
+    dispatch(loginAction({ email, password }));
   };
 
   const handleChangeEmail = (event) => {
-    setDocumentoIdentidad(event.target.value);
+    event.preventDefault();
+    setEmail(event.target.value);
   };
 
   const handleChangePassword = (event) => {
+    event.preventDefault();
     setPassword(event.target.value);
   };
 
@@ -48,12 +50,12 @@ const LoginPage = () => {
           >
             <Form autoComplete="on" onSubmit={handleLogin}>
               <Form.Group>
-                <Form.Label>Documento Identidad</Form.Label>
+                <Form.Label>Correo</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Ingresa tú Documento"
-                  id="documentoIdentidad"
-                  name="documentoIdentidad"
+                  placeholder="Ingresa tú Correo"
+                  id="email"
+                  name="email"
                   onChange={handleChangeEmail}
                   autoFocus
                 />

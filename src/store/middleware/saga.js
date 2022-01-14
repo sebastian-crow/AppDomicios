@@ -76,11 +76,9 @@ import {
   getAllClientDoneAction,
 
   // Dealers
-  getAllDomiciliarioAction,
-  getAllDomiciliarioDoneAction,
+  getAllDomiciliaryAction,
+  getAllDomiciliaryDoneAction,
   loginError,
-  saveUrlPushAction,
-  saveUrlPushDoneAction,
 
   // Sheets Orders
   getSheetsOrderAction,
@@ -92,24 +90,28 @@ import { LOCATION_CHANGE } from "redux-first-history";
 function* loginSaga(action) {
   try {
     const { data } = yield call(api.login, action.payload);
-    if (data.status === 200) {
+    console.log(data);
+    if (data) {
       var webPush = localStorage.getItem("webpush");
       var webPush = JSON.parse(webPush);
       if (webPush) {
+        /*
         yield put(
           saveUrlPushAction({
-            userId: data.data.user._id,
+            userId: data.data.user.uid,
             urlPush: JSON.stringify(webPush),
           })
         );
+        */
       }
       yield put(loginDoneAction(data));
       yield put(push("/"));
     } else {
-      yield put(loginError(data.message));
-      console.log("All Wrong, check me and find the problem...");
+      yield put(loginError("No existe un user"));
     }
   } catch (error) {
+    console.log(error);
+    yield put(loginError(error.message));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -130,8 +132,12 @@ function* loginDoneSaga(action) {
 
 function* restoreSessionStateSaga(action) {
   try {
-    const pathname = action.payload.location.pathname;
-    yield put(push(pathname));
+    const pathname = action.payload?.location.pathname;
+    if (pathname) {
+      yield put(push(pathname));
+    } else {
+      yield put(push("/"));
+    }
   } catch (error) {
     console.log(error);
   } finally {
@@ -156,13 +162,10 @@ function* logoutSagas(action) {
 function* registerSaga(action) {
   try {
     const { data } = yield call(api.register, action.payload);
-    if (data.status === 200) {
-      yield put(registerDoneAction(data));
-    } else {
-      yield put(errorRegistro(data.status));
-    }
+    yield put(registerDoneAction(data));
+    yield put(push("/"));
   } catch (error) {
-    yield put(errorRegistro("Error al procesar el registro"));
+    yield put(errorRegistro(error));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -171,20 +174,19 @@ function* registerSaga(action) {
 }
 
 function* locationChangeSaga(action) {
-  console.log(action.payload.location.pathname);
-  const user = yield select((state) => state.login.usuario.user);
+  const user = yield select((state) => state.login.user);
   if (user) {
     const pathname = action.payload.location.pathname;
     if (pathname === "/") {
       switch (user.rol) {
-        case "cliente":
-          yield put(push("/cliente/dashboard"));
+        case "client":
+          yield put(push("/client/dashboard"));
           break;
         case "admin":
           yield put(push("/admin/dashboard"));
           break;
-        case "domiciliario":
-          yield put(push("/domiciliario/dashboard"));
+        case "domiciliary":
+          yield put(push("/domiciliary/dashboard"));
           break;
         default:
           break;
@@ -195,7 +197,7 @@ function* locationChangeSaga(action) {
 
 function* actualizarUsuarioSaga(action) {
   try {
-    const { data } = yield call(api.editarUsuario, action.payload);
+    const { data } = yield call(api.editUser, action.payload);
     yield put(actualizarUsuarioDoneAction(data));
   } catch (error) {
   } finally {
@@ -338,11 +340,11 @@ function* getAllClientSaga() {
 }
 
 // All dealers registred
-function* getAllDomiciliarioSaga() {
+function* getAllDomiciliarySaga() {
   try {
-    const { data } = yield call(api.getAllDomiciliarios);
+    const { data } = yield call(api.getAllDomiciliarys);
     if (data.status === "200") {
-      yield put(getAllDomiciliarioDoneAction(data));
+      yield put(getAllDomiciliaryDoneAction(data));
     } else {
       yield put(loginError(data.message));
     }
@@ -498,24 +500,6 @@ function* getSheetsOrderSaga(action) {
   }
 }
 
-function* saveUrlPushSaga(action) {
-  try {
-    const { data } = yield call(api.savePushUrl, action.payload);
-
-    if (data.status === 200) {
-      yield put(saveUrlPushDoneAction(data));
-    } else {
-      //yield put(errorDeleteOrder(data.status));
-    }
-  } catch (error) {
-    yield put(errorDeleteOrder("Error inesperado"));
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
   yield takeLatest(loginDoneAction.type, loginDoneSaga);
@@ -546,14 +530,13 @@ export function* rootSaga() {
   // Users
   yield takeLatest(getAllUserAction.type, getAllUserSaga);
   yield takeLatest(getAllClientAction.type, getAllClientSaga);
-  yield takeLatest(getAllDomiciliarioAction.type, getAllDomiciliarioSaga);
+  yield takeLatest(getAllDomiciliaryAction.type, getAllDomiciliarySaga);
 
   // Orders
   yield takeLatest(getAllOrderAction.type, getAllOrderSaga);
   yield takeLatest(createOrderAction.type, createOrderSaga);
   yield takeLatest(updateOrderAction.type, updateOrderSaga);
   yield takeLatest(deleteOrderAction.type, deleteOrderSaga);
-  yield takeLatest(saveUrlPushAction.type, saveUrlPushSaga);
 
   // Sheets Orders
   yield takeLatest(getSheetsOrderAction.type, getSheetsOrderSaga);

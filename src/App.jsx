@@ -20,23 +20,21 @@ import "./assets/css/home.css";
 import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "layouts/Admin";
 import NoAuth from "layouts/NoAuth";
-import { restoreSessionStateAction, saveUrlPushAction } from "./store/reducer";
+import { restoreSessionStateAction } from "./store/reducer";
 import Login from "./components/addresses/auth/Login";
 import Register from "./components/addresses/auth/Register";
-import routesCliente from "./routes/routesCliente";
+import routesClient from "./routes/routesClient";
 import routesAdmin from "./routes/routesAdmin";
-import routesDomiciliario from "./routes/routesDomiciliario";
+import routesDomiciliary from "./routes/routesDomiciliary";
 import defaultRoutes from "./routes/defaultRoutes";
 
-function App(props) {
+function App() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.login.usuario.user);
-  //const position = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
   React.useEffect(() => {
     if (!user) {
       const userSessionInfo = getSessionCookie();
-      console.log(userSessionInfo);
       if (Object.keys(userSessionInfo).length) {
         dispatch(restoreSessionStateAction());
       } else {
@@ -63,21 +61,21 @@ function App(props) {
               )}
             />
             <Route
-              path="/domiciliario"
+              path="/domiciliary"
               render={(props) => (
-                <AdminLayout {...props} routes={routesDomiciliario} />
+                <AdminLayout {...props} routes={routesDomiciliary} />
               )}
             />
             <Route
-              path="/cliente"
+              path="/client"
               render={(props) => (
-                <AdminLayout {...props} routes={routesCliente} />
+                <AdminLayout {...props} routes={routesClient} />
               )}
             />
             <Route
               restricted
-              path="/clienteForm"
-              render={(props) => <NoAuth {...props} routes={routesCliente} />}
+              path="/clientForm"
+              render={(props) => <NoAuth {...props} routes={routesClient} />}
             />
 
             <Route

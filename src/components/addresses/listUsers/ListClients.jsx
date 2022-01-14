@@ -8,7 +8,7 @@ import {
 } from "../../../store/reducer";
 import { push } from "redux-first-history";
 
-const ListUsers = () => {
+const ListClients = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.ui.clients);
 
@@ -35,12 +35,12 @@ const ListUsers = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.rol === "cliente" ? user._id : ""}>
+              <tr key={user.rol === "client" ? user.uid : ""}>
                 <td>
-                  {user.rol === "cliente" ? user.nombre : ""}{" "}
-                  {user.rol === "cliente" ? user.apellido : ""}
+                  {user.rol === "client" ? user.name : ""}{" "}
+                  {user.rol === "client" ? user.lastName : ""}
                 </td>
-                <td>{user.documentoIdentidad}</td>
+                <td>{user.documentNumber}</td>
                 <td>{"En proceso..."}</td>
               </tr>
             ))}
@@ -51,4 +51,4 @@ const ListUsers = () => {
   );
 };
 
-export default ListUsers;
+export default ListClients;

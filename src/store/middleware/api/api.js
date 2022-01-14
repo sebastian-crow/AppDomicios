@@ -4,9 +4,9 @@ require("dotenv").config();
 let client;
 
 export const getSessionToken = () => {
-  const uiStore = sessionStorage.getItem("store");
+  const uiStore = localStorage.getItem("store");
   var ui = JSON.parse(uiStore);
-  if (ui) return ui.login.usuario.token;
+  if (ui) return ui.login.user.token;
   else return null;
 };
 // axios client factory ...
@@ -14,7 +14,7 @@ export const getSessionToken = () => {
 function getClient() {
   if (!client) {
     client = axios.create({
-      baseURL: process.env.REACT_APP_BACK_END || "http://localhost:3006",
+      baseURL: process.env.REACT_APP_BACK_END + "/api" || "http://localhost:3006" + "/api",
     });
   }
   return client;
@@ -49,7 +49,7 @@ const callAPI = (options) => {
 export function login(params) {
   return callAPI({
     method: "POST",
-    url: `/users/authenticate`,
+    url: `/auth`,
     data: params,
   });
 }
@@ -57,15 +57,15 @@ export function login(params) {
 export function register(params) {
   return callAPI({
     method: "POST",
-    url: `/users/register`,
+    url: `/register`,
     data: params,
   });
 }
 
-export function editarUsuario(params) {
+export function editUser(params) {
   return callAPI({
-    method: "PUT",
-    url: `/users/update/` + params.id,
+    method: "PATCH",
+    url: `/user`,
     data: params.data,
   });
 }
@@ -73,7 +73,7 @@ export function editarUsuario(params) {
 export function createPosition(params) {
   return callAPI({
     method: "POST",
-    url: `/position`,
+    url: `/positionUser`,
     data: params,
   });
 }
@@ -82,14 +82,6 @@ export function getPositionFromUser(id) {
   return callAPI({
     method: "GET",
     url: `/position/user/${id}`,
-  });
-}
-
-export function updatePosition(params) {
-  return callAPI({
-    method: "PUT",
-    url: `/position/${params.positionId}`,
-    data: { position: JSON.stringify({ lat: params.lat, lng: params.lng }) },
   });
 }
 
@@ -107,65 +99,34 @@ export function getAllClients() {
   });
 }
 
-export function getAllDomiciliarios() {
+export function getAllDomiciliarys() {
   return callAPI({
     method: "GET",
-    url: `/users/domiciliarios`,
+    url: `/users/domiciliarys`,
   });
 }
 
-// Products
-
-export function getAllProducts() {
-  return callAPI({
-    method: "GET",
-    url: `/products`,
-  });
-}
-
-export function createProduct(params) {
-  return callAPI({
-    method: "POST",
-    url: `/products`,
-    data: params,
-  });
-}
-
-export function updateProduct(params) {
-  return callAPI({
-    method: "PUT",
-    url: `/products/` + params.id,
-    data: params.data,
-  });
-}
-
-export function deleteProduct(params) {
-  return callAPI({
-    method: "DELETE",
-    url: `/products/` + params,
-  });
-}
 
 // Orders
 export function getAllOrders() {
   return callAPI({
     method: "GET",
-    url: `/orders`,
+    url: `/order`,
   });
 }
 
 export function createOrder(params) {
   return callAPI({
     method: "POST",
-    url: `/orders/create`,
+    url: `/order`,
     data: params,
   });
 }
 
 export function updateOrder(params) {
   return callAPI({
-    method: "PUT",
-    url: `/orders/update/` + params.id,
+    method: "PATCH",
+    url: `/order` + params.id,
     data: params.data,
   });
 }
@@ -173,7 +134,7 @@ export function updateOrder(params) {
 export function deleteOrder(params) {
   return callAPI({
     method: "DELETE",
-    url: `/orders/delete/` + params.id,
+    url: `/order` + params.id,
     data: params.data,
   });
 }
@@ -183,13 +144,5 @@ export function getSheetsOrder(params) {
   return callAPI({
     method: "GET",
     url: params,
-  });
-}
-
-export function savePushUrl(params) {
-  return callAPI({
-    method: "POST",
-    url: `/users/saveUrlPush/` + params.userId,
-    data: { urlPush: params.urlPush },
   });
 }

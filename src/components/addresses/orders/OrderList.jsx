@@ -20,7 +20,7 @@ const ListOrders = () => {
   const dispatch = useDispatch();
 
   // Get current user
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
   // Get all orders from store
   const orders = useSelector((state) => state.ui.orders);
@@ -28,7 +28,7 @@ const ListOrders = () => {
   // Filter orders by user
   const ordersCurrentUser = [];
   orders.map((order) => {
-    if (order.domiciliario.id === user._id) {
+    if (order.domiciliary.id === user.uid) {
       ordersCurrentUser.push(order);
     }
   });
@@ -52,7 +52,7 @@ const ListOrders = () => {
 
   // Get Delaer's Location
   React.useEffect(() => {
-    if (user.rol === "domiciliario") {
+    if (user.rol === "domiciliary") {
     }
   });
 
@@ -79,7 +79,7 @@ const ListOrders = () => {
                   <th scope="col">Delete</th>
                 </>
               )}
-              {user.rol === "domiciliario" && (
+              {user.rol === "domiciliary" && (
                 <>
                   <th scope="col">Aceptar</th>
                   <th scope="col">Cancelar</th>
@@ -93,7 +93,7 @@ const ListOrders = () => {
                 <tr key={order._id}>
                   <td>{order.orderName}</td>
                   <td>{order.direccion}</td>
-                  <td>{order.cliente.name}</td>
+                  <td>{order.client.name}</td>
                   <td>
                     {order.fecha} <br></br>
                     <strong>Ordered two minutes ago</strong>
@@ -133,12 +133,12 @@ const ListOrders = () => {
               ))}
             </tbody>
           )}
-          {user.rol === "domiciliario" && (
+          {user.rol === "domiciliary" && (
             <tbody>
               {ordersCurrentUser.map((order) => (
                 <tr key={order._id}>
                   <td>{order.orderNumber}</td>
-                  <td>{order.nombresYApellidos}</td>
+                  <td>{order.namesYApellidos}</td>
                   <td>{order.pedido}</td>
                   <td>{order.pedido /* Dirección de recogida */}</td>
                   <td>{order.pedido /* Dirección de entrega */}</td>
@@ -173,4 +173,4 @@ const ListOrders = () => {
 };
 export default ListOrders;
 
-//<Link to={`/domiciliario/dealermap/${order._id}`}>+</Link>
+//<Link to={`/domiciliary/dealermap/${order._id}`}>+</Link>

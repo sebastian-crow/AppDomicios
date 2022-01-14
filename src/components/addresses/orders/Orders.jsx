@@ -19,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
 const ListOrders = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.ui.orders);
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
   const userOrders = orders.map((order) =>
-    order.domiciliario.id === user._id ? order : "",
+    order.domiciliary.id === user.uid ? order : "",
   );
 
   // Actualizar la lista
@@ -65,8 +65,8 @@ const ListOrders = () => {
               <br />
               <tr>
                 <th scope="col">Fecha</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Domiciliario</th>
+                <th scope="col">Client</th>
+                <th scope="col">Domiciliary</th>
                 <th scope="col">Productos</th>
                 <th scope="col">Dirección</th>
                 <th scope="col">Edit</th>
@@ -77,8 +77,8 @@ const ListOrders = () => {
               {orders.map((order) => (
                 <tr key={order._id}>
                   <td>{order.fecha}</td>
-                  <td>{order.cliente.nombre}</td>
-                  <td>{order.domiciliario.nombre}</td>
+                  <td>{order.client.name}</td>
+                  <td>{order.domiciliary.name}</td>
                   <td>{order.direccion}</td>
                   <td>{order.valorCU}</td>
                   <td>
@@ -105,12 +105,12 @@ const ListOrders = () => {
             </tbody>
           </table>
         )}
-        {user.rol == "domiciliario" && (
+        {user.rol == "domiciliary" && (
           <>
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">Cliente</th>
+                  <th scope="col">Client</th>
                   <th scope="col">Productos</th>
                   <th scope="col">Dirección</th>
                   <th scope="col">Acciones</th>
@@ -119,12 +119,12 @@ const ListOrders = () => {
               <tbody>
                 {userOrders.map((order) => (
                   <tr key={order._id}>
-                    <td>{order.cliente.nombre}</td>
+                    <td>{order.client.name}</td>
                     <td>{order.productos}</td>
                     <td>{order.direccion}</td>
                     <td>
                       <Button
-                        onClick={() => viewMap(order.cliente.id)}
+                        onClick={() => viewMap(order.client.id)}
                         fullWidth
                         variant="contained"
                         color="primary"

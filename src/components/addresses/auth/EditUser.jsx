@@ -19,17 +19,17 @@ import { Button } from "react-bootstrap";
 import moment from "moment";
 
 // Take Order Component
-const EditarUsuario = (props) => {
+const EditUser = (props) => {
   const dispatch = useDispatch();
 
   const password = useFormInput("");
-  const usuario = useSelector((state) => state.login.usuario.user);
-  const nombre = useFormInput(usuario.nombre);
-  const apellido = useFormInput(usuario.apellido);
-  const tipoDocumento = useFormInput(usuario.tipoDocumento);
-  const documentoIdentidad = useFormInput(usuario.documentoIdentidad);
-  const fechaNacimiento = useFormInput(
-    moment(usuario.fechaNacimiento).format("YYYY-MM-DD")
+  const user = useSelector((state) => state.login.user);
+  const name = useFormInput(user.name);
+  const lastName = useFormInput(user.lastName);
+  const typeDocument = useFormInput(user.typeDocument);
+  const documentNumber = useFormInput(user.documentNumber);
+  const bornDate = useFormInput(
+    moment(user.bornDate).format("YYYY-MM-DD")
   );
   const [error, setError] = useState(null);
 
@@ -37,15 +37,15 @@ const EditarUsuario = (props) => {
     event.preventDefault();
     setError(null);
     let data = {
-      nombre: nombre.value,
-      apellido: apellido.value,
-      tipoDocumento: tipoDocumento.value,
-      documentoIdentidad: documentoIdentidad.value,
+      name: name.value,
+      lastName: lastName.value,
+      typeDocument: typeDocument.value,
+      documentNumber: documentNumber.value,
       password: password.value,
-      fechaNacimiento: fechaNacimiento.value,
-      rol: "cliente",
+      bornDate: bornDate.value,
+      rol: "client",
     };
-    dispatch(actualizarUsuarioAction({ data, id: usuario._id }));
+    dispatch(actualizarUsuarioAction({ data, id: user._id }));
     dispatch(push("/"));
   };
 
@@ -59,11 +59,11 @@ const EditarUsuario = (props) => {
                 <Col sm={10}>
                   <Input
                     type="text"
-                    id="nombre"
+                    id="name"
                     autofocus
-                    defaultValue={usuario.nombre}
+                    defaultValue={user.name}
                     placeholder="Nombre del Usuario"
-                    {...nombre}
+                    {...name}
                   />
                 </Col>
               </FormGroup>
@@ -71,10 +71,10 @@ const EditarUsuario = (props) => {
                 <Col sm={10}>
                   <Input
                     type="text"
-                    id="apellido"
+                    id="lastName"
                     placeholder="Apellido"
-                    defaultValue={usuario.apellido}
-                    {...apellido}
+                    defaultValue={user.lastName}
+                    {...lastName}
                   />
                 </Col>
               </FormGroup>
@@ -84,7 +84,7 @@ const EditarUsuario = (props) => {
                     type="text"
                     id="tipo"
                     placeholder="Tipo de Documento"
-                    {...tipoDocumento}
+                    {...typeDocument}
                   />
                 </Col>
               </FormGroup>
@@ -92,11 +92,11 @@ const EditarUsuario = (props) => {
                 <Col sm={10}>
                   <Input
                     type="text"
-                    id="documentoIdentidad"
+                    id="documentNumber"
                     placeholder="Documento de Identidad"
-                    name="documentoIdentidad"
-                    defaultValue={usuario.documentoIdentidad}
-                    {...documentoIdentidad}
+                    name="documentNumber"
+                    defaultValue={user.documentNumber}
+                    {...documentNumber}
                   />
                 </Col>
               </FormGroup>
@@ -118,11 +118,11 @@ const EditarUsuario = (props) => {
                     inputLabelProps={{
                       shrink: true,
                     }}
-                    defaultValue={moment(usuario.fechaNacimiento).format(
+                    defaultValue={moment(user.bornDate).format(
                       "YYYY-MM-DD"
                     )}
                     placeholder="Fecha Nacimiento"
-                    {...fechaNacimiento}
+                    {...bornDate}
                   />
                 </Col>
               </FormGroup>
@@ -155,4 +155,4 @@ const useFormInput = (initialValue) => {
   };
 };
 
-export default EditarUsuario;
+export default EditUser;

@@ -19,7 +19,7 @@ const ListProducts = () => {
   const orders = useSelector((state) => state.ui.orders);
 
   // Get current user
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
   const products = useSelector((state) => state.ui.products);
 
   const handleDelete = (event, id) => {

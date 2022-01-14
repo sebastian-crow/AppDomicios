@@ -1,27 +1,27 @@
 import React, { useEffect } from 'react';
 import "../../assets/css/home.css";
 import MapLocal from "../maps/Map";
-import { getFromDomiciliarioPositionAction, getFromClientPositionAction } from "../../store/reducer";
+import { getFromDomiciliaryPositionAction, getFromClientPositionAction } from "../../store/reducer";
 //import { useSelector } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 
 const UserMap = (props) => {
 
   const dispatch = useDispatch();
-  const domiciliarioId = props.match.params.id;
-  const position = useSelector((state) => state.ui.positionDomiciliario);
+  const domiciliaryId = props.match.params.id;
+  const position = useSelector((state) => state.ui.positionDomiciliary);
   
   
   const clientId = useSelector((state) => state.ui.positionClient.id)
   const clientPosition = useSelector((state) => state.ui.positionClient.location)
 
-//  Domiciliario Location
+//  Domiciliary Location
   useEffect(() => {
     const timer = setInterval(() => {
-      dispatch(getFromDomiciliarioPositionAction(domiciliarioId));
+      dispatch(getFromDomiciliaryPositionAction(domiciliaryId));
     }, 5000);
     return () => clearTimeout(timer);
-  }, [dispatch, position, domiciliarioId]);
+  }, [dispatch, position, domiciliaryId]);
 
 // Client Location
   useEffect(() => {

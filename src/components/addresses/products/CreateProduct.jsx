@@ -19,7 +19,7 @@ const CreateProduct = (props) => {
   const dispatch = useDispatch();
 
   // Get Current User
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
   const nombre = useFormInput("");
   const descripcion = useFormInput("");

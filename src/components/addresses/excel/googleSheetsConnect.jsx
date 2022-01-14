@@ -22,7 +22,7 @@ import moment from "moment";
 export const GoogleSheetsConnect = (props) => {
   const dispatch = useDispatch();
 
-  const usuario = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
   const [error, setError] = useState(null);
   const [googleSheets, setGoogleSheets] = useState(null);
 
@@ -37,7 +37,7 @@ export const GoogleSheetsConnect = (props) => {
     let data = {
       googleSheets: googleSheets,
     };
-    dispatch(actualizarUsuarioAction({ data, id: usuario._id }));
+    dispatch(actualizarUsuarioAction({ data, id: user._id }));
     dispatch(push("/"));
   };
 

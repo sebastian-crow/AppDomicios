@@ -22,9 +22,9 @@ const UserOrderList = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // Get Current User
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
-  const rol = user.rol === "cliente" || user.rol === "admin";
+  const rol = user.rol === "client" || user.rol === "admin";
 
   // Get All Orders from store
   const orders = useSelector((state) => state.ui.orders);
@@ -33,7 +33,7 @@ const UserOrderList = () => {
 
   const ordersCurrentUser = [];
   orders.map((order) => {
-    if (order.cliente.id === user._id) {
+    if (order.client.id === user.uid) {
       return ordersCurrentUser.push(order);
     }
   });
@@ -67,7 +67,7 @@ const UserOrderList = () => {
 
   React.useEffect(() => {
     orders.map((order) => {
-      if (order.cliente.id === user._id) {
+      if (order.client.id === user.uid) {
         return ordersCurrentUser.push(order);
       }
     }, []);
@@ -84,7 +84,7 @@ const UserOrderList = () => {
               <th scope="col">Dirección Recogida</th>
               <th scope="col">Dirección Entrega</th>
               <th scope="col">Estado</th>
-              <th scope="col">Domiciliario</th>
+              <th scope="col">Domiciliary</th>
               <th scope="col">Ubication</th>
               <th scope="col">Editar</th>
               <th scope="col">Cancelar</th>
@@ -102,12 +102,12 @@ const UserOrderList = () => {
                 <td>{order.direccionRecogida}</td>
                 <td>{order.direccionEntrega}</td>
                 <td>{order.estado}</td>
-                <td>{order.domiciliario.name}</td>
+                <td>{order.domiciliary.name}</td>
                 <td>
                   <Button
                     onClick={(e) => {
                       e.preventDefault;
-                      dispatch(push(`/cliente/clientmap/${order._id}`));
+                      dispatch(push(`/client/clientmap/${order._id}`));
                     }}
                     variant="primary"
                   >
@@ -118,7 +118,7 @@ const UserOrderList = () => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault;
-                      dispatch(push(`/cliente/editorder/${order._id}`));
+                      dispatch(push(`/client/editorder/${order._id}`));
                     }}
                     variant="warning"
                   >

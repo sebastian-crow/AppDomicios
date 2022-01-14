@@ -12,7 +12,7 @@ import DemoNavbar from '../components/Navbars/DemoNavbar';
 let ps;
 
 function Dashboard(props) {
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
   const [backgroundColor, setBackgroundColor] = React.useState('black');
   const [activeColor, setActiveColor] = React.useState('info');
   const mainPanel = React.useRef();

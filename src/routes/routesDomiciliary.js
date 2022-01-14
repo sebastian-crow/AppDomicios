@@ -1,41 +1,41 @@
 // Orders
 import OrderList from "../components/addresses/orders/OrderList";
 import UserPage from "views/User.js";
-import EditarUsuario from "../components/addresses/auth/EditarUsuario";
+import EditUser from "../components/addresses/auth/EditUser";
 
 // Maps
 import  { Map } from "../components/addresses/maps/map/Map";
 
-var routesDomiciliario = [
+var routesDomiciliary = [
   {
     path: "/orderslist",
     name: "Listar ordenes",
     icon: "nc-icon nc-spaceship",
-    rol: ["domiciliario"],
+    rol: ["domiciliary"],
     component: OrderList,
-    layout: "/domiciliario",
+    layout: "/domiciliary",
     visible: true,
   },
   // Maps
   {
     path: "/dealermap/:id",
-    rol: ["domiciliario"],
+    rol: ["domiciliary"],
     name: "Dealer map",
     icon: "nc-icon nc-pin-3",
     //component: DealerMapProof,
     //component: DealerMapAgainProof,
     component: Map,
-    layout: "/domiciliario",
+    layout: "/domiciliary",
     visible: false,
   },
   {
     path: "/user-page",
-    rol: ["domiciliario"],
-    name: "Editar usuario",
+    rol: ["domiciliary"],
+    name: "Editar user",
     icon: "nc-icon nc-single-02",
-    component: EditarUsuario,
-    layout: "/domiciliario",
+    component: EditUser,
+    layout: "/domiciliary",
     visible: true,
   },
 ];
-export default routesDomiciliario;
+export default routesDomiciliary;

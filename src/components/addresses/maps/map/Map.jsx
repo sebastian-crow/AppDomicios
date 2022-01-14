@@ -12,7 +12,7 @@ import {
   createPositionDealerAction,
   updatePositionDealerAction,
   getFromDealerPositionAction,
-  getAllDomiciliarioAction,
+  getAllDomiciliaryAction,
   getAllOrderAction,
 } from "../../../../store/reducer";
 
@@ -57,8 +57,8 @@ export const Map = (props) => {
   };
 
   // Dealer
-  const dealer = useSelector((state) => state.login.usuario.user);
-  const dealerId = useSelector((state) => state.login.usuario.user._id);
+  const dealer = useSelector((state) => state.login.user);
+  const dealerId = useSelector((state) => state.login.user.uid);
 
   const dealerPosition = JSON.parse(
     positions.dealer.position.replace(/'/g, '"'),
@@ -76,7 +76,7 @@ export const Map = (props) => {
       currentOrder.push(order);
     }
   });
-  const clientId = currentOrder[0].cliente.id;
+  const clientId = currentOrder[0].client.id;
 
   // Markers
   const markers = [
@@ -94,7 +94,7 @@ export const Map = (props) => {
     {
       id: 10,
       type: "user",
-      name: dealer.nombre,
+      name: dealer.name,
       address: "Cr 57A N#48-43 Copacabana Antioquia",
       phoneNumber: 323234373,
       coordinates: {
@@ -125,7 +125,7 @@ export const Map = (props) => {
   // UseEffect's
   useEffect(() => {
     dispatch(getAllOrderAction());
-    dispatch(getAllDomiciliarioAction());
+    dispatch(getAllDomiciliaryAction());
   }, []);
 
   // Get Current Location to Dealer
@@ -155,7 +155,7 @@ export const Map = (props) => {
                 lat: crd.latitude,
                 lng: crd.longitude,
               }),
-              usuario: dealerId,
+              user: dealerId,
             }),
           );
         }
@@ -204,7 +204,7 @@ export const Map = (props) => {
                   lat: crd.latitude,
                   lng: crd.longitude,
                 }),
-                usuario: clientId,
+                user: clientId,
               }),
             );
           }

@@ -28,7 +28,7 @@ export const MapSelectUbication = () => {
 
   const clientPosition = JSON.parse(positionClient.position.replace(/'/g, '"'));
   const dispatch = useDispatch();
-  const clientId = useSelector((state) => state.login.usuario.user._id);
+  const clientId = useSelector((state) => state.login.user.uid);
 
   const [viewport, setViewport] = useState({
     latitude: clientPosition.lat,
@@ -83,7 +83,7 @@ export const MapSelectUbication = () => {
                   lat: crd.latitude,
                   lng: crd.longitude,
                 }),
-                usuario: clientId,
+                user: clientId,
               })
             );
           }

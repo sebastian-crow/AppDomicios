@@ -3,7 +3,7 @@ import UserPage from "views/User.js";
 
 // Users
 import UserProductList from "../components/addresses/products/UserProductList";
-import EditarUsuario from "../components/addresses/auth/EditarUsuario";
+import EditUser from "../components/addresses/auth/EditUser";
 
 // Products
 import CreateProduct from "../components/addresses/products/CreateProduct";
@@ -26,90 +26,90 @@ import { MapSelectUbication } from "../components/addresses/orders/lib/MapSelect
 // Google Sheets Connection
 import { GoogleSheetsConnect } from "../components/addresses/excel/googleSheetsConnect";
 
-var routesCliente = [
+var routesClient = [
   // Orders
   {
     path: "/pedidos",
-    rol: ["cliente"],
+    rol: ["client"],
     name: "Listar Pedidos",
     icon: "nc-icon nc-cart-simple",
     component: UserProductOrderList,
-    layout: "/cliente",
+    layout: "/client",
     visible: true,
   },
   {
     path: "/orderslist",
     name: "Listar ordenes",
     icon: "nc-icon nc-spaceship",
-    rol: ["cliente"],
+    rol: ["client"],
     component: UserOrderList,
-    layout: "/cliente",
+    layout: "/client",
     visible: true,
   },
   {
-    path: "/takeorder/:idClienteEmpresa/:orderNumberSheets/:nombreYApellidoCliente",
+    path: "/takeorder/:idClientEmpresa/:orderNumberSheets/:nameYApellidoClient",
     name: "Cordinar Entrega",
     icon: "nc-icon nc-cart-simple",
-    rol: ["cliente"],
+    rol: ["client"],
     component: TakeOrder,
-    layout: "/cliente",
+    layout: "/client",
     visible: false,
   },
   {
     path: "/editorder/:id",
     name: "Edit Order",
     icon: "nc-icon nc-bank",
-    rol: ["cliente"],
+    rol: ["client"],
     component: EditOrder,
-    layout: "/cliente",
+    layout: "/client",
     visible: false,
   },
   // Maps
   {
     path: "/clientmap/:id",
     name: "Client Map",
-    rol: ["cliente"],
+    rol: ["client"],
     component: Map,
-    layout: "/cliente",
+    layout: "/client",
     visible: false,
   },
 
   // User's Pages
   {
     path: "/user-page",
-    rol: ["cliente"],
-    name: "Editar usuario",
+    rol: ["client"],
+    name: "Editar user",
     icon: "nc-icon nc-single-02",
-    component: EditarUsuario,
-    layout: "/cliente",
+    component: EditUser,
+    layout: "/client",
     visible: true,
   },
   {
     path: "/googlesheetsconnection",
-    rol: ["cliente"],
+    rol: ["client"],
     name: "Google Sheets",
     icon: "nc-icon nc-single-02",
     component: GoogleSheetsConnect,
-    layout: "/cliente",
+    layout: "/client",
     visible: true,
   },
   {
-    path: "/clienteFormulario",
-    rol: ["cliente"],
+    path: "/clientFormulario",
+    rol: ["client"],
     name: "Order Form",
     icon: "nc-icon nc-single-02",
     component: TakeOrder,
-    layout: "/clienteForm",
+    layout: "/clientForm",
     visible: false,
   },
   {
-    path: "/clienteFormulario",
-    rol: ["cliente"],
+    path: "/clientFormulario",
+    rol: ["client"],
     name: "Order Form",
     icon: "nc-icon nc-single-02",
     component: EditProductOrder,
-    layout: "/clienteForm",
+    layout: "/clientForm",
     visible: false,
   },
 ];
-export default routesCliente;
+export default routesClient;

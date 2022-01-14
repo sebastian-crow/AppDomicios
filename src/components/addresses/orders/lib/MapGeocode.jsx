@@ -36,13 +36,13 @@ export const MapGeocode = () => {
     []
   );
 
-  const clientId = useSelector((state) => state.login.usuario.user._id);
+  const clientId = useSelector((state) => state.login.user.uid);
 
   // Marker
   const marker = {
     id: 20,
     type: "currentUser",
-    name: useSelector((state) => state.login.usuario.user.nombre),
+    name: useSelector((state) => state.login.user.name),
     address: "direction xd",
     phoneNumber: 3413443482,
     coordinates: {
@@ -94,7 +94,7 @@ export const MapGeocode = () => {
                   lat: crd.latitude,
                   lng: crd.longitude,
                 }),
-                usuario: clientId,
+                user: clientId,
               })
             );
           }

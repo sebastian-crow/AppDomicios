@@ -21,7 +21,7 @@ const EditProduct = (props) => {
     state.ui.products.find((product) => product._id === props.match.params.id),
   );
   // Get Current User
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
   const nombre = useFormInput(product ? product.nombre : "");
   const descripcion = useFormInput(product ? product.descripcion : "");

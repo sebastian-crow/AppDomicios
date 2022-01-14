@@ -57,12 +57,12 @@ export const getAllClientDoneAction = createAction(
   "GET_ALL_CLIENT_DONE_ACTION"
 );
 
-// Domiciliarios
-export const getAllDomiciliarioAction = createAction(
+// Domiciliarys
+export const getAllDomiciliaryAction = createAction(
   "GET_ALL_DOMICILIARIO_ACTION"
 );
 
-export const getAllDomiciliarioDoneAction = createAction(
+export const getAllDomiciliaryDoneAction = createAction(
   "GET_ALL_DOMICILIARIO_DONE_ACTION"
 );
 
@@ -70,11 +70,6 @@ export const getAllDomiciliarioDoneAction = createAction(
 export const getAllOrderAction = createAction("GET_ALL_ORDER_ACTION");
 
 export const getAllOrderDoneAction = createAction("GET_ALL_ORDER_DONE_ACTION");
-
-// urlPush
-export const saveUrlPushAction = createAction("SAVE_URL_PUSH_ACTION");
-
-export const saveUrlPushDoneAction = createAction("SAVE_URL_PUSH_DONE_ACTION");
 
 // Get Sheets Orders
 export const getSheetsOrderAction = createAction("GET_SHEETS_ORDER_ACTION");
@@ -97,7 +92,7 @@ const initialState = {
   users: [],
   products: [],
   clients: [],
-  domiciliarios: [],
+  domiciliarys: [],
   orders: [],
   sheetsOrder: [],
 };
@@ -154,22 +149,15 @@ const uiReducer = createReducer(initialState, {
     state.clients = action.payload.data.Clients;
   },
 
-  // Get All Domiciliarios
-  [getAllDomiciliarioDoneAction]: (state, action) => {
-    state.domiciliarios = action.payload.data.Domiciliarios;
+  // Get All Domiciliarys
+  [getAllDomiciliaryDoneAction]: (state, action) => {
+    state.domiciliarys = action.payload.data;
   },
 
   // Get All Orders
   [getAllOrderDoneAction]: (state, action) => {
     state.orders = action.payload.data.Orders;
   },
-
-  // Save URL to push notification
-  [saveUrlPushDoneAction]: (state, action) => {
-    console.log(state);
-    //state.urlPush = action.payload.data.Orders;
-  },
-
   // Get All Google Sheets by User
   [getSheetsOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;

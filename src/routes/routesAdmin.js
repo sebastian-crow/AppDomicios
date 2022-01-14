@@ -2,8 +2,8 @@ import Dashboard from "views/Dashboard.js";
 import UserPage from "views/User.js";
 
 // Users
-import ListClientes from "../components/addresses/listUsers/ListClientes";
-import EditarUsuario from "../components/addresses/auth/EditarUsuario";
+import ListClientss from "../components/addresses/listUsers/ListClients";
+import EditUser from "../components/addresses/auth/EditUser";
 
 // Products
 import CreateProduct from "../components/addresses/products/CreateProduct";
@@ -35,17 +35,17 @@ var routesAdmin = [
     rol: ["admin"],
     name: "User Profile",
     icon: "nc-icon nc-single-02",
-    component: EditarUsuario,
+    component: EditUser,
     layout: "/admin",
     visible: true,
   },
   // Auth routes
   {
-    path: "/listclientes",
-    name: "Listar usuarios",
+    path: "/listclients",
+    name: "Listar users",
     rol: ["admin"],
     icon: "nc-icon nc-single-02",
-    component: ListClientes,
+    component: ListClientss,
     layout: "/admin",
     visible: true,
   },

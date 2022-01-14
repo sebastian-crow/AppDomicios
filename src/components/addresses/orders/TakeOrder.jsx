@@ -8,7 +8,7 @@ import { push } from "redux-first-history";
 
 // Reducers
 import {
-  getAllDomiciliarioAction,
+  getAllDomiciliaryAction,
   createOrderAction,
   getSheetsOrderAction,
 } from "../../../store/reducer";
@@ -38,14 +38,14 @@ const TakeOrder = (props) => {
   const dispatch = useDispatch();
 
   // Get Current User
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
   // Get Dealers List
-  const dealers = useSelector((state) => state.ui.domiciliarios);
+  const dealers = useSelector((state) => state.ui.domiciliarys);
 
   // Sheets Orders
 
-  const { orderNumberSheets, idClienteEmpresa } = useParams();
+  const { orderNumberSheets, idClientEmpresa } = useParams();
 
   const sheetsOrder = useSelector((state) => state.ui.sheetsOrder);
 
@@ -67,7 +67,7 @@ const TakeOrder = (props) => {
   );
   const [documentNumber, setDocumentNumber] = React.useState(null);
   const [phoneNumber, setPhoneNumber] = React.useState(
-    currentSheetsOrder?.["Telefono cliente"]
+    currentSheetsOrder?.["Telefono client"]
   );
   const [department, setDepartment] = React.useState([]);
   const [city, setCity] = React.useState([]);
@@ -226,7 +226,7 @@ const TakeOrder = (props) => {
     let data = {
       orderNumber: orderNumber,
       pedido: orderText,
-      nombresYApellidos: nameLastName,
+      namesYApellidos: nameLastName,
       cedula: documentNumber,
       telefono: phoneNumber,
       departamento: department,
@@ -235,16 +235,16 @@ const TakeOrder = (props) => {
       direccionEntrega: finalAddress,
       correoElectronico: email,
       metodoDePago: paymentMethod,
-      domiciliario: {
+      domiciliary: {
         id: dealerData.value,
         name: dealerData.label,
       },
       fecha: Date.now(),
-      cliente: {
-        nombre: user.nombre,
-        id: user._id,
+      client: {
+        name: user.name,
+        id: user.uid,
       },
-      clienteEmpresa: idClienteEmpresa,
+      clientEmpresa: idClientEmpresa,
       estado: "En proceso",
     };
 
@@ -257,8 +257,8 @@ const TakeOrder = (props) => {
 
   // Get Dealers Array
   React.useEffect(() => {
-    dispatch(getAllDomiciliarioAction());
-    dispatch(getSheetsOrderAction(user._id));
+    dispatch(getAllDomiciliaryAction());
+    dispatch(getSheetsOrderAction(user.uid));
   }, [dispatch]);
 
   return (
@@ -337,8 +337,8 @@ const TakeOrder = (props) => {
                     id="phoneNumber"
                     placeholder="Telefono"
                     onChange={handlePhoneChange}
-                    defaultValue={currentSheetsOrder?.["Telefono cliente"]}
-                    {...currentSheetsOrder?.["Telefono cliente"]}
+                    defaultValue={currentSheetsOrder?.["Telefono client"]}
+                    {...currentSheetsOrder?.["Telefono client"]}
                   />
                 </Col>
               </FormGroup>
@@ -417,11 +417,11 @@ const TakeOrder = (props) => {
                 <Col sm={10}>
                   <Select
                     onChange={handleDealerChange}
-                    placeholder="Domiciliario"
+                    placeholder="Domiciliary"
                     options={dealers.map((dealer) => {
                       return {
                         value: dealer._id,
-                        label: dealer.nombre,
+                        label: dealer.name,
                       };
                     })}
                   />

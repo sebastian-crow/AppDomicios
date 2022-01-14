@@ -9,7 +9,7 @@ import {
   createPositionDealerAction,
   updatePositionDealerAction,
   getFromDealerPositionAction,
-  getAllDomiciliarioAction,
+  getAllDomiciliaryAction,
   getAllOrderAction,
 } from "../../../../../store/reducer";
 
@@ -55,8 +55,8 @@ export const Map = (props) => {
   });
 
   // Dealer
-  const dealer = currentOrder[0].domiciliario.name;
-  const dealerId = currentOrder[0].domiciliario.id;
+  const dealer = currentOrder[0].domiciliary.name;
+  const dealerId = currentOrder[0].domiciliary.id;
   console.log("Current Order", currentOrder);
 
   // Component State
@@ -81,7 +81,7 @@ export const Map = (props) => {
       numero_orden: currentOrder[0].orderNumber,
       direccion: `${currentOrder[0].direccion} ${currentOrder[0].ciudad.label} ${currentOrder[0].departamento.label}`,
       phoneNumber: currentOrder[0].telefono,
-      domiciliario: currentOrder[0].domiciliario.name,
+      domiciliary: currentOrder[0].domiciliary.name,
       coordinates: {
         lat: dealerPosition.lat,
         lng: dealerPosition.lng,
@@ -148,7 +148,7 @@ export const Map = (props) => {
   // UseEffect's
   useEffect(() => {
     dispatch(getAllOrderAction());
-    dispatch(getAllDomiciliarioAction());
+    dispatch(getAllDomiciliaryAction());
     dispatch(getFromDealerPositionAction());
   }, []);
 
@@ -179,7 +179,7 @@ export const Map = (props) => {
                 lat: crd.latitude,
                 lng: crd.longitude,
               }),
-              usuario: dealerId,
+              user: dealerId,
             })
           );
         }
@@ -232,8 +232,8 @@ export const Map = (props) => {
                 >
                   <div className="card">
                     <label>Dirección: {marker.direccion} </label>
-                    <label>Número Domiciliario: {marker.phoneNumber} </label>
-                    <label>Domiciliario: {marker.domiciliario} </label>
+                    <label>Número Domiciliary: {marker.phoneNumber} </label>
+                    <label>Domiciliary: {marker.domiciliary} </label>
                   </div>
                 </Popup>
               )}

@@ -19,7 +19,7 @@ const UserProductList = () => {
   const dispatch = useDispatch();
 
   // Get current user
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
 
   // Get products from the store
   const products = useSelector((state) => state.ui.products.filter(product => product.user.id === user._id));

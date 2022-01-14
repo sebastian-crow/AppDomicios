@@ -2,17 +2,17 @@ import React, { useEffect } from 'react'
 import { Link } from "react-router-dom";
 import "../../../assets/css/home.css";
 import MapLocal from "../maps/Map";
-import { updatePositionAction, getFromUserPositionAction, createPositionAction, getAllDomiciliarioAction } from "../../../store/reducer";
+import { updatePositionAction, getFromUserPositionAction, createPositionAction, getAllDomiciliaryAction } from "../../../store/reducer";
 import { useDispatch, useSelector } from "react-redux";
 
 
 
 const Inicio = () => {
   const dispatch = useDispatch();
-  const userID = useSelector((state) => state.login.usuario.user._id);
+  const userID = useSelector((state) => state.login.user.uid);
   const position = useSelector((state) => state.ui.position);
   const positionId = useSelector((state) => state.ui.positionId);
-  const user = useSelector((state) => state.login.usuario.user)
+  const user = useSelector((state) => state.login.user)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,7 +28,7 @@ const Inicio = () => {
         if (positionId) {
           dispatch(updatePositionAction({ lat: crd.latitude, lng: crd.longitude, positionId: positionId }));
         } else {
-          dispatch(createPositionAction({ position: JSON.stringify({ lat: crd.latitude, lng: crd.longitude }), usuario: userID }));
+          dispatch(createPositionAction({ position: JSON.stringify({ lat: crd.latitude, lng: crd.longitude }), user: userID }));
         }
       };
 
@@ -49,7 +49,7 @@ const Inicio = () => {
         <h1>Dealer map</h1>
       </Link>
       <div style={{ height: "800px" }}>
-        {user.rol === 'cliente' && (
+        {user.rol === 'client' && (
           <>
             <div className="takeOrder">
               <Link
@@ -90,19 +90,19 @@ const Inicio = () => {
         <>
           <div className="takeOrder">
             <Link
-              to="/listdomiciliarios"
+              to="/listdomiciliarys"
 
             >
-              <h1 className="ordersText">Domiciliarios</h1>
+              <h1 className="ordersText">Domiciliarys</h1>
             </Link>
           </div>
           <div className="orders">
 
 
             <Link
-              to="/listclientes" orderlist
+              to="/listclients" orderlist
             >
-              <h1 className="ordersText">Clientes</h1>
+              <h1 className="ordersText">Clients</h1>
             </Link>
           </div>
           <div className="myProducts">
@@ -123,7 +123,7 @@ const Inicio = () => {
       )}
 
 
-      {user.rol === 'domiciliario' && (
+      {user.rol === 'domiciliary' && (
         <>
           <div className="takeOrder">
             <Link
@@ -137,7 +137,7 @@ const Inicio = () => {
 
 
             <Link
-              to="/listclientes" orderlist
+              to="/listclients" orderlist
             >
               <h1 className="ordersText">Ordenes Hechas</h1>
             </Link>

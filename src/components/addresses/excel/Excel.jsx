@@ -33,7 +33,7 @@ export const Excel = () => {
   const products = useSelector((state) => state.ui.products);
 
   // Current User
-  const user = useSelector((state) => state.login.usuario.user);
+  const user = useSelector((state) => state.login.user);
   console.log("current user", user);
 
   // Componenet State
@@ -46,7 +46,7 @@ export const Excel = () => {
   const columns = [
     {
       title: "Nombre",
-      dataIndex: "nombre",
+      dataIndex: "name",
       editable: true,
     },
     {
@@ -174,7 +174,7 @@ export const Excel = () => {
           if (row && row !== "undefined") {
             newRows.push({
               key: index,
-              nombre: row[0],
+              name: row[0],
               descripcion: row[1],
               variedades: row[2],
               precio: row[3],
@@ -218,7 +218,7 @@ export const Excel = () => {
         every data category for know if exists.
       */
       return {
-        nombre: dat.nombre,
+        name: dat.name,
         descripcion: dat.descripcion,
         variedades: dat.variedades,
         precio: {
@@ -228,7 +228,7 @@ export const Excel = () => {
         ocultar: dat.ocultar,
         categoria: {
           id: 8784818,
-          nombre: dat.categoria,
+          name: dat.categoria,
         },
         imagen: {
           0: {
@@ -241,8 +241,8 @@ export const Excel = () => {
           },
         },
         user: {
-          nombre: user.nombre,
-          id: user._id,
+          name: user.name,
+          id: user.uid,
         },
       };
     });
@@ -273,7 +273,7 @@ export const Excel = () => {
   const handleAdd = () => {
     const newData = {
       key: count,
-      nombre: "",
+      name: "",
       descripcion: "",
       variedades: "",
       precio: "",
