@@ -22,8 +22,6 @@ var routesDomiciliary = [
     rol: ["domiciliary"],
     name: "Dealer map",
     icon: "nc-icon nc-pin-3",
-    //component: DealerMapProof,
-    //component: DealerMapAgainProof,
     component: Map,
     layout: "/domiciliary",
     visible: false,

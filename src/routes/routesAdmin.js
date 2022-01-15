@@ -16,16 +16,6 @@ import { Excel } from "../components/addresses/excel/Excel";
 import { Map } from "../components/addresses/maps/map/admin/Map";
 
 var routesAdmin = [
-  // Default routes
-  {
-    path: "/dashboard",
-    rol: ["admin"],
-    name: "Dashboard",
-    icon: "nc-icon nc-diamond",
-    component: Dashboard,
-    layout: "/admin",
-    visible: true,
-  },
   {
     path: "/user-page",
     rol: ["admin"],
@@ -42,15 +32,6 @@ var routesAdmin = [
     rol: ["admin"],
     icon: "nc-icon nc-single-02",
     component: ListClientss,
-    layout: "/admin",
-    visible: true,
-  },
-  {
-    path: "/takeorder",
-    name: "Hacer un pedido",
-    icon: "nc-icon nc-cart-simple",
-    rol: ["admin"],
-    component: TakeOrder,
     layout: "/admin",
     visible: true,
   },

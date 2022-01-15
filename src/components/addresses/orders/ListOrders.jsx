@@ -120,7 +120,7 @@ const ListOrders = () => {
           )}
           {user.rol === "domiciliary" && (
             <tbody>
-              {ordersCurrentUser.map((order) => (
+              {orders.map((order) => (
                 <tr key={order.uid}>
                   <td>{order.orderNumber}</td>
                   <td>{order.nameLasName}</td>

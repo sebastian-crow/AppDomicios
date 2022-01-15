@@ -22,36 +22,16 @@ import moment from "moment";
 
 const UserProductOrderList = () => {
   const dispatch = useDispatch();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // Get Current User
   const user = useSelector((state) => state.login.user);
 
-  const rol = user.rol === "client" || user.rol === "admin";
-
-  // Get All Orders from store
-  const orders = useSelector((state) => state.ui.orders);
-
   // Get All Sheets Orders by user from local storage
-  const sheetsOrders = useSelector((state) => state.ui.sheetsOrder);
+  const sheetsOrders = useSelector((state) =>
+    state.ui.sheetsOrder.filter((order) => order.client === user.id),
+  );
 
-  // Filter orders by users
-  const ordersCurrentUser = [];
-  orders.map((order) => {
-    if (order.client.id === user.uid) {
-      return ordersCurrentUser.push(order);
-    }
-  });
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  console.log(sheetsOrders);
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -61,24 +41,10 @@ const UserProductOrderList = () => {
     dispatch(push("/orderslist"));
   };
 
-  let proof_id = Math.floor(Math.random() * 100);
-
   // Update List
   React.useEffect(() => {
     dispatch(getAllOrderAction());
   }, [dispatch]);
-
-  React.useEffect(() => {
-    if (!orders.lenght) dispatch(getAllOrderAction());
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    orders.map((order) => {
-      if (order.client.id === user.uid) {
-        return ordersCurrentUser.push(order);
-      }
-    }, []);
-  });
 
   // Get Google sheets from sheet.best by user data googlesheets field
   React.useEffect(() => {
@@ -86,7 +52,15 @@ const UserProductOrderList = () => {
   }, []);
   return (
     <>
-      <div style={{ height: "800px", overflowY: "scroll" }}>
+      <div
+        style={{
+          position: "relative",
+          marginLeft: "10%",
+          height: "600px",
+          width: "80%",
+          overflow: "scroll",
+        }}
+      >
         <table className="table">
           <thead>
             <tr>
@@ -115,17 +89,17 @@ const UserProductOrderList = () => {
           </thead>
           <tbody>
             {sheetsOrders.map((order) => (
-              <tr key={proof_id}>
-                <td>{order["# de Orden"]}</td>
+              <tr key={order["Numero de Orden"]}>
+                <td>{order["Numero de Orden"]}</td>
                 <td>{order["Fecha Creacion"]}</td>
                 <td>{order["Nombres y Apellidos"]}</td>
-                <td>{order["Telefono client"]}</td>
+                <td>{order["Telefono cliente"]}</td>
                 <td>{order["Direccion entrega"]}</td>
                 <td>{order["Ciudad"]}</td>
                 <td>{order["Barrio"]}</td>
                 <td>{order["Nombre Conjunto Residencial"]}</td>
                 <td>{order["Nota entrega"]}</td>
-                <td>{order["# Paquete a entregar"]}</td>
+                <td>{order["Paquete a entregar"]}</td>
                 <td>{order["Estado Pedido"]}</td>
                 <td>{order["Domiciliary"]}</td>
                 <td>{order["Direccion Recogida"]}</td>
@@ -166,8 +140,8 @@ const UserProductOrderList = () => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/client/takeorder/${user.uid}/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`
-                        )
+                          `/client/takeorder/${user.uid}/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`,
+                        ),
                       );
                     }}
                     variant="success"
