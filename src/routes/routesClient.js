@@ -6,11 +6,11 @@ import EditUser from "../components/addresses/auth/EditUser";
 // Product Orders
 import EditProductOrder from "../components/addresses/orders/productOrders/EditProductOrder";
 import UserProductOrderList from "../components/addresses/orders/productOrders/UserProductOrderList";
+import OrderList from "../components/addresses/orders/ListOrders";
 
 // Delivery Orders
 import TakeOrder from "../components/addresses/orders/TakeOrder";
 import EditOrder from "../components/addresses/orders/EditOrder";
-import UserOrderList from "../components/addresses/orders/UserOrderList";
 
 // Map
 import { Map } from "../components/addresses/maps/map/client/Map";
@@ -35,7 +35,7 @@ var routesClient = [
     name: "Listar ordenes",
     icon: "nc-icon nc-spaceship",
     rol: ["client"],
-    component: UserOrderList,
+    component: OrderList,
     layout: "/client",
     visible: true,
   },

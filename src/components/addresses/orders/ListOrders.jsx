@@ -22,8 +22,8 @@ const ListOrders = () => {
   const user = useSelector((state) => state.login.user);
 
   // Get all orders from store
-  const orders = useSelector((state) => state.ui.orders.filter((order) => order.domiciliary.id === user.id));
-
+  const orders = useSelector((state) => state.ui.orders);
+  console.log(orders);
   const handleDelete = (event) => {
     event.preventDefault();
     const data = {};
@@ -35,11 +35,6 @@ const ListOrders = () => {
   React.useEffect(() => {
     dispatch(getAllOrderAction());
   }, [dispatch]);
-
-  React.useEffect(() => {
-    if (!orders.length) dispatch(getAllOrderAction());
-  });
-
 
   return (
     <>
@@ -120,7 +115,7 @@ const ListOrders = () => {
           )}
           {user.rol === "domiciliary" && (
             <tbody>
-              {orders.map((order) => (
+              {orders.filter((order) => order.domiciliary == user.id).map((order) => (
                 <tr key={order.uid}>
                   <td>{order.orderNumber}</td>
                   <td>{order.nameLasName}</td>
@@ -146,6 +141,52 @@ const ListOrders = () => {
                   </td>
                   <td>
                     <Button variant="secondary">X</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+          {user.rol === "client" && (
+            <tbody>
+              {orders.filter((order) => order.client == user.uid).map((order) => (
+                <tr key={order.id}>
+                  <td>{order.orderNumber}</td>
+                  <td>{order.clientCompany}</td>
+                  <td>{order.client}</td>
+                  <td>
+                    {order.fecha} <br></br>
+                    <strong>Ordered two minutes ago</strong>
+                  </td>
+                  <td>
+                    <ReverseCounter />
+                  </td>
+                  <td>In process / Done</td>
+                  <td>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault;
+                        dispatch(push(`/admin/map/${order.uid}`));
+                      }}
+                      variant="contained"
+                    >
+                      Ver en mapa{" "}
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault;
+                        dispatch(push(`/editOrder/${order.uid}`));
+                      }}
+                      variant="warning"
+                    >
+                      Editar{" "}
+                    </Button>
+                  </td>
+                  <td>
+                    <Button onClick={handleDelete} variant="danger">
+                      Borrar
+                    </Button>
                   </td>
                 </tr>
               ))}
