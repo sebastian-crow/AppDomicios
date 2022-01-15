@@ -178,13 +178,13 @@ function* locationChangeSaga(action) {
     if (pathname === "/") {
       switch (user.rol) {
         case "client":
-          yield put(push("/client/dashboard"));
+          yield put(push("/client/pedidos"));
           break;
         case "admin":
-          yield put(push("/admin/dashboard"));
+          yield put(push("/admin/orderslist"));
           break;
         case "domiciliary":
-          yield put(push("/domiciliary/dashboard"));
+          yield put(push("/domiciliary/orderslist"));
           break;
         default:
           break;

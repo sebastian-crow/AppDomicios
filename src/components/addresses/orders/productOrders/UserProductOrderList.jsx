@@ -55,7 +55,7 @@ const UserProductOrderList = () => {
       <div
         style={{
           position: "relative",
-          marginLeft: "10%",
+          left: "10%",
           height: "600px",
           width: "80%",
           overflow: "scroll",
