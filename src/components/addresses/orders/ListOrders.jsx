@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
 // React Bootstrap
-import { Button } from "react-bootstrap";
+import { Button } from "reactstrap";
 
 // Reverse counter for know the time we need to remaining
 import { ReverseCounter } from "../counter/ReverseCounter";
@@ -70,7 +70,7 @@ const ListOrders = () => {
           {user.rol === "admin" && (
             <tbody>
               {orders.map((order) => (
-                <tr key={order.uid}>
+                <tr key={order.id}>
                   <td>{order.orderNumber}</td>
                   <td>{order.clientCompany}</td>
                   <td>{order.client}</td>
@@ -86,7 +86,7 @@ const ListOrders = () => {
                     <Button
                       onClick={(e) => {
                         e.preventDefault;
-                        dispatch(push(`/admin/map/${order.uid}`));
+                        dispatch(push(`/admin/map/${order.id}`));
                       }}
                       variant="contained"
                     >
@@ -97,7 +97,7 @@ const ListOrders = () => {
                     <Button
                       onClick={(e) => {
                         e.preventDefault;
-                        dispatch(push(`/editOrder/${order.uid}`));
+                        dispatch(push(`/editOrder/${order.id}`));
                       }}
                       variant="warning"
                     >
@@ -116,7 +116,7 @@ const ListOrders = () => {
           {user.rol === "domiciliary" && (
             <tbody>
               {orders.filter((order) => order.domiciliary == user.id).map((order) => (
-                <tr key={order.uid}>
+                <tr key={order.id}>
                   <td>{order.orderNumber}</td>
                   <td>{order.nameLasName}</td>
                   <td>{order.ticket}</td>
@@ -148,7 +148,7 @@ const ListOrders = () => {
           )}
           {user.rol === "client" && (
             <tbody>
-              {orders.filter((order) => order.client == user.uid).map((order) => (
+              {orders.filter((order) => order.client == user.id).map((order) => (
                 <tr key={order.id}>
                   <td>{order.orderNumber}</td>
                   <td>{order.clientCompany}</td>
@@ -165,7 +165,7 @@ const ListOrders = () => {
                     <Button
                       onClick={(e) => {
                         e.preventDefault;
-                        dispatch(push(`/admin/map/${order.uid}`));
+                        dispatch(push(`/admin/map/${order.id}`));
                       }}
                       variant="contained"
                     >
@@ -176,7 +176,7 @@ const ListOrders = () => {
                     <Button
                       onClick={(e) => {
                         e.preventDefault;
-                        dispatch(push(`/editOrder/${order.uid}`));
+                        dispatch(push(`/editOrder/${order.id}`));
                       }}
                       variant="warning"
                     >

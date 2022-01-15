@@ -35,7 +35,7 @@ const ListClients = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.rol === "client" ? user.uid : ""}>
+              <tr key={user.rol === "client" ? user.id : ""}>
                 <td>
                   {user.rol === "client" ? user.name : ""}{" "}
                   {user.rol === "client" ? user.lastName : ""}

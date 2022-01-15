@@ -55,7 +55,7 @@ export const Map = (props) => {
 
   // Dealer
   const dealer = useSelector((state) => state.login.user);
-  const dealerId = useSelector((state) => state.login.user.uid);
+  const dealerId = useSelector((state) => state.login.user.id);
 
   const dealerPosition = JSON.parse(
     positions.dealer.position.replace(/'/g, '"'),
@@ -204,14 +204,6 @@ export const Map = (props) => {
           */}
         </ReactMapGL>
       </div>
-      <style jsx>{`
-        .mapboxNameRandom {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          width: 100%;
-        }
-      `}</style>
     </>
   );
 };

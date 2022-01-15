@@ -14,10 +14,7 @@ import {
 } from "../../../store/reducer";
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input } from "reactstrap";
-
-// React Bootstrap
-import { Button } from "react-bootstrap";
+import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
 
 // React Select
 import Select from "react-select";
@@ -238,7 +235,7 @@ const TakeOrder = (props) => {
       paymentMethod: paymentMethod.label,
       domiciliary: dealerData.value.toString(),
       date: moment(Date.now()).format("DD/MM/YYYY"),
-      client: user.uid.toString(),
+      client: user.id.toString(),
       clientCompany: idClientEmpresa ? idClientEmpresa : "0",
       state: "En proceso",
     };
@@ -253,7 +250,7 @@ const TakeOrder = (props) => {
   // Get Dealers Array
   React.useEffect(() => {
     dispatch(getAllDomiciliaryAction());
-    dispatch(getSheetsOrderAction(user.uid));
+    dispatch(getSheetsOrderAction(user.id));
   }, [dispatch]);
 
   return (
@@ -415,7 +412,7 @@ const TakeOrder = (props) => {
                     placeholder="Domiciliary"
                     options={dealers.map((dealer) => {
                       return {
-                        value: dealer.uid,
+                        value: dealer.id,
                         label: dealer.name,
                       };
                     })}
@@ -438,33 +435,6 @@ const TakeOrder = (props) => {
           </div>
         </Container>
       </div>
-      <style jsx>{`
-        .positionButton {
-          position: absolute;
-          left: 50rem;
-          top: -41rem;
-        }
-
-        .mapContainerForm {
-          position: absolute;
-          top: 50rem;
-          width: 84%;
-          height: 600px;
-          border: 2px solid black;
-        }
-
-        .containerProof {
-          position: relative;
-          top: 2rem;
-          left: 3rem;
-        }
-
-        .takeOrderTitle {
-          font-size: 44px;
-          font-family: monospace;
-          font-weight: bold;
-        }
-      `}</style>
     </>
   );
 };

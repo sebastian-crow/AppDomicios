@@ -1,16 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
-import { getAllDomiciliaryAction, getFromUserPositionAction } from "../../../store/reducer";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from '@material-ui/styles';
+import {
+  getAllDomiciliaryAction,
+  getFromUserPositionAction,
+} from "../../../store/reducer";
+import { Button } from "reactstrap";
 import { push } from "redux-first-history";
 
-const useStyles = makeStyles((theme) => ({
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
 const ListDomiciliary = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.ui.domiciliarys);
@@ -18,11 +14,10 @@ const ListDomiciliary = () => {
   React.useEffect(() => {
     dispatch(getAllDomiciliaryAction());
   }, [dispatch]);
-  const classes = useStyles();
   const viewMap = (id) => {
     dispatch(getFromUserPositionAction(id));
     dispatch(push(`/mapuser/${id}`));
-  }
+  };
 
   return (
     <>
@@ -37,13 +32,14 @@ const ListDomiciliary = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.uid}>
-                <td>{user.name} {user.lastName}</td>
+              <tr key={user.id}>
+                <td>
+                  {user.name} {user.lastName}
+                </td>
                 <td>{user.documentNumber}</td>
                 <td>
                   <Button
-                    onClick={() => viewMap(user.uid)}
-                    fullWidth
+                    onClick={() => viewMap(user.id)}
                     variant="contained"
                     color="primary"
                     className={classes.submit}
@@ -58,6 +54,6 @@ const ListDomiciliary = () => {
       </div>
     </>
   );
-}
+};
 
 export default ListDomiciliary;

@@ -1,12 +1,16 @@
 // React
-import React, { useRef, useEffect, useState, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { createBrowserHistory } from "history";
-
-// React Bootstrap
-import { Button, Col, Container, Form, Row, Alert } from "react-bootstrap";
-
-import { MDBBtn } from "mdbreact";
+import React, { useState } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
+  Alert,
+  Label,
+  FormGroup,
+  Input,
+} from "reactstrap";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -40,7 +44,6 @@ const LoginPage = () => {
   return (
     <>
       <Container>
-        <h1 className="shadow-sm text-success mt-5 p-3 text-center rounded"></h1>
         <Row className="mt-5">
           <Col
             lg={5}
@@ -48,10 +51,10 @@ const LoginPage = () => {
             sm={12}
             className="p-5 m-auto shadow-sm rounded-lg"
           >
-            <Form autoComplete="on" onSubmit={handleLogin}>
-              <Form.Group>
-                <Form.Label>Correo</Form.Label>
-                <Form.Control
+            <Form onSubmit={handleLogin}>
+              <FormGroup>
+                <Label for="exampleEmail">Correo</Label>
+                <Input
                   type="text"
                   placeholder="Ingresa tú Correo"
                   id="email"
@@ -59,10 +62,10 @@ const LoginPage = () => {
                   onChange={handleChangeEmail}
                   autoFocus
                 />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Contraseña</Form.Label>
-                <Form.Control
+              </FormGroup>
+              <FormGroup>
+                <Label for="examplePassword">Contraseña</Label>
+                <Input
                   type="password"
                   placeholder="Contraseña"
                   id="password"
@@ -70,12 +73,10 @@ const LoginPage = () => {
                   onChange={handleChangePassword}
                   autoComplete="current-password"
                 />
-              </Form.Group>
-
+              </FormGroup>
               <Button variant="secondary btn-block" type="submit">
                 Iniciar Sesión
               </Button>
-
               <Button
                 variant="secondary btn-block"
                 type="submit"

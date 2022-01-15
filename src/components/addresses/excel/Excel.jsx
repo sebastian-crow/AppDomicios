@@ -242,7 +242,7 @@ export const Excel = () => {
         },
         user: {
           name: user.name,
-          id: user.uid,
+          id: user.id,
         },
       };
     });

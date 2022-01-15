@@ -14,10 +14,7 @@ import {
 } from "../../../../store/reducer";
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input } from "reactstrap";
-
-// React Bootstrap
-import { Button } from "react-bootstrap";
+import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
 
 // React Select
 import Select from "react-select";
@@ -103,7 +100,7 @@ const EditProductOrder = (props) => {
       orderName,
       fecha: new Date(),
       client: {
-        id: user.uid,
+        id: user.id,
         name: user.name,
       },
       domiciliary: {

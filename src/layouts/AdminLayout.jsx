@@ -8,10 +8,12 @@ import Footer from '../components/Footer/Footer';
 import Sidebar from '../components/Sidebar/Sidebar';
 import FixedPlugin from '../components/FixedPlugin/FixedPlugin';
 import DemoNavbar from '../components/Navbars/DemoNavbar';
+// CSS
+import "../assets/css/home.css";
 
 let ps;
 
-function Dashboard(props) {
+function AdminLayout(props) {
   const user = useSelector((state) => state.login.user);
   const [backgroundColor, setBackgroundColor] = React.useState('black');
   const [activeColor, setActiveColor] = React.useState('info');
@@ -82,4 +84,4 @@ function Dashboard(props) {
   );
 }
 
-export default Dashboard;
+export default AdminLayout;

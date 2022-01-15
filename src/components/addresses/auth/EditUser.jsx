@@ -10,10 +10,7 @@ import { push } from "redux-first-history";
 import { actualizarUsuarioAction } from "../../../store/reducer";
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input } from "reactstrap";
-
-// React Bootstrap
-import { Button } from "react-bootstrap";
+import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
 
 // Moment
 import moment from "moment";
@@ -60,7 +57,6 @@ const EditUser = (props) => {
                   <Input
                     type="text"
                     id="name"
-                    autofocus
                     defaultValue={user.name}
                     placeholder="Nombre del Usuario"
                     {...name}

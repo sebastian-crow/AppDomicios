@@ -10,13 +10,8 @@ import { push } from "redux-first-history";
 import { actualizarUsuarioAction } from "../../../store/reducer";
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input } from "reactstrap";
+import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
 
-// React Bootstrap
-import { Button } from "react-bootstrap";
-
-// Moment
-import moment from "moment";
 
 // Take Order Component
 export const GoogleSheetsConnect = (props) => {
@@ -53,7 +48,6 @@ export const GoogleSheetsConnect = (props) => {
                     type="text"
                     id="sheet.besUrl"
                     value={user.googleSheets}
-                    autofocus
                     placeholder="Agrega tu link de sheet.bes para conectar tu perfil con tu cuenta de google sheets"
                     onChange={handleGoogleSheetsChange}
                   />
@@ -86,22 +80,6 @@ export const GoogleSheetsConnect = (props) => {
           </Form>
         </Container>
       </div>
-      <style jsx>{`
-        .aLink {
-          text-decoration: none;
-          color: white;
-        }
-
-        .aLink:hover {
-          color: white;
-        }
-
-        .sheetBsRePosition {
-          position: absolute;
-          left: 13rem;
-          top: -5.1rem;
-        }
-      `}</style>
     </>
   );
 };

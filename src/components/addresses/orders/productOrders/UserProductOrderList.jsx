@@ -1,13 +1,12 @@
 // React
 import * as React from "react";
-import { Link } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
 // React Bootstrap
-import { Button } from "react-bootstrap";
+import { Button } from "reactstrap";
 
 // Reverse counter for kwnow the time we need to remaining
 import { ReverseCounter } from "../../counter/ReverseCounter";
@@ -22,16 +21,10 @@ import moment from "moment";
 
 const UserProductOrderList = () => {
   const dispatch = useDispatch();
-
-  // Get Current User
   const user = useSelector((state) => state.login.user);
-
-  // Get All Sheets Orders by user from local storage
   const sheetsOrders = useSelector((state) =>
     state.ui.sheetsOrder.filter((order) => order.client === user.id),
   );
-
-  console.log(sheetsOrders);
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -44,12 +37,9 @@ const UserProductOrderList = () => {
   // Update List
   React.useEffect(() => {
     dispatch(getAllOrderAction());
+    dispatch(getSheetsOrderAction(user.googleSheets));
   }, [dispatch]);
 
-  // Get Google sheets from sheet.best by user data googlesheets field
-  React.useEffect(() => {
-    dispatch(getSheetsOrderAction(user.googleSheets));
-  }, []);
   return (
     <>
       <div
@@ -140,7 +130,7 @@ const UserProductOrderList = () => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/client/takeorder/${user.uid}/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`,
+                          `/client/takeorder/${user.id}/${order["# de Orden"]}/${order["Nombres y Apellidos"]}`,
                         ),
                       );
                     }}

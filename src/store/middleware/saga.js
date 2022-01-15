@@ -96,7 +96,7 @@ function* loginSaga(action) {
         /*
         yield put(
           saveUrlPushAction({
-            userId: data.data.user.uid,
+            userId: data.data.user.id,
             urlPush: JSON.stringify(webPush),
           })
         );

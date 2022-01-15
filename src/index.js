@@ -8,17 +8,19 @@ import "assets/scss/paper-dashboard.scss?v=1.3.0";
 import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { Provider } from "react-redux";
-import { store } from './store/configureStore';
+import { store } from "./store/configureStore";
 import App from "./App";
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <Provider store={store}>
-        <App />
+    <App />
   </Provider>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
 
-serviceWorkerRegistration.register();
-reportWebVitals();
+if (process.env.REACT_APP_PROJECT_STATUS !== "development") {
+  serviceWorkerRegistration.register();
+  reportWebVitals();
+}

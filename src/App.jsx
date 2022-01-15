@@ -2,23 +2,19 @@
 /* eslint-disable linebreak-style */
 import React from "react";
 import { Router } from "react-router";
-import { Link } from "react-router-dom";
-import { Switch, Route, Redirect } from "react-router-dom"; // Librería react-router-dom
+import { Switch, Route } from "react-router-dom"; // Librería react-router-dom
 import { push } from "redux-first-history";
-import { createBrowserHistory } from "history";
 
 // Store and history
-import { store, history } from "./store/configureStore";
+import { history } from "./store/configureStore";
 
 // Cookies Session
-import Cookies from "js-cookie";
-import { SessionContext, getSessionCookie, setSessionCookie } from "./session";
+import {  getSessionCookie } from "./session";
 
-// CSS
-import "./assets/css/home.css";
+
 
 import { useDispatch, useSelector } from "react-redux";
-import AdminLayout from "layouts/Admin";
+import AdminLayout from "layouts/AdminLayout";
 import NoAuth from "layouts/NoAuth";
 import { restoreSessionStateAction } from "./store/reducer";
 import Login from "./components/addresses/auth/Login";

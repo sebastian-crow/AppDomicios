@@ -1,13 +1,12 @@
 // React
 import * as React from "react";
-import { Link } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { push } from "redux-first-history";
 
 // React Bootstrap
-import { Button } from "react-bootstrap";
+import { Button } from "reactstrap";
 
 // Reverse counter for kwnow the time we need to remaining
 import { ReverseCounter } from "../counter/ReverseCounter";
@@ -18,34 +17,9 @@ import moment from "moment";
 
 const UserOrderList = () => {
   const dispatch = useDispatch();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  // Get Current User
   const user = useSelector((state) => state.login.user);
-
-  const rol = user.rol === "client" || user.rol === "admin";
-
-  // Get All Orders from store
-  const orders = useSelector((state) => state.ui.orders);
-
-  // Filter orders by users
-
-  const ordersCurrentUser = [];
-  orders.map((order) => {
-    if (order.client.id === user.uid) {
-      return ordersCurrentUser.push(order);
-    }
-  });
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const orders = useSelector((state) => state.ui.orders.filter((order) => order.client.id === user._id));
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -56,7 +30,6 @@ const UserOrderList = () => {
   };
 
   // Update List
-
   React.useEffect(() => {
     dispatch(getAllOrderAction());
   }, [dispatch]);
@@ -67,7 +40,7 @@ const UserOrderList = () => {
 
   React.useEffect(() => {
     orders.map((order) => {
-      if (order.client.id === user.uid) {
+      if (order.client.id === user.id) {
         return ordersCurrentUser.push(order);
       }
     }, []);
