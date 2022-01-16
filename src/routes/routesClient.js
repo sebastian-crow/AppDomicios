@@ -1,7 +1,6 @@
 import EditUser from "../components/addresses/auth/EditUser";
 
 // Product Orders
-import EditProductOrder from "../components/addresses/orders/productOrders/EditProductOrder";
 import UserProductOrderList from "../components/addresses/orders/productOrders/UserProductOrderList";
 import OrderList from "../components/addresses/orders/ListOrders";
 

@@ -7,8 +7,8 @@ import { history } from "./store/configureStore";
 // Cookies Session
 import {  getSessionCookie } from "./session";
 import { useDispatch, useSelector } from "react-redux";
-import AdminLayout from "layouts/AdminLayout";
-import NoAuth from "layouts/NoAuth";
+import AdminLayout from "./layouts/AdminLayout";
+import NoAuth from "./layouts/NoAuth";
 import { restoreSessionStateAction } from "./store/reducer";
 import Login from "./components/addresses/auth/Login";
 import Register from "./components/addresses/auth/Register";

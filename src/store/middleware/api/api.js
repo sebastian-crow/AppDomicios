@@ -1,6 +1,5 @@
 import axios from "axios";
 import { CANCEL } from "redux-saga";
-require("dotenv").config();
 let client;
 
 export const getSessionToken = () => {

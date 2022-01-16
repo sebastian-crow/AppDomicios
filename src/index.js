@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 
 //import 'mapbox-gl/dist/mapbox-gl.css';
 import "bootstrap/dist/css/bootstrap.css";
-//import "./assets/scss/paper-dashboard.scss";
+import "./assets/scss/paper-dashboard.scss";
 //import "assets/demo/demo.css";
 import { Provider } from "react-redux";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
