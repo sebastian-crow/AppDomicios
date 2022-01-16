@@ -20,7 +20,7 @@ function saveUiState(state) {
   };
   try {
     setSessionCookie(data);
-    console.log(data);
+    console.error(data);
     localStorage.setItem("store", JSON.stringify(data));
   } catch (err) {
     // console.error("Unable to store state", err);

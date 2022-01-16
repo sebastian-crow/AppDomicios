@@ -26,7 +26,7 @@ var routesDomiciliary = [
     visible: false,
   },
   {
-    path: "/user-page",
+    path: "/editUser",
     rol: ["domiciliary"],
     name: "Editar user",
     icon: "nc-icon nc-single-02",

@@ -3,10 +3,8 @@ import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-import { useDispatch, useSelector } from "react-redux";
-
-import logo from "logo.svg";
-import addresses_red from '../../assets/img/logo.svg';
+import { useSelector } from "react-redux";
+import addresses_red from "../../assets/img/logo.svg";
 var ps;
 
 function Sidebar(props) {
@@ -36,18 +34,12 @@ function Sidebar(props) {
       data-active-color={props.activeColor}
     >
       <div className="logo">
-        <a
-          href="#"
-          className="simple-text logo-mini"
-        >
+        <a href="#" className="simple-text logo-mini">
           <div className="logo-img">
             <img src={addresses_red} alt="react-logo" />
           </div>
         </a>
-        <a
-          href="#"
-          className="simple-text logo-normal"
-        >
+        <a href="#" className="simple-text logo-normal">
           Addresses
         </a>
       </div>

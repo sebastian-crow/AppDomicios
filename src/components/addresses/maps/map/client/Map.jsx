@@ -57,7 +57,6 @@ export const Map = (props) => {
   // Dealer
   const dealer = currentOrder[0].domiciliary.name;
   const dealerId = currentOrder[0].domiciliary.id;
-  console.log("Current Order", currentOrder);
 
   // Component State
   const [currentMarkerId, setCurrentMarkerId] = useState(null);

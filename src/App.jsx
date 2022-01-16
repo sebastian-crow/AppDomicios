@@ -1,18 +1,11 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable linebreak-style */
 import React from "react";
 import { Router } from "react-router";
 import { Switch, Route } from "react-router-dom"; // Librería react-router-dom
 import { push } from "redux-first-history";
-
 // Store and history
 import { history } from "./store/configureStore";
-
 // Cookies Session
 import {  getSessionCookie } from "./session";
-
-
-
 import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "layouts/AdminLayout";
 import NoAuth from "layouts/NoAuth";

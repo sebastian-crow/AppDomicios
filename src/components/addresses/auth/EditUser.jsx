@@ -57,7 +57,6 @@ const EditUser = (props) => {
                   <Input
                     type="text"
                     id="name"
-                    defaultValue={user.name}
                     placeholder="Nombre del Usuario"
                     {...name}
                   />
@@ -69,7 +68,6 @@ const EditUser = (props) => {
                     type="text"
                     id="lastName"
                     placeholder="Apellido"
-                    defaultValue={user.lastName}
                     {...lastName}
                   />
                 </Col>
@@ -91,7 +89,6 @@ const EditUser = (props) => {
                     id="documentNumber"
                     placeholder="Documento de Identidad"
                     name="documentNumber"
-                    defaultValue={user.documentNumber}
                     {...documentNumber}
                   />
                 </Col>
@@ -111,12 +108,6 @@ const EditUser = (props) => {
                   <Input
                     type="date"
                     id="date"
-                    inputLabelProps={{
-                      shrink: true,
-                    }}
-                    defaultValue={moment(user.bornDate).format(
-                      "YYYY-MM-DD"
-                    )}
                     placeholder="Fecha Nacimiento"
                     {...bornDate}
                   />

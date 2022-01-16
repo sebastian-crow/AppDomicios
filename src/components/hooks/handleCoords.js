@@ -34,7 +34,7 @@ const handleCoords = (address) => {
   return Geocode.fromAddress(address).then(
     (response) => {
       const { lat, lng } = response.results[0].geometry.location;
-      console.log(lat, lng);
+      console.error(lat, lng);
     },
     (error) => {
       console.error(error);

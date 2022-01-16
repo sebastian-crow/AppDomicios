@@ -4,10 +4,10 @@ import ReactDOM from "react-dom";
 
 //import 'mapbox-gl/dist/mapbox-gl.css';
 import "bootstrap/dist/css/bootstrap.css";
-import "assets/scss/paper-dashboard.scss?v=1.3.0";
-import "assets/demo/demo.css";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
+//import "./assets/scss/paper-dashboard.scss";
+//import "assets/demo/demo.css";
 import { Provider } from "react-redux";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { store } from "./store/configureStore";
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";

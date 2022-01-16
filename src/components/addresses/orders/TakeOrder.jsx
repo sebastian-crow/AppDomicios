@@ -243,7 +243,6 @@ const TakeOrder = (props) => {
     dispatch(createOrderAction(data));
     dispatch(push("/orderlist"));
     openWhatsapp();
-    console.log("Data order", data);
     3;
   };
 

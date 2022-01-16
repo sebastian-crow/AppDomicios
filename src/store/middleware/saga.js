@@ -88,7 +88,6 @@ import { LOCATION_CHANGE } from "redux-first-history";
 function* loginSaga(action) {
   try {
     const { data } = yield call(api.login, action.payload);
-    console.log(data);
     if (data) {
       var webPush = localStorage.getItem("webpush");
       var webPush = JSON.parse(webPush);
@@ -108,7 +107,7 @@ function* loginSaga(action) {
       yield put(loginError("No existe un user"));
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     yield put(loginError(error.message));
   } finally {
     if (yield cancelled()) {
@@ -137,7 +136,7 @@ function* restoreSessionStateSaga(action) {
       yield put(push("/"));
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -149,7 +148,7 @@ function* logoutSagas(action) {
   try {
     yield put(cleanSessionStateAcion());
   } catch (error) {
-    console.log(error);
+    console.error(error);
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -442,7 +441,7 @@ function* getSheetsOrderSaga(action) {
     if (data) {
       yield put(getSheetsOrderDoneAction(data));
     } else {
-      console.log("You have many errors");
+      console.error("You have many errors");
     }
   } catch (error) {
   } finally {

@@ -23,7 +23,6 @@ const ListOrders = () => {
 
   // Get all orders from store
   const orders = useSelector((state) => state.ui.orders);
-  console.log(orders);
   const handleDelete = (event) => {
     event.preventDefault();
     const data = {};

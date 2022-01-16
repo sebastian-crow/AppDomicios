@@ -1,12 +1,8 @@
-import Dashboard from "views/Dashboard.js";
-import UserPage from "views/User.js";
-
 // Users
 import ListClientss from "../components/addresses/listUsers/ListClients";
 import EditUser from "../components/addresses/auth/EditUser";
 
 // Orders
-import TakeOrder from "../components/addresses/orders/TakeOrder";
 import OrderList from "../components/addresses/orders/ListOrders";
 
 // Excel
@@ -17,9 +13,9 @@ import { Map } from "../components/addresses/maps/map/admin/Map";
 
 var routesAdmin = [
   {
-    path: "/user-page",
+    path: "/editUser",
     rol: ["admin"],
-    name: "User Profile",
+    name: "Editar usuario",
     icon: "nc-icon nc-single-02",
     component: EditUser,
     layout: "/admin",
@@ -28,7 +24,7 @@ var routesAdmin = [
   // Auth routes
   {
     path: "/listclients",
-    name: "Listar users",
+    name: "Listar usuarios",
     rol: ["admin"],
     icon: "nc-icon nc-single-02",
     component: ListClientss,
