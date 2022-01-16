@@ -1,17 +1,23 @@
 // React
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import { push } from "redux-first-history";
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 
 // Reducers
-import { actualizarUsuarioAction } from "../../../store/reducer";
+import { actualizarUsuarioAction } from '../../../store/reducer';
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
-
+import {
+  Container,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Button,
+} from 'reactstrap';
 
 // Take Order Component
 export const GoogleSheetsConnect = (props) => {
@@ -32,8 +38,8 @@ export const GoogleSheetsConnect = (props) => {
     let data = {
       googleSheets: googleSheets,
     };
-    dispatch(actualizarUsuarioAction({ data, id: user.id }));
-    dispatch(push("/"));
+    dispatch(actualizarUsuarioAction(data));
+    dispatch(push('/'));
   };
 
   return (
@@ -57,7 +63,7 @@ export const GoogleSheetsConnect = (props) => {
                 <div className="">
                   <Button variant="success" size="lg" type="submit">
                     Guardar
-                  </Button>{" "}
+                  </Button>{' '}
                   {``}
                 </div>
               </FormGroup>
@@ -71,7 +77,7 @@ export const GoogleSheetsConnect = (props) => {
                     >
                       Ir a Sheet.bes
                     </a>
-                  </Button>{" "}
+                  </Button>{' '}
                   {``}
                 </div>
               </FormGroup>

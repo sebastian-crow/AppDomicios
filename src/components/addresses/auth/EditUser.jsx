@@ -42,7 +42,7 @@ const EditUser = (props) => {
       bornDate: bornDate.value,
       rol: "client",
     };
-    dispatch(actualizarUsuarioAction({ data, id: user._id }));
+    dispatch(actualizarUsuarioAction(data));
     dispatch(push("/"));
   };
 

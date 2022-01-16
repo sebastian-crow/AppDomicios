@@ -65,7 +65,7 @@ export function editUser(params) {
   return callAPI({
     method: "PATCH",
     url: `/user`,
-    data: params.data,
+    data: params,
   });
 }
 

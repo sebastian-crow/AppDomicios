@@ -91,10 +91,10 @@ function* loginSaga(action) {
     if (data) {
       var webPush = localStorage.getItem('webpush');
       var webPush = JSON.parse(webPush);
+      console.log(webPush);
       if (webPush) {
         yield put(
-          saveUrlPushAction({
-            userId: data.data.user.id,
+          actualizarUsuarioAction({
             urlPush: JSON.stringify(webPush),
           })
         );
@@ -129,6 +129,15 @@ function* restoreSessionStateSaga(action) {
   try {
     const pathname = action.payload?.location.pathname;
     if (pathname) {
+      var webPush = localStorage.getItem('webpush');
+      var webPush = JSON.parse(webPush);
+      if (webPush) {
+        yield put(
+          actualizarUsuarioAction({
+            urlPush: JSON.stringify(webPush),
+          })
+        );
+      }
       yield put(push(pathname));
     } else {
       yield put(push('/'));
