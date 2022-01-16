@@ -5,9 +5,6 @@ import EditUser from "../components/addresses/auth/EditUser";
 // Orders
 import OrderList from "../components/addresses/orders/ListOrders";
 
-// Excel
-import { Excel } from "../components/addresses/excel/Excel";
-
 // Map
 import { Map } from "../components/addresses/maps/map/admin/Map";
 
@@ -48,16 +45,6 @@ var routesAdmin = [
     component: Map,
     layout: "/admin",
     visible: false,
-  },
-  // Import Excell Data
-  {
-    path: "/importexceldata",
-    name: "Excel",
-    icon: "nc-icon nc-bank",
-    rol: ["admin"],
-    component: Excel,
-    layout: "/admin",
-    visible: true,
   },
 ];
 export default routesAdmin;

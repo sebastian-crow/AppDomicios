@@ -34,17 +34,6 @@ const UserOrderList = () => {
     dispatch(getAllOrderAction());
   }, [dispatch]);
 
-  React.useEffect(() => {
-    if (!orders.lenght) dispatch(getAllOrderAction());
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    orders.map((order) => {
-      if (order.client.id === user.id) {
-        return ordersCurrentUser.push(order);
-      }
-    }, []);
-  });
   return (
     <>
       <div style={{ height: "800px", overflowY: "scroll" }}>
@@ -64,7 +53,7 @@ const UserOrderList = () => {
             </tr>
           </thead>
           <tbody>
-            {ordersCurrentUser.map((order) => (
+            {orders.map((order) => (
               <tr key={order._id}>
                 <td>{order.orderNumber}</td>
                 <td>{order.pedido}</td>
