@@ -5,10 +5,10 @@ import {
   call,
   cancelled,
   select,
-} from "redux-saga/effects";
+} from 'redux-saga/effects';
 
-import { push } from "redux-first-history";
-import { api } from "./api";
+import { push } from 'redux-first-history';
+import { api } from './api';
 import {
   loginAction,
   loginDoneAction,
@@ -81,30 +81,28 @@ import {
   // Sheets Orders
   getSheetsOrderAction,
   getSheetsOrderDoneAction,
-} from "../reducer";
+} from '../reducer';
 
-import { LOCATION_CHANGE } from "redux-first-history";
+import { LOCATION_CHANGE } from 'redux-first-history';
 
 function* loginSaga(action) {
   try {
     const { data } = yield call(api.login, action.payload);
     if (data) {
-      var webPush = localStorage.getItem("webpush");
+      var webPush = localStorage.getItem('webpush');
       var webPush = JSON.parse(webPush);
       if (webPush) {
-        /*
         yield put(
           saveUrlPushAction({
             userId: data.data.user.id,
             urlPush: JSON.stringify(webPush),
           })
         );
-        */
       }
       yield put(loginDoneAction(data));
-      yield put(push("/"));
+      yield put(push('/'));
     } else {
-      yield put(loginError("No existe un user"));
+      yield put(loginError('No existe un user'));
     }
   } catch (error) {
     console.error(error);
@@ -133,7 +131,7 @@ function* restoreSessionStateSaga(action) {
     if (pathname) {
       yield put(push(pathname));
     } else {
-      yield put(push("/"));
+      yield put(push('/'));
     }
   } catch (error) {
     console.error(error);
@@ -160,7 +158,7 @@ function* registerSaga(action) {
   try {
     const { data } = yield call(api.register, action.payload);
     yield put(registerDoneAction(data));
-    yield put(push("/"));
+    yield put(push('/'));
   } catch (error) {
     yield put(errorRegistro(error));
   } finally {
@@ -174,16 +172,16 @@ function* locationChangeSaga(action) {
   const user = yield select((state) => state.login.user);
   if (user) {
     const pathname = action.payload.location.pathname;
-    if (pathname === "/") {
+    if (pathname === '/') {
       switch (user.rol) {
-        case "client":
-          yield put(push("/client/pedidos"));
+        case 'client':
+          yield put(push('/client/pedidos'));
           break;
-        case "admin":
-          yield put(push("/admin/orderslist"));
+        case 'admin':
+          yield put(push('/admin/orderslist'));
           break;
-        case "domiciliary":
-          yield put(push("/domiciliary/orderslist"));
+        case 'domiciliary':
+          yield put(push('/domiciliary/orderslist'));
           break;
         default:
           break;
@@ -223,7 +221,10 @@ function* createPositionClientSaga(action) {
 
 function* getFromClientPositionSaga(action) {
   try {
-    const { data } = yield call(api.getPositionFromUser, action.payload);
+    const { data } = yield call(
+      api.getPositionFromUser,
+      action.payload
+    );
     yield put(getFromClientPositionDoneAction(data));
   } catch (error) {
   } finally {
@@ -268,7 +269,10 @@ function* updatePositionDealerSaga(action) {
 
 function* getFromDealerPositionSaga(action) {
   try {
-    const { data } = yield call(api.getPositionFromUser, action.payload);
+    const { data } = yield call(
+      api.getPositionFromUser,
+      action.payload
+    );
     yield put(getFromDealerPositionDoneAction(data));
   } catch (error) {
   } finally {
@@ -340,7 +344,7 @@ function* createProductSaga(action) {
       yield put(errorCreateProduct(data.status));
     }
   } catch (error) {
-    yield put(errorCreateProduct("Error inesperado"));
+    yield put(errorCreateProduct('Error inesperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -370,7 +374,7 @@ function* deleteProductSaga(action) {
       yield put(errorDeleteProduct(data.status));
     }
   } catch (error) {
-    yield put(errorDeleteProduct("Error inesperado"));
+    yield put(errorDeleteProduct('Error inesperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -397,7 +401,7 @@ function* createOrderSaga(action) {
     const { data } = yield call(api.createOrder, action.payload);
     yield put(createOrderDoneAction(data));
   } catch (error) {
-    yield put(errorCreateOrder("Error inesperado"));
+    yield put(errorCreateOrder('Error inesperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -426,7 +430,7 @@ function* deleteOrderSaga(action) {
       yield put(errorDeleteOrder(data.status));
     }
   } catch (error) {
-    yield put(errorDeleteOrder("Error inesperado"));
+    yield put(errorDeleteOrder('Error inesperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -441,7 +445,7 @@ function* getSheetsOrderSaga(action) {
     if (data) {
       yield put(getSheetsOrderDoneAction(data));
     } else {
-      console.error("You have many errors");
+      console.error('You have many errors');
     }
   } catch (error) {
   } finally {
@@ -454,20 +458,41 @@ function* getSheetsOrderSaga(action) {
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
   yield takeLatest(loginDoneAction.type, loginDoneSaga);
-  yield takeLatest(actualizarUsuarioAction.type, actualizarUsuarioSaga);
+  yield takeLatest(
+    actualizarUsuarioAction.type,
+    actualizarUsuarioSaga
+  );
   yield takeLatest(registerAction.type, registerSaga);
 
-  yield takeEvery(restoreSessionStateAction.type, restoreSessionStateSaga);
+  yield takeEvery(
+    restoreSessionStateAction.type,
+    restoreSessionStateSaga
+  );
   yield takeEvery(logoutAction.type, logoutSagas);
 
   // Client Location
-  yield takeLatest(createPositionClientAction.type, createPositionClientSaga);
-  yield takeLatest(getFromClientPositionAction.type, getFromClientPositionSaga);
+  yield takeLatest(
+    createPositionClientAction.type,
+    createPositionClientSaga
+  );
+  yield takeLatest(
+    getFromClientPositionAction.type,
+    getFromClientPositionSaga
+  );
 
   // Dealer Location
-  yield takeLatest(createPositionDealerAction.type, createPositionDealerSaga);
-  yield takeLatest(updatePositionDealerAction.type, updatePositionDealerSaga);
-  yield takeLatest(getFromDealerPositionAction.type, getFromDealerPositionSaga);
+  yield takeLatest(
+    createPositionDealerAction.type,
+    createPositionDealerSaga
+  );
+  yield takeLatest(
+    updatePositionDealerAction.type,
+    updatePositionDealerSaga
+  );
+  yield takeLatest(
+    getFromDealerPositionAction.type,
+    getFromDealerPositionSaga
+  );
   //yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
 
@@ -480,7 +505,10 @@ export function* rootSaga() {
   // Users
   yield takeLatest(getAllUserAction.type, getAllUserSaga);
   yield takeLatest(getAllClientAction.type, getAllClientSaga);
-  yield takeLatest(getAllDomiciliaryAction.type, getAllDomiciliarySaga);
+  yield takeLatest(
+    getAllDomiciliaryAction.type,
+    getAllDomiciliarySaga
+  );
 
   // Orders
   yield takeLatest(getAllOrderAction.type, getAllOrderSaga);

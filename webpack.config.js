@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 require('dotenv').config({ path: './.env' });
 
 __webpack_base_uri__ = 'http://localhost:8080';
@@ -9,7 +10,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -58,6 +59,8 @@ module.exports = {
       '*',
       '.js',
       '.jsx',
+      'ts',
+      'tsx',
       '.css',
       'scss',
       '.json',
@@ -86,6 +89,10 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       process: 'process/browser',
+    }),
+    new InjectManifest({
+      swSrc: './src/service-worker.js',
+      swDest: 'service-worker.js',
     }),
   ],
 };

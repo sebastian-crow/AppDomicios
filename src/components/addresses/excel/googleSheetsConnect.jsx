@@ -19,7 +19,7 @@ export const GoogleSheetsConnect = (props) => {
 
   const user = useSelector((state) => state.login.user);
   const [error, setError] = useState(null);
-  const [googleSheets, setGoogleSheets] = useState(null);
+  const [googleSheets, setGoogleSheets] = useState(user.googleSheets);
 
   // Hanlde evnet onChange to Email
   const handleGoogleSheetsChange = (googleSheetsData) => {
@@ -32,7 +32,7 @@ export const GoogleSheetsConnect = (props) => {
     let data = {
       googleSheets: googleSheets,
     };
-    dispatch(actualizarUsuarioAction({ data, id: user._id }));
+    dispatch(actualizarUsuarioAction({ data, id: user.id }));
     dispatch(push("/"));
   };
 
