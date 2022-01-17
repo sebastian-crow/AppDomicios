@@ -26,91 +26,30 @@ const animatedComponents = makeAnimated();
 const EditProductOrder = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
-  const dealers = useSelector((state) => state.ui.domiciliarys);
-  const products = useSelector((state) => state.ui.products);
+  
   const orders = useSelector((state) => state.ui.orders);
-  const order = orders.find((order) => order._id === props.match.params.id);
-  const [dealerData, setDealerData] = React.useState({});
-  const [orderName, setOrderName] = React.useState(order.orderName);
-  const [address, setAddress] = React.useState(order.direccion.address);
-  const [productsAndAmount, setProductsAndAmount] = React.useState([]);
-  let domiciliarysPreview = {};
-  dealers?.forEach((domiciliary) => {
-    if (order.domiciliary.id === domiciliary._id) {
-      if (Object.values(dealerData).length === 0) {
-        domiciliarysPreview = {
-          value: domiciliary._id,
-          label: domiciliary.name,
-        };
-      }
-    }
-  });
 
-  let productosPreview = [];
-  order.productos?.forEach((product) => {
-    productosPreview.push({
-      value: product.id,
-      label: product.name,
-      amount: product.cantidad,
-    });
-    if (productsAndAmount.length === 0) {
-      setProductsAndAmount(productosPreview);
-    }
-  });
-  // Handle event onChange amount
-  const handleAmountChange = (amount, index) => {
-    productsAndAmount[index].amount = amount.target.value;
-    setProductData(productsAndAmount);
-  };
-
-  // Hanlde the event onChange to the Product multi select
-  const handleProductChange = (productData, index) => {
-    productsAndAmount[index] = productData;
-    setProductData(productsAndAmount);
-  };
-
-  // Handle event onChange to dealer multii select
-  const handleDealerChange = (dealerData) => {
-    setDealerData(dealerData);
-  };
-
-  // Handle event onChange to orderName
-  const handleOrderNameChange = (orderName) => {
-    setOrderName(orderName.target.value);
-  };
-
-  // Handle event onChange to Address
-  const handleAddressChange = (address) => {
-    setAddress(address.target.value);
-  };
-
+  
   // Handle  Update
   const handleSave = () => {
-    const productDone = [];
-    productsAndAmount.map((info) => {
-      productDone.push({
-        name: info.label,
-        id: info.value,
-        cantidad: info.amount,
-      });
-    });
-    const remaining = 180000; // Time remaining since the order was created.
-
     let data = {
-      orderName,
-      fecha: new Date(),
-      client: {
-        id: user.id,
-        name: user.name,
-      },
-      domiciliary: {
-        id: dealerData.value,
-        name: dealerData.label,
-      },
-      productos: productDone,
-      direccion: address,
-      remaining,
+      someInformation: "Sisas"
     };
+    // let data = {
+    //   orderName,
+    //   fecha: new Date(),
+    //   client: {
+    //     id: user.id,
+    //     name: user.name,
+    //   },
+    //   domiciliary: {
+    //     id: dealerData.value,
+    //     name: dealerData.label,
+    //   },
+    //   productos: productDone,
+    //   direccion: address,
+    //   remaining,
+    // };
     dispatch(createOrderAction(data));
     if (user?.rol === "admin") {
       dispatch(push("/admin/orderslist"));
@@ -119,35 +58,8 @@ const EditProductOrder = (props) => {
     }
   };
 
-  const addListProduct = () => {
-    const listProducs = [];
-    if (productsAndAmount.length) {
-      for (let index = 0; index <= productsAndAmount.length - 1; index++) {
-        const element = productsAndAmount[index];
-        listProducs.push(element);
-      }
-      listProducs.push({});
-    } else {
-      listProducs.push({});
-    }
-    setProductsAndAmount(listProducs);
-  };
-
-  const deleteProducto = (e, index) => {
-    e.preventDefault();
-    const listProducs = [];
-    productsAndAmount.forEach((indexProducto, key) => {
-      if (index !== key) {
-        listProducs.push(indexProducto);
-      }
-    });
-    setProductsAndAmount(listProducs);
-  };
-
   // Get Products Array
   React.useEffect(() => {
-    dispatch(getAllProductAction());
-    dispatch(getAllDomiciliaryAction());
   }, [dispatch]);
 
   return (
