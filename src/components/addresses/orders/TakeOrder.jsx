@@ -1,32 +1,39 @@
 // React
-import * as React from "react";
-import { useParams } from "react-router-dom";
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import { push } from "redux-first-history";
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 
 // Reducers
 import {
   getAllDomiciliaryAction,
   createOrderAction,
   getSheetsOrderAction,
-} from "../../../store/reducer";
+} from '../../../store/reducer';
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
+import {
+  Container,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Button,
+} from 'reactstrap';
 
 // React Select
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 
 // Departments And Cities JSON
-import { cities, departments } from "./lib/cities";
+import { cities, departments } from './lib/cities';
 
 // Map to Select User's current location
-import { MapSelectUbication } from "./lib/MapSelectUbication";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
-import moment from "moment";
+import { MapSelectUbication } from './lib/MapSelectUbication';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const animatedComponents = makeAnimated();
 
@@ -48,41 +55,40 @@ const TakeOrder = (props) => {
   const sheetsOrder = useSelector((state) => state.ui.sheetsOrder);
 
   const currentSheetsOrder = sheetsOrder.map((order) => {
-    if (order["# de Orden"] === orderNumberSheets) {
+    if (order['# de Orden'] === orderNumberSheets) {
       return order;
     }
   })[0];
 
   const [orderNumber, setorderNumber] = React.useState(
-    currentSheetsOrder?.["# de Orden"],
+    currentSheetsOrder?.['# de Orden']
   );
 
   const [orderText, setOrderText] = React.useState(
-    currentSheetsOrder?.["# Paquete a entregar"],
+    currentSheetsOrder?.['# Paquete a entregar']
   );
   const [nameLastName, setNameLastName] = React.useState(
-    currentSheetsOrder?.["Nombres y Apellidos"],
+    currentSheetsOrder?.['Nombres y Apellidos']
   );
   const [documentNumber, setDocumentNumber] = React.useState(null);
   const [phoneNumber, setPhoneNumber] = React.useState(
-    currentSheetsOrder?.["Telefono client"],
+    currentSheetsOrder?.['Telefono client']
   );
   const [department, setDepartment] = React.useState([]);
   const [city, setCity] = React.useState([]);
 
   const [firstAddress, setFirstAddress] = React.useState(
-    currentSheetsOrder?.["Direccion Recogida"],
+    currentSheetsOrder?.['Direccion Recogida']
   );
   const [finalAddress, setFinalAddress] = React.useState(
-    currentSheetsOrder?.['"Direccion entrega "'],
+    currentSheetsOrder?.['"Direccion entrega "']
   );
 
   const [email, setEmail] = React.useState(null);
   const [paymentMethod, setPaymentMethod] = React.useState([]);
   const [dealerData, setDealerData] = React.useState({});
-  const [dealerDataGoogleSheets, setDealerDataGoogleSheets] = React.useState(
-    {},
-  );
+  const [dealerDataGoogleSheets, setDealerDataGoogleSheets] =
+    React.useState({});
 
   // Handle Events OnChange
   // Handle names and last names
@@ -177,25 +183,27 @@ const TakeOrder = (props) => {
   let finalInfoCitiesData = [
     {
       value: 3,
-      label: "Medellín",
+      label: 'Medellín',
     },
     {
       value: 4,
-      label: "Bello",
+      label: 'Bello',
     },
   ];
 
-  let temporalfinalInfoCitiesData = finalCitiesData.map((finalData) => {
-    let object = finalData.map((final) => {
-      return {
-        value: Math.floor(Math.random() * 100),
-        label: final.label,
-      };
-    });
-    return object.map((obj) => {
-      return obj;
-    });
-  });
+  let temporalfinalInfoCitiesData = finalCitiesData.map(
+    (finalData) => {
+      let object = finalData.map((final) => {
+        return {
+          value: Math.floor(Math.random() * 100),
+          label: final.label,
+        };
+      });
+      return object.map((obj) => {
+        return obj;
+      });
+    }
+  );
 
   if (temporalfinalInfoCitiesData.length > 0) {
     finalInfoCitiesData = temporalfinalInfoCitiesData;
@@ -204,19 +212,19 @@ const TakeOrder = (props) => {
   // Payment Methods
   const paymentMethods = [
     {
-      method: "Efectivo",
+      method: 'Efectivo',
       id: Math.floor(Math.random() * 100),
     },
     {
-      method: "Transferencia Bancaria",
+      method: 'Transferencia Bancaria',
       id: Math.floor(Math.random() * 100),
     },
   ];
 
   const openWhatsapp = () => {
     const url =
-      "https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0";
-    window.open(url, "_blank");
+      'https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0';
+    window.open(url, '_blank');
   };
 
   // Handle Save
@@ -228,20 +236,20 @@ const TakeOrder = (props) => {
       document: documentNumber,
       phone: phoneNumber,
       departament: department.label.toString(),
-      city: city.length ? city.label : "DEFAULT",
+      city: city.length ? city.label : 'DEFAULT',
       fistAddress: firstAddress,
       lastAddress: finalAddress,
       //correoElectronico: email,
       paymentMethod: paymentMethod.label,
       domiciliary: dealerData.value.toString(),
-      date: moment(Date.now()).format("DD/MM/YYYY"),
+      date: moment(Date.now()).format('DD/MM/YYYY'),
       client: user.id.toString(),
-      clientCompany: idClientEmpresa ? idClientEmpresa : "0",
-      state: "En proceso",
+      clientCompany: idClientEmpresa ? idClientEmpresa : '0',
+      state: 'En proceso',
     };
 
     dispatch(createOrderAction(data));
-    dispatch(push("/orderlist"));
+    dispatch(push('/orderlist'));
     openWhatsapp();
     3;
   };
@@ -255,60 +263,13 @@ const TakeOrder = (props) => {
   return (
     <>
       <div>
-        <Container className="themed-container containerProof" fluid="sm">
+        <Container
+          className="themed-container containerProof"
+          fluid="sm"
+        >
           <Form className="form">
             <h2 className="takeOrderTitle">Tomar Orden</h2>
             <Col>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Select
-                    onChange={handleDepartmentChange}
-                    placeholder="Empresa"
-                    options={departments.map((department) => {
-                      return {
-                        value: department.id,
-                        label: department.departamento,
-                      };
-                    })}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    //id="orderNumber"
-                    placeholder="N° de Orden de tu pedido"
-                    onChange={handleOrderNumber}
-                    defaultValue={currentSheetsOrder?.["# de Orden"]}
-                    {...currentSheetsOrder?.["# de Orden"]}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="orderText"
-                    placeholder="Pega tu pedido aquí"
-                    onChange={handleOrderText}
-                    defaultValue={currentSheetsOrder?.["# Paquete a entregar"]}
-                    {...currentSheetsOrder?.["# Paquete a entregar"]}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="nameLastName"
-                    placeholder="Nombres y Apellidos"
-                    onChange={handleNameChange}
-                    defaultValue={currentSheetsOrder?.["Nombres y Apellidos"]}
-                    {...currentSheetsOrder?.["Nombres y Apellidos"]}
-                  />
-                </Col>
-              </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
                   <Input
@@ -318,18 +279,6 @@ const TakeOrder = (props) => {
                     onChange={handleDocumentNumber}
                     defaultValue={documentNumber}
                     {...documentNumber}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="phoneNumber"
-                    placeholder="Telefono"
-                    onChange={handlePhoneChange}
-                    defaultValue={currentSheetsOrder?.["Telefono client"]}
-                    {...currentSheetsOrder?.["Telefono client"]}
                   />
                 </Col>
               </FormGroup>
@@ -363,8 +312,10 @@ const TakeOrder = (props) => {
                     id="firstAddress"
                     placeholder="Dirección Recogida"
                     onChange={handleFirstAddressChange}
-                    defaultValue={currentSheetsOrder?.["Direccion Recogida"]}
-                    {...currentSheetsOrder?.["Direccion Recogida"]}
+                    defaultValue={
+                      currentSheetsOrder?.['Direccion Recogida']
+                    }
+                    {...currentSheetsOrder?.['Direccion Recogida']}
                   />
                 </Col>
               </FormGroup>
@@ -375,18 +326,10 @@ const TakeOrder = (props) => {
                     id="finalAddress"
                     placeholder="Dirección Entrega"
                     onChange={handleFinalAddressChange}
-                    defaultValue={currentSheetsOrder?.['"Direccion entrega "']}
+                    defaultValue={
+                      currentSheetsOrder?.['"Direccion entrega "']
+                    }
                     {...currentSheetsOrder?.['"Direccion entrega "']}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="email"
-                    placeholder="Correo Electronico"
-                    onChange={handleEmailChange}
                   />
                 </Col>
               </FormGroup>
@@ -408,7 +351,7 @@ const TakeOrder = (props) => {
                 <Col sm={10}>
                   <Select
                     onChange={handleDealerChange}
-                    placeholder="Domiciliary"
+                    placeholder="Domiciliario"
                     options={dealers.map((dealer) => {
                       return {
                         value: dealer.id,
@@ -420,18 +363,24 @@ const TakeOrder = (props) => {
               </FormGroup>
               <FormGroup className="">
                 <div className="positionButton">
-                  <Button variant="success" size="lg" onClick={handleSave}>
+                  <Button
+                    variant="success"
+                    size="lg"
+                    onClick={handleSave}
+                  >
                     Crear Orden
-                  </Button>{" "}
+                  </Button>{' '}
                   {``}
                 </div>
               </FormGroup>
             </Col>
             <Col></Col>
           </Form>
+          {/* 
           <div className="mapContainerForm">
             <MapSelectUbication />
           </div>
+          */}
         </Container>
       </div>
     </>

@@ -81,6 +81,10 @@ import {
   // Sheets Orders
   getSheetsOrderAction,
   getSheetsOrderDoneAction,
+  updateSheetOrderAction,
+  updateSheetOrderDoneAction,
+  deleteSheetOrderAction,
+  deleteSheesOrderDoneAction,
 } from '../reducer';
 
 import { LOCATION_CHANGE } from 'redux-first-history';
@@ -464,6 +468,46 @@ function* getSheetsOrderSaga(action) {
   }
 }
 
+// Update Sheets Orders
+function* updateSheetsOrderSaga(action) {
+  try {
+    const { data } = yield call(action.payload);
+    console.log('What is that?', data);
+    if (data) {
+      //yield put(updateSheetOrderDoneAction(data));
+      console.log(
+        'this is your data when you try to update this',
+        data
+      );
+    } else {
+      console.error('You have many errors');
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+// Delete Sheets Orders
+function* deleteSheetsOrderSaga(action) {
+  try {
+    const { data } = yield call(action.payload);
+    if (data) {
+      yield put(deleteSheesOrderDoneAction(data));
+      console.log('This happended when you try to delete this', data);
+    } else {
+      console.error('You have many errors');
+    }
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
 export function* rootSaga() {
   yield takeLatest(loginAction.type, loginSaga);
   yield takeLatest(loginDoneAction.type, loginDoneSaga);
@@ -527,4 +571,12 @@ export function* rootSaga() {
 
   // Sheets Orders
   yield takeLatest(getSheetsOrderAction.type, getSheetsOrderSaga);
+  yield takeLatest(
+    updateSheetOrderAction.type,
+    updateSheetsOrderSaga
+  );
+  yield takeLatest(
+    deleteSheetOrderAction.type,
+    deleteSheetsOrderSaga
+  );
 }

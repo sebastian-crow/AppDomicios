@@ -4,6 +4,11 @@ import EditUser from "../components/addresses/auth/EditUser";
 import UserProductOrderList from "../components/addresses/orders/productOrders/UserProductOrderList";
 import OrderList from "../components/addresses/orders/ListOrders";
 
+
+// OrderProductEdit
+import { EditProductOrder } from "../components/addresses/orders/productOrders/EditProductOrder";
+import { EditOrderProduct } from "../components/addresses/orders/productOrders/EditOrderProduct";
+
 // Delivery Orders
 import TakeOrder from "../components/addresses/orders/TakeOrder";
 import EditOrder from "../components/addresses/orders/EditOrder";
@@ -15,15 +20,24 @@ import { Map } from "../components/addresses/maps/map/client/Map";
 import { GoogleSheetsConnect } from "../components/addresses/excel/googleSheetsConnect";
 
 var routesClient = [
-  // Orders
+  // OrdersProduct
   {
-    path: "/pedidos",
+    path: "/orderProducts",
     rol: ["client"],
     name: "Listar pedidos",
     icon: "nc-icon nc-cart-simple",
     component: UserProductOrderList,
     layout: "/client",
     visible: true,
+  },
+  {
+    path: "/editOrderProduct/:orderProductNumber",
+    rol: ["client"],
+    name: "Edit Order Product",
+    icon: "nc-icon nc-cart-simple",
+    component: EditOrderProduct,
+    layout: "/client",
+    visible: false,
   },
   {
     path: "/orderslist",
@@ -41,7 +55,7 @@ var routesClient = [
     rol: ["client"],
     component: TakeOrder,
     layout: "/client",
-    visible: false,
+    visible: true,
   },
   {
     path: "/editorder/:id",

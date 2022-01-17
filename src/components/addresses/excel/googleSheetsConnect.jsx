@@ -53,7 +53,7 @@ export const GoogleSheetsConnect = (props) => {
                   <Input
                     type="text"
                     id="sheet.besUrl"
-                    value={user.googleSheets}
+                    defaultValue={user.googleSheets}
                     placeholder="Agrega tu link de sheet.bes para conectar tu perfil con tu cuenta de google sheets"
                     onChange={handleGoogleSheetsChange}
                   />

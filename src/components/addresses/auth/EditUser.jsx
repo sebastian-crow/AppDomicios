@@ -1,32 +1,39 @@
 // React
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import { push } from "redux-first-history";
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 
 // Reducers
-import { actualizarUsuarioAction } from "../../../store/reducer";
+import { actualizarUsuarioAction } from '../../../store/reducer';
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
+import {
+  Container,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Button,
+} from 'reactstrap';
 
 // Moment
-import moment from "moment";
+import moment from 'moment';
 
 // Take Order Component
 const EditUser = (props) => {
   const dispatch = useDispatch();
 
-  const password = useFormInput("");
+  const password = useFormInput('');
   const user = useSelector((state) => state.login.user);
   const name = useFormInput(user.name);
   const lastName = useFormInput(user.lastName);
   const typeDocument = useFormInput(user.typeDocument);
   const documentNumber = useFormInput(user.documentNumber);
   const bornDate = useFormInput(
-    moment(user.bornDate).format("YYYY-MM-DD")
+    moment(user.bornDate).format('YYYY-MM-DD')
   );
   const [error, setError] = useState(null);
 
@@ -40,10 +47,10 @@ const EditUser = (props) => {
       documentNumber: documentNumber.value,
       password: password.value,
       bornDate: bornDate.value,
-      rol: "client",
+      rol: 'client',
     };
     dispatch(actualizarUsuarioAction(data));
-    dispatch(push("/"));
+    dispatch(push('/'));
   };
 
   return (
@@ -117,7 +124,7 @@ const EditUser = (props) => {
                 <div className="">
                   <Button variant="success" size="lg" type="submit">
                     Guardar
-                  </Button>{" "}
+                  </Button>{' '}
                   {``}
                 </div>
               </FormGroup>

@@ -10,29 +10,48 @@ import { Button } from 'reactstrap';
 
 // Reducers
 import {
-  getAllOrderAction,
-  deleteOrderAction,
   getSheetsOrderAction,
+  deleteSheetOrderAction,
 } from '../../../../store/reducer';
 
 const UserProductOrderList = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
-  const sheetsOrders = useSelector((state) =>
-    state.ui.sheetsOrder.filter((order) => order.client === user.id)
-  );
+  const sheetsOrders = useSelector((state) => state.ui.sheetsOrder);
 
-  const handleDelete = (event) => {
+  const [activeLink, setActiveLink] = React.useState(false);
+  const [link, setLink] = React.useState(null);
+  //when this state change to true show the table info and the link
+
+  // Hanlde Delete
+  const handleDelete = (event, orderNumber) => {
     event.preventDefault();
     const data = {};
-    dispatch(deleteOrderAction(data));
-    dispatch(getAllOrderAction());
-    dispatch(push('/orderslist'));
+    fetch(`${user.googleSheets}/Numero de Orden/${orderNumber}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((dataRes) => {
+        console.log(dataRes);
+        //dispatch(deleteSheetOrderAction(data));
+        dispatch(push('/client/orderProducts'));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  // Handle Set Link
+  const handleSetLikn = (e, link) => {
+    e.preventDefault();
+    setActiveLink(true);
+    setLink(link);
+    console.log("What's happend?");
+    console.log('What is link', link);
   };
 
   // Update List
   React.useEffect(() => {
-    dispatch(getAllOrderAction());
     dispatch(getSheetsOrderAction(user.googleSheets));
   }, [dispatch, sheetsOrders]);
 
@@ -61,16 +80,19 @@ const UserProductOrderList = () => {
               <th scope="col">Nota Entrega</th>
               <th scope="col">Paquete A Entregar</th>
               <th scope="col">Estado Pedido </th>
-              <th scope="col">Domiciliary</th>
+              <th scope="col">Domiciliario</th>
               <th scope="col">Dirección Recogida</th>
               <th scope="col">Hora Entrega</th>
               <th scope="col">Ubicación Entrega</th>
               <th scope="col">Foto Entrega</th>
               <th scope="col">Nota Entrega</th>
-              <th scope="col">Ubicación en Mapa</th>
               <th scope="col">Editar</th>
-              <th scope="col">Cancelar</th>
-              <th scope="col">Tomar Orden</th>
+              <th scope="col">Eliminar</th>
+              {activeLink ? (
+                <th scope="col">Link</th>
+              ) : (
+                <th scope="col">Tomar Orden</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -87,7 +109,7 @@ const UserProductOrderList = () => {
                 <td>{order['Nota entrega']}</td>
                 <td>{order['Paquete a entregar']}</td>
                 <td>{order['Estado Pedido']}</td>
-                <td>{order['Domiciliary']}</td>
+                <td>{order['Domiciliario']}</td>
                 <td>{order['Direccion Recogida']}</td>
                 <td>{order['Hora entrega']}</td>
                 <td>{order['Ubicacion entrega']}</td>
@@ -98,20 +120,9 @@ const UserProductOrderList = () => {
                     onClick={(e) => {
                       e.preventDefault;
                       dispatch(
-                        push(`/client/clientmap/${order._id}`)
-                      );
-                    }}
-                    variant="primary"
-                  >
-                    Mapa{' '}
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault;
-                      dispatch(
-                        push(`/client/editorder/${order._id}`)
+                        push(
+                          `/client/editOrderProduct/${order['Numero de Orden']}`
+                        )
                       );
                     }}
                     variant="warning"
@@ -120,25 +131,32 @@ const UserProductOrderList = () => {
                   </Button>
                 </td>
                 <td>
-                  <Button onClick={handleDelete} variant="danger">
-                    Cancelar Orden
-                  </Button>
-                </td>
-                <td>
                   <Button
-                    onClick={(e) => {
-                      e.preventDefault;
-                      dispatch(
-                        push(
-                          `/client/takeorder/${user.id}/${order['Numero de Orden']}/${order['Nombres y Apellidos']}`
-                        )
-                      );
-                    }}
-                    variant="success"
+                    onClick={(event) =>
+                      handleDelete(event, order['Numero de Orden'])
+                    }
+                    variant="danger"
                   >
-                    Crear Link{' '}
+                    Eliminar
                   </Button>
                 </td>
+                {activeLink ? (
+                  <td>{link}</td>
+                ) : (
+                  <td>
+                    <Button
+                      onClick={(e) =>
+                        handleSetLikn(
+                          e,
+                          (`${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order['Numero de Orden']}/${order['Nombres y Apellidos']}`)
+                        )
+                      }
+                      variant="success"
+                    >
+                      Crear Link{' '}
+                    </Button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
