@@ -330,67 +330,6 @@ function* getAllDomiciliarySaga() {
   }
 }
 
-// Products
-
-function* getAllProductSaga() {
-  try {
-    const { data } = yield call(api.getAllProducts);
-    yield put(getAllProductDoneAction(data));
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-function* createProductSaga(action) {
-  try {
-    const { data } = yield call(api.createProduct, action.payload);
-    if (data.status === 200) {
-      yield put(createProductDoneAction(data));
-    } else {
-      yield put(errorCreateProduct(data.status));
-    }
-  } catch (error) {
-    yield put(errorCreateProduct('Error inesperado'));
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-function* updateProductSaga(action) {
-  try {
-    const { data } = yield call(api.updateProduct, action.payload);
-    yield put(updateProductDoneAction(data));
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-function* deleteProductSaga(action) {
-  try {
-    const data = yield call(api.deleteProduct, action.payload);
-    if (data.status === 200) {
-      yield put(deleteProductDoneAction());
-      yield put(getAllProductAction());
-    } else {
-      yield put(errorDeleteProduct(data.status));
-    }
-  } catch (error) {
-    yield put(errorDeleteProduct('Error inesperado'));
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
 // Orders
 
 function* getAllOrderSaga() {
