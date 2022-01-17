@@ -188,7 +188,7 @@ function* locationChangeSaga(action) {
     if (pathname === '/') {
       switch (user.rol) {
         case 'client':
-          yield put(push('/client/pedidos'));
+          yield put(push('/client/orderProducts'));
           break;
         case 'admin':
           yield put(push('/admin/orderslist'));
@@ -485,14 +485,7 @@ export function* rootSaga() {
     getFromDealerPositionAction.type,
     getFromDealerPositionSaga
   );
-  //yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
-
-  // Products
-  yield takeLatest(getAllProductAction.type, getAllProductSaga);
-  yield takeEvery(createProductAction.type, createProductSaga);
-  yield takeLatest(updateProductAction.type, updateProductSaga);
-  yield takeLatest(deleteProductAction.type, deleteProductSaga);
 
   // Users
   yield takeLatest(getAllUserAction.type, getAllUserSaga);
