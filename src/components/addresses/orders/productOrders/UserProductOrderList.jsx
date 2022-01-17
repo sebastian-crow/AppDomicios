@@ -52,7 +52,9 @@ const UserProductOrderList = () => {
 
   // Update List
   React.useEffect(() => {
-    dispatch(getSheetsOrderAction(user.googleSheets));
+    if (!sheetsOrders.length) {
+      dispatch(getSheetsOrderAction(user.googleSheets));
+    }
   }, [dispatch, sheetsOrders]);
 
   return (
@@ -60,16 +62,16 @@ const UserProductOrderList = () => {
       <div
         style={{
           position: 'relative',
-          left: '10%',
-          height: '600px',
-          width: '80%',
+          left: '2%',
+          height: '90%',
+          width: '95%',
           overflow: 'scroll',
         }}
       >
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">Número de Orden</th>
+              <th scope="col">#</th>
               <th scope="col">Fecha Creación</th>
               <th scope="col">Nombres y Apellidos</th>
               <th scope="col">Telefono Client</th>
@@ -148,7 +150,7 @@ const UserProductOrderList = () => {
                       onClick={(e) =>
                         handleSetLikn(
                           e,
-                          (`${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order['Numero de Orden']}/${order['Nombres y Apellidos']}`)
+                          `${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order['Numero de Orden']}/${order['Nombres y Apellidos']}`
                         )
                       }
                       variant="success"
