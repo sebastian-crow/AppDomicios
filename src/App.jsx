@@ -25,6 +25,10 @@ function App() {
 
   // Primera Ruta Almacenada, ruta de formulario
   const previousURL = window.location.href;
+  const previousURLToSave = previousURL.startsWith(
+    `${process.env.REACT_APP_REACT_HOST}/client/takeorder/`
+  );
+  console.log('PREVIOUS URL TO SAVE ', previousURLToSave);
   if (previousURL !== `${process.env.REACT_APP_REACT_HOST}/login`)
     localStorage.setItem('formURL', previousURL);
 

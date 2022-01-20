@@ -108,7 +108,6 @@ function* loginSaga(action) {
     if (data) {
       var webPush = localStorage.getItem('webpush');
       var webPush = JSON.parse(webPush);
-      console.log(webPush);
       if (webPush) {
         yield put(
           actualizarUsuarioAction({
@@ -175,6 +174,7 @@ function* logoutSagas(action) {
     localStorage.removeItem('formURL');
     localStorage.removeItem('authURL');
     localStorage.removeItem('defaultRedirectURL');
+    localStorage.removeItem('ordersProduct');
   } catch (error) {
     console.error(error);
   } finally {
@@ -207,11 +207,16 @@ function* locationChangeSaga(action) {
     const defaultRedirectURL = localStorage.getItem(
       'defaultRedirectURL'
     );
-    // const orderProduct = yield select((state) =>
-    //   state.ui.ordersProduct.filter(
-    //     (order) => order.userPlatform === user.id
-    //   )
-    // );
+    const { data } = yield call(api.getAllOrdersProduct);
+    yield localStorage.setItem('ordersProduct', JSON.stringify(data));
+    const ordersproduct = localStorage.getItem('ordersProduct');
+    const productOrders = JSON.parse(ordersproduct);
+    const orderProduct = [];
+    for (let i = 0; i < productOrders.length; i++) {
+      if (productOrders[i].userPlatform === user.id) {
+        orderProduct.push(productOrders[i]);
+      }
+    }
     if (pathname === '/') {
       switch (user.rol) {
         case 'client':
@@ -225,22 +230,13 @@ function* locationChangeSaga(action) {
               'defaultRedirectURL',
               defaultRedirectURL
             );
-          if (defaultRedirectURL && authURL && formURL) {
-            yield put(push('/client/takeorder/2/5/Datodeusuario'));
+          if (
+            defaultRedirectURL &&
+            authURL &&
+            formURL.endsWith(orderProduct[0].linkToOrder)
+          ) {
+            yield put(push(orderProduct[0].linkToOrder));
           }
-          // if (
-          //   formURL !==
-          //   `${REACT_APP_REACT_HOST}/${orderProduct[0]?.linkToOrder}`
-          // )
-          //   localStorage.removeItem('formURL');
-
-          // if (
-          //   defaultRedirectURL &&
-          //   authURL &&
-          //   formURL === orderProduct[0]?.linkToOrder
-          // ) {
-          //   yield put(push(orderProduct[0]?.linkToOrder));
-          // }
 
           break;
         case 'admin':

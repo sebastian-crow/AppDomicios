@@ -1,27 +1,35 @@
 // store current state in local session store which can be restored
 // on page reload.
-import { createAction, createReducer } from "@reduxjs/toolkit";
-import { LOCATION_CHANGE } from "redux-first-history";
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { LOCATION_CHANGE } from 'redux-first-history';
 
-export const restoreSessionStateAction = createAction("SESSION_RESTORE_STATE");
-export const saveSessionStateAction = createAction("SESSION_SAVE_STATE");
-export const cleanSessionStateAcion = createAction("CLEAN_SESSION_STATE_ACION");
+export const restoreSessionStateAction = createAction(
+  'SESSION_RESTORE_STATE'
+);
+export const saveSessionStateAction = createAction(
+  'SESSION_SAVE_STATE'
+);
+export const cleanSessionStateAcion = createAction(
+  'CLEAN_SESSION_STATE_ACION'
+);
 
 import {
   setSessionCookie,
   RemoveSessionCookie,
   getSessionCookie,
-} from "../../session";
+} from '../../session';
 
 function saveUiState(state) {
   const data = {
     ui: state.ui,
     login: state.login,
   };
+  console.log('what is this data', data);
+  console.log('What is this state', state);
   try {
     setSessionCookie(data);
     console.error(data);
-    localStorage.setItem("store", JSON.stringify(data));
+    localStorage.setItem('store', JSON.stringify(data));
   } catch (err) {
     // console.error("Unable to store state", err);
   }
@@ -35,7 +43,7 @@ function loadUiState(state) {
       state.login = data.login;
     }
   } catch (err) {
-    console.error("Unable to restore state", err);
+    console.error('Unable to restore state', err);
   }
 }
 
@@ -43,7 +51,7 @@ function cleanUiState(state) {
   try {
     RemoveSessionCookie();
   } catch (err) {
-    console.error("Unable to restore state", err);
+    console.error('Unable to restore state', err);
   }
 }
 
