@@ -28,12 +28,7 @@ function App() {
   const previousURLToSave = previousURL.startsWith(
     `${process.env.REACT_APP_REACT_HOST}/client/takeorder/`
   );
-  console.log('PREVIOUS URL TO SAVE ', previousURLToSave);
-  if (previousURL !== `${process.env.REACT_APP_REACT_HOST}/login`)
-    localStorage.setItem('formURL', previousURL);
-
-  const formURL = localStorage.getItem('formURL');
-  console.log('FORM URL', formURL);
+  if (previousURLToSave) localStorage.setItem('formURL', previousURL);
 
   React.useEffect(() => {
     if (!user) {

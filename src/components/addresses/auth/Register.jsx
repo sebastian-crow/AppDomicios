@@ -1,25 +1,34 @@
 // React
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { Container, Button, Form, Alert, Label, FormGroup, Input } from "reactstrap";
+import {
+  Container,
+  Button,
+  Form,
+  Alert,
+  Label,
+  FormGroup,
+  Input,
+  FormFeedback,
+} from 'reactstrap';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import Select from "react-select";
+import { useDispatch, useSelector } from 'react-redux';
+import Select from 'react-select';
 
 // Reducers
-import { registerAction } from "../../../store/reducer";
+import { registerAction } from '../../../store/reducer';
 
 const SignUp = () => {
   const error = useSelector((state) => state.login.errorRegistro);
-  const name = useFormInput("");
-  const lastName = useFormInput("");
-  const documentNumber = useFormInput("");
-  const [typeDocument, setTypeDocument] = React.useState("cc");
-  const password = useFormInput("");
-  const bornDate = useFormInput("");
-  const email = useFormInput("");
-  const [rol, setRol] = React.useState("client");
+  const name = useFormInput('');
+  const lastName = useFormInput('');
+  const documentNumber = useFormInput('');
+  const [typeDocument, setTypeDocument] = React.useState('cc');
+  const password = useFormInput('');
+  const bornDate = useFormInput('');
+  const email = useFormInput('');
+  const [rol, setRol] = React.useState('client');
   const dispatch = useDispatch();
   const handleRegister = (event) => {
     event.preventDefault();
@@ -109,12 +118,12 @@ const SignUp = () => {
               placeholder="Tipo de documento"
               options={[
                 {
-                  value: "cc",
-                  label: "Cedula",
+                  value: 'cc',
+                  label: 'Cedula',
                 },
                 {
-                  value: "nit",
-                  label: "NIT",
+                  value: 'nit',
+                  label: 'NIT',
                 },
               ]}
             />
@@ -136,12 +145,12 @@ const SignUp = () => {
               placeholder="Rol"
               options={[
                 {
-                  value: "client",
-                  label: "Cliente",
+                  value: 'client',
+                  label: 'Cliente',
                 },
                 {
-                  value: "domiciliary",
-                  label: "Domiciliario",
+                  value: 'domiciliary',
+                  label: 'Domiciliario',
                 },
               ]}
             />
@@ -149,7 +158,7 @@ const SignUp = () => {
           <Button variant="secondary btn-block" type="submit">
             Registrar
           </Button>
-          {error && <Alert variant="danger">{error}</Alert>}
+          {error && <FormFeedback tooltip>{error}</FormFeedback>}
         </Form>
       </Container>
     </>
