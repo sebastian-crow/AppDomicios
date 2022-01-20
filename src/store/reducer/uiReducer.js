@@ -101,6 +101,18 @@ export const deleteSheesOrderDoneAction = createAction(
   'DELETE_SHEET_ORDER_DONE_ACTION'
 );
 
+/*
+ * OrderProduct
+ * Create
+ */
+export const getAllOrderProductAction = createAction(
+  'GET_ALL__ORDER_PRODUCT_ACTION'
+);
+
+export const getAllOrderProductDoneAction = createAction(
+  'GET_ALL_ORDER_PRODUCT_DONE_ACTION'
+);
+
 // UI state reducers
 const initialState = {
   position: {
@@ -112,6 +124,7 @@ const initialState = {
   clients: [],
   domiciliarys: [],
   orders: [],
+  ordersProduct: [],
   sheetsOrder: [],
 };
 
@@ -180,6 +193,12 @@ const uiReducer = createReducer(initialState, {
   [getAllOrderDoneAction]: (state, action) => {
     state.orders = action.payload;
   },
+
+  // Get All Orders Products
+  [getAllOrderProductDoneAction]: (state, action) => {
+    state.ordersProduct = action.payload;
+  },
+
   // Get All Google Sheets by User
   [getSheetsOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;
@@ -189,7 +208,7 @@ const uiReducer = createReducer(initialState, {
   [updateSheetOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;
   },
-  
+
   // Delete Sheets Orders
   [deleteSheesOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;

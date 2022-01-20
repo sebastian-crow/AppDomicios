@@ -21,6 +21,10 @@ import {
   FormGroup,
   Input,
   Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from 'reactstrap';
 
 // React Select
@@ -52,13 +56,11 @@ const TakeOrder = (props) => {
 
   const { orderNumberSheets, idClientEmpresa } = useParams();
 
-  const sheetsOrder = useSelector((state) => state.ui.sheetsOrder);
-
-  const currentSheetsOrder = sheetsOrder.map((order) => {
-    if (order['# de Orden'] === orderNumberSheets) {
-      return order;
-    }
-  })[0];
+  const currentSheetsOrder = useSelector((state) =>
+    state.ui.sheetsOrder.filter(
+      (order) => order['Numero de Orden'] === orderNumberSheets
+    )
+  );
 
   const [orderNumber, setorderNumber] = React.useState(
     currentSheetsOrder?.['# de Orden']
@@ -89,6 +91,10 @@ const TakeOrder = (props) => {
   const [dealerData, setDealerData] = React.useState({});
   const [dealerDataGoogleSheets, setDealerDataGoogleSheets] =
     React.useState({});
+
+  const [toggle, setToggle] = React.useState(false);
+  const [confirm, setConfirm] = React.useState(false);
+  const [cancel, setCancel] = React.useState(false);
 
   // Handle Events OnChange
   // Handle names and last names
@@ -227,31 +233,45 @@ const TakeOrder = (props) => {
     window.open(url, '_blank');
   };
 
+  // Handle Close
+  const handleClose = () => setToggle(!toggle);
+
   // Handle Save
   const handleSave = () => {
+    setToggle(!toggle);
+    setConfirm(!confirm);
+
+    if (confirm) {
+      console.log('Send all data');
+    } else {
+      console.log("Don't send nothing");
+    }
+
     let data = {
-      orderNumber: orderNumber,
-      ticket: orderText,
-      nameLasName: nameLastName,
-      document: documentNumber,
-      phone: phoneNumber,
+      orderNumber: orderNumber ? orderNumber : 902,
+      ticket: orderText ? orderText : 'Pedido Error',
+      phone: Number(phoneNumber),
       departament: department.label.toString(),
       city: city.length ? city.label : 'DEFAULT',
-      fistAddress: firstAddress,
+      firstAddress: firstAddress,
       lastAddress: finalAddress,
-      //correoElectronico: email,
-      paymentMethod: paymentMethod.label,
-      domiciliary: dealerData.value.toString(),
-      date: moment(Date.now()).format('DD/MM/YYYY'),
-      client: user.id.toString(),
+      paymentMethod: paymentMethod.label.toString(),
+      domiciliary: Number(dealerData.value),
+      date: moment(Date.now()).format('YYYY/MM/DD'),
+      clientName: user.name,
+      clientLastName: user.lastName,
+      clientDocumentNumber: Number(user.documentNumber),
+      clientEmail: user.email,
+      clientId: user.id,
       clientCompany: idClientEmpresa ? idClientEmpresa : '0',
       state: 'En proceso',
     };
 
-    dispatch(createOrderAction(data));
-    dispatch(push('/orderlist'));
-    openWhatsapp();
-    3;
+    console.log('Data', data);
+
+    // dispatch(createOrderAction(data));
+    // dispatch(push('/client/orderslist'));
+    // openWhatsapp();
   };
 
   // Get Dealers Array
@@ -270,18 +290,6 @@ const TakeOrder = (props) => {
           <Form className="form">
             <h2 className="takeOrderTitle">Tomar Orden</h2>
             <Col>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="documentNumber"
-                    placeholder="Cédula"
-                    onChange={handleDocumentNumber}
-                    defaultValue={documentNumber}
-                    {...documentNumber}
-                  />
-                </Col>
-              </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
                   <Select
@@ -335,6 +343,17 @@ const TakeOrder = (props) => {
               </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
+                  <Input
+                    type="text"
+                    id="phone"
+                    placeholder="Celular"
+                    onChange={handlePhoneChange}
+                  />
+                </Col>
+              </FormGroup>
+
+              <FormGroup row>
+                <Col sm={10}>
                   <Select
                     onChange={handePayMethodChange}
                     placeholder="Método De Pago"
@@ -371,6 +390,12 @@ const TakeOrder = (props) => {
                     Crear Orden
                   </Button>{' '}
                   {``}
+                  <MyVerticallyCenteredModal
+                    toggle={toggle}
+                    handleChange={handleSave}
+                    handleClose={handleClose}
+                    confirm={confirm}
+                  />
                 </div>
               </FormGroup>
             </Col>
@@ -384,6 +409,33 @@ const TakeOrder = (props) => {
         </Container>
       </div>
     </>
+  );
+};
+
+const MyVerticallyCenteredModal = (props) => {
+  const {
+    toggle,
+    handleChange,
+    confirm,
+    handleConfirm,
+    handleClose,
+  } = props;
+  return (
+    <Modal isOpen={toggle} toggle={handleChange}>
+      <ModalHeader toggle={handleChange}>
+        <h5>Confirmar</h5>
+      </ModalHeader>
+      <ModalBody>
+        ¿Estás seguro/a de que los datos ingresados en el formulario
+        son correctos?
+      </ModalBody>
+      <ModalFooter>
+        <Button confirm={handleConfirm} onClick={handleChange}>
+          Aceptar
+        </Button>
+        <Button onClick={handleClose}>Cancelar</Button>
+      </ModalFooter>
+    </Modal>
   );
 };
 

@@ -1,5 +1,5 @@
 // React
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Button,
   Col,
@@ -10,14 +10,14 @@ import {
   Label,
   FormGroup,
   Input,
-} from "reactstrap";
+} from 'reactstrap';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import { push } from "redux-first-history";
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 
 // Reducer
-import { loginAction } from "../../../store/reducer";
+import { loginAction } from '../../../store/reducer';
 
 // Login Page Component
 const LoginPage = () => {
@@ -29,6 +29,9 @@ const LoginPage = () => {
   const handleLogin = (event) => {
     event.preventDefault();
     dispatch(loginAction({ email, password }));
+    const authURL = window.location.href;
+    const previousURL = localStorage.getItem('authURL');
+    if (!previousURL) localStorage.setItem('authURL', authURL);
   };
 
   const handleChangeEmail = (event) => {
@@ -89,7 +92,8 @@ const LoginPage = () => {
           </Col>
         </Row>
         <h6 className="mt-5 p-5 text-center text-secondary ">
-          Copyright © 2021 Raven Designs For Dummies. All Rights Reserved.
+          Copyright © 2021 Raven Designs For Dummies. All Rights
+          Reserved.
         </h6>
       </Container>
     </>

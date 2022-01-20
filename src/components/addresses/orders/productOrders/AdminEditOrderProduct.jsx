@@ -16,111 +16,124 @@ import {
   Input,
   Button,
   Badge,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from 'reactstrap';
 
 // Moment
 import moment from 'moment';
 
-// Take Order Component
-export const EditOrderProduct = (props) => {
+// Reducers
+import {
+  updateOrderProductAction,
+  getAllOrderProductAction,
+} from '../../../../store/reducer';
+
+// Edit Order Product Component
+export const AdminEditOrderProduct = (props) => {
   const dispatch = useDispatch();
 
   const { orderProductNumber } = useParams();
 
-  const sheetsInfoUser = useSelector(
-    (state) => state.login.user.googleSheets
-  );
-
-  const currentSheet = useSelector((state) =>
-    state.ui.sheetsOrder.filter(
-      (order) => order['Numero de Orden'] === orderProductNumber
+  const currentOrderProduct = useSelector((state) =>
+    state.ui.ordersProduct.filter(
+      (order) => order.orderNumber == orderProductNumber
     )
   );
 
-  // Current Shet Information form handle
+  console.log('Current order product,', currentOrderProduct);
+
+  // Component State
+  const [toggle, setToggle] = React.useState(false);
+  const [confirm, setConfirm] = React.useState(false);
+  const [cancel, setCancel] = React.useState(false);
+
+  // Handle Close
+  const handleClose = () => setToggle(!toggle);
+
+  // Current orderProduct Information form handle
   const orderNumber = useFormInput(
-    currentSheet[0]['Numero de Orden']
+    currentOrderProduct[0].orderNumber
   );
   const creationDate = useFormInput(
-    currentSheet[0]['Fecha Creacion']
+    currentOrderProduct[0].creationDate
   );
   const nameLastName = useFormInput(
-    currentSheet[0]['Nombres y Apellidos']
+    currentOrderProduct[0].nameLastName
   );
   const clientPhone = useFormInput(
-    currentSheet[0]['Telefono cliente']
+    currentOrderProduct[0].clientPhone
   );
   const deliveryAddress = useFormInput(
-    currentSheet[0]['Direccion entrega']
+    currentOrderProduct[0].deliveryAddress
   );
-  const city = useFormInput(currentSheet[0]['Ciudad']);
-  const neighbourhood = useFormInput(currentSheet[0]['Barrio']);
+  const city = useFormInput(currentOrderProduct[0].city);
+  const neighbourhood = useFormInput(
+    currentOrderProduct[0].neighbourhood
+  );
   const residentialGroupName = useFormInput(
-    currentSheet[0]['Nombre Conjunto Residencial']
+    currentOrderProduct[0].residentialGroupName
   );
-  const houseNumber = useFormInput(
-    currentSheet[0]['Numero de Casa o apto']
+  const deliveryNote = useFormInput(
+    currentOrderProduct[0].deliveryNote
   );
-  const deliveryNote = useFormInput(currentSheet[0]['Nota entrega']);
   const deliveryPacket = useFormInput(
-    currentSheet[0]['Paquete a entregar']
+    currentOrderProduct[0].deliveryPacket
   );
-  const orderState = useFormInput(currentSheet[0]['Estado Pedido']);
-  const dealer = useFormInput(currentSheet[0]['Domiciliario']);
+  const orderState = useFormInput(currentOrderProduct[0].orderState);
+  const dealer = useFormInput(currentOrderProduct[0].dealer);
   const pickUpAddress = useFormInput(
-    currentSheet[0]['Direccion Recogida']
+    currentOrderProduct[0].pickUpAddress
   );
-  const deliveryHour = useFormInput(currentSheet[0]['Hora entrega']);
+  const deliveryHour = useFormInput(
+    currentOrderProduct[0].deliveryHour
+  );
   const deliveryUbication = useFormInput(
-    currentSheet[0]['Ubicacion entrega']
+    currentOrderProduct[0].deliveryUbication
   );
   const deliveryPicture = useFormInput(
-    currentSheet[0]['Foto entrega']
+    currentOrderProduct[0].deliveryPicture
   );
 
   const [error, setError] = useState(null);
-
-  const sendInfoToSheetsBest = (data) => {
-    fetch(`${sheetsInfoUser}/Numero de Orden/${orderProductNumber}`, {
-      method: 'PATCH',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((r) => r.json())
-      .then(console.log)
-      .catch(console.error);
-  };
 
   const handleUpdate = (event) => {
     event.preventDefault();
     setError(null);
     let data = {
-      'Numero de Orden': orderNumber.value,
-      'Fecha Creacion': creationDate.value,
-      'Nombres y Apellidos': nameLastName.value,
-      'Telefono cliente': clientPhone.value,
-      'Direccion entrega': deliveryAddress.value,
-      Ciudad: city.value,
-      Barrio: neighbourhood.value,
-      'Nombre Conjunto Residencial': residentialGroupName.value,
-      'Numero de Casa o apto': houseNumber.value,
-      'Nota entrega': deliveryNote.value,
-      'Paquete a entregar': deliveryPacket.value,
-      'Estado Pedido': orderState.value,
-      Domiciliario: dealer.value,
-      'Direccion Recogida': pickUpAddress.value,
-      'Hora entrega': deliveryHour.value,
-      'Ubicacion entrega': deliveryUbication.value,
-      'Foto entrega': deliveryPicture.value,
+      orderNumber: orderNumber.value,
+      creationDate: creationDate.value,
+      nameLastName: nameLastName.value,
+      clientPhone: clientPhone.value,
+      deliveryAddress: deliveryAddress.value,
+      city: city.value,
+      neighbourhood: neighbourhood.value,
+      residentialGroupName: residentialGroupName.value,
+      deliveryNote: deliveryNote.value,
+      deliveryPacket: deliveryPacket.value,
+      orderState: orderState.value,
+      dealer: dealer.value,
+      pickUpAddress: pickUpAddress.value,
+      deliveryHour: deliveryHour.value,
+      deliveryUbication: deliveryUbication.value,
+      deliveryPicture: deliveryPicture.value,
     };
-    console.log('What is all this dta?', data);
-
-    sendInfoToSheetsBest(data);
-    dispatch(push('/client/orderProducts'));
+    setToggle(!toggle);
+    setConfirm(!confirm);
+    if (confirm) {
+      dispatch(updateOrderProductAction(data));
+      dispatch(push('/admin/ordersproductlist'));
+    } else {
+      console.log("Don't delete nothing");
+    }
   };
+
+  React.useEffect(() => {
+    if (!currentOrderProduct.length)
+      dispatch(getAllOrderProductAction());
+  }, [dispatch]);
 
   return (
     <>
@@ -222,18 +235,6 @@ export const EditOrderProduct = (props) => {
 
               <FormGroup row>
                 <Col sm={10}>
-                  <Badge color="primary">Número de Casa o Apto</Badge>
-                  <Input
-                    type="text"
-                    id="houseNumber"
-                    placeholder="Número de Casa o Apto"
-                    {...houseNumber}
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup row>
-                <Col sm={10}>
                   <Badge color="primary">Nota Entrega</Badge>
                   <Input
                     type="text"
@@ -311,11 +312,21 @@ export const EditOrderProduct = (props) => {
                 </Col>
               </FormGroup>
               <FormGroup className="">
-                <div className="">
-                  <Button variant="success" size="lg" type="submit">
+                <div>
+                  <Button
+                    variant="success"
+                    size="lg"
+                    onClick={handleUpdate}
+                  >
                     Guardar
                   </Button>{' '}
                   {``}
+                  <MyVerticallyCenteredModal
+                    toggle={toggle}
+                    handleChange={handleUpdate}
+                    handleClose={handleClose}
+                    confirm={confirm}
+                  />
                 </div>
               </FormGroup>
             </Col>
@@ -337,4 +348,31 @@ const useFormInput = (initialValue) => {
     value,
     onChange: handleChange,
   };
+};
+
+const MyVerticallyCenteredModal = (props) => {
+  const {
+    toggle,
+    handleChange,
+    confirm,
+    handleConfirm,
+    handleClose,
+  } = props;
+  return (
+    <Modal isOpen={toggle} toggle={handleChange}>
+      <ModalHeader toggle={handleChange}>
+        <h5>Confirmar</h5>
+      </ModalHeader>
+      <ModalBody>
+        ¿Estás seguro/a de que desea actualizar los datos de este
+        pedido?
+      </ModalBody>
+      <ModalFooter>
+        <Button confirm={handleConfirm} onClick={handleChange}>
+          Aceptar
+        </Button>
+        <Button onClick={handleClose}>Cancelar</Button>
+      </ModalFooter>
+    </Modal>
+  );
 };

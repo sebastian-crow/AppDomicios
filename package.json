@@ -57,6 +57,8 @@
     "path-browserify": "^1.0.1",
     "perfect-scrollbar": "^1.5.5",
     "react": "^17.0.2",
+    "react-bootstrap-icons": "^1.7.2",
+    "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "17.0.2",
     "react-excel-renderer": "^1.1.0",
     "react-geocode": "^0.2.3",

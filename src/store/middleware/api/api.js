@@ -1,9 +1,9 @@
-import axios from "axios";
-import { CANCEL } from "redux-saga";
+import axios from 'axios';
+import { CANCEL } from 'redux-saga';
 let client;
 
 export const getSessionToken = () => {
-  const uiStore = localStorage.getItem("store");
+  const uiStore = localStorage.getItem('store');
   var ui = JSON.parse(uiStore);
   if (ui) return ui.login.user.token;
   else return null;
@@ -13,7 +13,9 @@ export const getSessionToken = () => {
 function getClient() {
   if (!client) {
     client = axios.create({
-      baseURL: process.env.REACT_APP_BACK_END + "/api" || "http://localhost:3006" + "/api",
+      baseURL:
+        process.env.REACT_APP_BACK_END + '/api' ||
+        'http://localhost:3006' + '/api',
     });
   }
   return client;
@@ -31,12 +33,12 @@ const callAPI = (options) => {
   };
   if (token) {
     opts.headers = {
-      Accept: "application/json",
-      Authorization: "Bearer " + token,
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
     };
   } else {
     opts.headers = {
-      Accept: "application/json",
+      Accept: 'application/json',
     };
   }
 
@@ -47,7 +49,7 @@ const callAPI = (options) => {
 
 export function login(params) {
   return callAPI({
-    method: "POST",
+    method: 'POST',
     url: `/auth`,
     data: params,
   });
@@ -55,7 +57,7 @@ export function login(params) {
 
 export function register(params) {
   return callAPI({
-    method: "POST",
+    method: 'POST',
     url: `/register`,
     data: params,
   });
@@ -63,7 +65,7 @@ export function register(params) {
 
 export function editUser(params) {
   return callAPI({
-    method: "PATCH",
+    method: 'PATCH',
     url: `/user`,
     data: params,
   });
@@ -71,7 +73,7 @@ export function editUser(params) {
 
 export function createPosition(params) {
   return callAPI({
-    method: "POST",
+    method: 'POST',
     url: `/positionUser`,
     data: params,
   });
@@ -79,44 +81,43 @@ export function createPosition(params) {
 
 export function getPositionFromUser(id) {
   return callAPI({
-    method: "GET",
+    method: 'GET',
     url: `/position/user/${id}`,
   });
 }
 
 export function getAllUsers() {
   return callAPI({
-    method: "GET",
+    method: 'GET',
     url: `/users`,
   });
 }
 
 export function getAllClients() {
   return callAPI({
-    method: "GET",
+    method: 'GET',
     url: `/user/client`,
   });
 }
 
 export function getAllDomiciliarys() {
   return callAPI({
-    method: "GET",
+    method: 'GET',
     url: `/user/domiciliary`,
   });
 }
 
-
 // Orders
 export function getAllOrders() {
   return callAPI({
-    method: "GET",
+    method: 'GET',
     url: `/order`,
   });
 }
 
 export function createOrder(params) {
   return callAPI({
-    method: "POST",
+    method: 'POST',
     url: `/order`,
     data: params,
   });
@@ -124,7 +125,7 @@ export function createOrder(params) {
 
 export function updateOrder(params) {
   return callAPI({
-    method: "PATCH",
+    method: 'PATCH',
     url: `/order` + params.id,
     data: params.data,
   });
@@ -132,8 +133,40 @@ export function updateOrder(params) {
 
 export function deleteOrder(params) {
   return callAPI({
-    method: "DELETE",
+    method: 'DELETE',
     url: `/order` + params.id,
+    data: params.data,
+  });
+}
+
+// Orders Product
+export function getAllOrdersProduct() {
+  return callAPI({
+    method: 'GET',
+    url: `/orderProduct`,
+  });
+}
+
+export function createOrderProduct(params) {
+  return callAPI({
+    method: 'POST',
+    url: `/orderProduct`,
+    data: params,
+  });
+}
+
+export function updateOrderProduct(params) {
+  return callAPI({
+    method: 'PATCH',
+    url: `/orderProduct` + params.id,
+    data: params.data,
+  });
+}
+
+export function deleteOrderProduct(params) {
+  return callAPI({
+    method: 'DELETE',
+    url: `/orderProduct` + params.id,
     data: params.data,
   });
 }
@@ -141,7 +174,23 @@ export function deleteOrder(params) {
 // Sheets Orders
 export function getSheetsOrder(params) {
   return callAPI({
-    method: "GET",
+    method: 'GET',
+    url: params,
+  });
+}
+
+// Update Sheets Orders
+export function updateSheetsOrder(params) {
+  return callAPI({
+    method: 'GET',
+    url: params,
+  });
+}
+
+// Delete Sheets Orders
+export function deleteSheetsOrder(params) {
+  return callAPI({
+    method: 'GET',
     url: params,
   });
 }

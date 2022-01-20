@@ -1,8 +1,13 @@
 // React
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 
 // Actions
 import {
@@ -10,24 +15,29 @@ import {
   updatePositionDealerAction,
   getFromDealerPositionAction,
   getAllDomiciliaryAction,
-  getAllOrderAction,
-} from "../../../../../store/reducer";
+  getAllOrderProductAction,
+} from '../../../../../store/reducer';
 
 // Mapbox GL
-import ReactMapGL, { Marker, Popup, Source, Layer } from "react-map-gl";
-
-// React Icons
-import { FaMapMarkerAlt } from "react-icons/fa";
+import ReactMapGL, {
+  Marker,
+  Popup,
+  Source,
+  Layer,
+} from 'react-map-gl';
 
 // CSS
-import "../style.css";
+import '../style.css';
+
+// React Boostrap Icons
+import { CheckLg, XLg } from 'react-bootstrap-icons';
 
 export const Map = (props) => {
   // Component State
   const [currentMarkerId, setCurrentMarkerId] = useState(null);
   const [viewport, setViewport] = useState({
-    width: "100vw",
-    height: "50vw",
+    width: '100vw',
+    height: '50vw',
     latitude: 6.343636,
     longitude: -75.512529,
     zoom: 8,
@@ -37,18 +47,21 @@ export const Map = (props) => {
   const dispatch = useDispatch();
 
   // Position, current Dealer and Order
-
   const positions = {
     client: {
-      position: useSelector((state) => state.ui.position.client.positionClient),
+      position: useSelector(
+        (state) => state.ui.position.client.positionClient
+      ),
       positionId: useSelector(
-        (state) => state.ui.position.client.positionClientId,
+        (state) => state.ui.position.client.positionClientId
       ),
     },
     dealer: {
-      position: useSelector((state) => state.ui.position.dealer.positionDealer),
+      position: useSelector(
+        (state) => state.ui.position.dealer.positionDealer
+      ),
       positionId: useSelector(
-        (state) => state.ui.position.dealer.positionDealerId,
+        (state) => state.ui.position.dealer.positionDealerId
       ),
     },
   };
@@ -57,29 +70,27 @@ export const Map = (props) => {
   const dealer = useSelector((state) => state.login.user);
   const dealerId = useSelector((state) => state.login.user.id);
 
-  const dealerPosition = JSON.parse(
-    positions.dealer.position.replace(/'/g, '"'),
-  );
-  const clientPosition = JSON.parse(
-    positions.client.position.replace(/'/g, '"'),
-  );
+  // const dealerPosition = JSON.parse(
+  //   positions.dealer.position.replace(/'/g, '"')
+  // );
+  // const clientPosition = JSON.parse(
+  //   positions.client.position.replace(/'/g, '"')
+  // );
 
   // Orders and Current Order
   const orderId = props.match.params.id;
-  const orders = useSelector((state) => state.ui.orders);
-  const currentOrder = [];
-  orders.map((order) => {
-    if (order._id === orderId) {
-      currentOrder.push(order);
-    }
-  });
-  const clientId = currentOrder[0].client.id;
+  console.log('order number', orderId);
+  const currentOrder = useSelector((state) =>
+    state.ui.orders.filter((order) => order.id == orderId)
+  );
+  console.log('Current order', currentOrder);
+  // const clientId = currentOrder[0].clientId;
 
   // Markers
   const markers = [
     {
       id: 20,
-      type: "order",
+      type: 'order',
       name: currentOrder[0].orderName,
       address: currentOrder[0].direccion,
       phoneNumber: 3413443482,
@@ -90,9 +101,9 @@ export const Map = (props) => {
     },
     {
       id: 10,
-      type: "user",
+      type: 'user',
       name: dealer.name,
-      address: "Cr 57A N#48-43 Copacabana Antioquia",
+      address: 'Cr 57A N#48-43 Copacabana Antioquia',
       phoneNumber: 323234373,
       coordinates: {
         lat: 6.343636,
@@ -108,10 +119,10 @@ export const Map = (props) => {
 
   // Road Between both points
   const Road = {
-    type: "Feature",
+    type: 'Feature',
     properties: {},
     geometry: {
-      type: "LineString",
+      type: 'LineString',
       coordinates: [
         [-75.56574, 6.24013],
         [-75.512529, 6.343636],
@@ -121,23 +132,23 @@ export const Map = (props) => {
 
   // UseEffect's
   useEffect(() => {
-    dispatch(getAllOrderAction());
-    dispatch(getAllDomiciliaryAction());
-  }, []);
+    if (!currentOrder.length) dispatch(getAllOrderProductAction());
+    //dispatch(getAllDomiciliaryAction());
+  }, [dispatch, currentOrder]);
 
-  // Get Current Location to Dealer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      dispatch(getFromDealerPositionAction(dealerId));
-    }, 5000);
+  // // Get Current Location to Dealer
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     dispatch(getFromDealerPositionAction(dealerId));
+  //   }, 5000);
 
-    return () => clearTimeout(timer);
-  }, [
-    dispatch,
-    positions.dealer.position,
-    positions.dealer.positionId,
-    dealerId,
-  ]);
+  //   return () => clearTimeout(timer);
+  // }, [
+  //   dispatch,
+  //   positions.dealer.position,
+  //   positions.dealer.positionId,
+  //   dealerId,
+  // ]);
 
   return (
     <>
@@ -145,8 +156,9 @@ export const Map = (props) => {
         <ReactMapGL
           {...viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_API}
-          onViewportChange={(nextViewport) => setViewport(nextViewport)}
-          //mapStyle=""
+          onViewportChange={(nextViewport) =>
+            setViewport(nextViewport)
+          }
         >
           {markers.map((marker) => (
             <>
@@ -156,8 +168,11 @@ export const Map = (props) => {
                 offsetLeft={-20}
                 offsetTop={-10}
               >
-                <Room
-                  style={{ fontSize: viewport.zoom * 5, cursor: "pointer" }}
+                <CheckLg
+                  style={{
+                    fontSize: viewport.zoom * 5,
+                    cursor: 'pointer',
+                  }}
                   onClick={() => handleMarkerClick(marker.id)}
                 />
               </Marker>
@@ -171,10 +186,10 @@ export const Map = (props) => {
                   onClose={() => setCurrentMarkerId(null)}
                 >
                   <div className="card">
-                    {marker.type === "user" && (
+                    {marker.type === 'user' && (
                       <label>Name: {marker.name}</label>
                     )}
-                    {marker.type === "order" && (
+                    {marker.type === 'order' && (
                       <label>Order Name: {marker.name}</label>
                     )}
                     <label>Address: {marker.address} </label>
@@ -184,24 +199,6 @@ export const Map = (props) => {
               )}
             </>
           ))}
-          {/* 
-            <Source id="polylineLayer" type="geojson" data={Road}>
-            <Layer
-              id="lineLayer"
-              type="line"
-              source="my-data"
-              layout={{
-                "line-join": "round",
-                "line-cap": "round",
-              }}
-              paint={{
-                "line-color": "rgba(3, 170, 238, 0.5)",
-                "line-width": 5,
-              }}
-            />
-          </Source>
-          
-          */}
         </ReactMapGL>
       </div>
     </>

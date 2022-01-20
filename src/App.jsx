@@ -1,25 +1,35 @@
-import React from "react";
-import { Router } from "react-router";
-import { Switch, Route } from "react-router-dom"; // Librería react-router-dom
-import { push } from "redux-first-history";
+import React from 'react';
+import { Router } from 'react-router';
+import { Switch, Route } from 'react-router-dom'; // Librería react-router-dom
+import { push } from 'redux-first-history';
 // Store and history
-import { history } from "./store/configureStore";
+import { history } from './store/configureStore';
 // Cookies Session
-import {  getSessionCookie } from "./session";
-import { useDispatch, useSelector } from "react-redux";
-import AdminLayout from "./layouts/AdminLayout";
-import NoAuth from "./layouts/NoAuth";
-import { restoreSessionStateAction } from "./store/reducer";
-import Login from "./components/addresses/auth/Login";
-import Register from "./components/addresses/auth/Register";
-import routesClient from "./routes/routesClient";
-import routesAdmin from "./routes/routesAdmin";
-import routesDomiciliary from "./routes/routesDomiciliary";
-import defaultRoutes from "./routes/defaultRoutes";
+import { getSessionCookie } from './session';
+import { useDispatch, useSelector } from 'react-redux';
+import AdminLayout from './layouts/AdminLayout';
+import NoAuth from './layouts/NoAuth';
+import { restoreSessionStateAction } from './store/reducer';
+import Login from './components/addresses/auth/Login';
+import Register from './components/addresses/auth/Register';
+import routesClient from './routes/routesClient';
+import routesAdmin from './routes/routesAdmin';
+import routesDomiciliary from './routes/routesDomiciliary';
+import defaultRoutes from './routes/defaultRoutes';
+
+import { useLocation } from 'react-router-dom';
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
+
+  // Primera Ruta Almacenada, ruta de formulario
+  const previousURL = window.location.href;
+  if (previousURL !== `${process.env.REACT_APP_REACT_HOST}/login`)
+    localStorage.setItem('formURL', previousURL);
+
+  const formURL = localStorage.getItem('formURL');
+  console.log('FORM URL', formURL);
 
   React.useEffect(() => {
     if (!user) {
@@ -27,8 +37,7 @@ function App() {
       if (Object.keys(userSessionInfo).length) {
         dispatch(restoreSessionStateAction());
       } else {
-        //  Preguntar is existe una ruta guardada antes de redirigir al login
-        dispatch(push("/login"));
+        dispatch(push('/login'));
       }
     }
   }, []);
@@ -64,12 +73,16 @@ function App() {
             <Route
               restricted
               path="/clientForm"
-              render={(props) => <NoAuth {...props} routes={routesClient} />}
+              render={(props) => (
+                <NoAuth {...props} routes={routesClient} />
+              )}
             />
 
             <Route
               path="/user"
-              render={(props) => <NoAuth {...props} routes={defaultRoutes} />}
+              render={(props) => (
+                <NoAuth {...props} routes={defaultRoutes} />
+              )}
             />
 
             <Route restricted path="/login" component={Login} />
@@ -78,8 +91,8 @@ function App() {
               path="/whatsappNotification"
               component={() => {
                 window.location.href =
-                  "https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0";
-                window.location.target = "_blank";
+                  'https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0';
+                window.location.target = '_blank';
                 return null;
               }}
             />

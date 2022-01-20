@@ -46,7 +46,7 @@ export const GoogleSheetsConnect = (props) => {
     <>
       <div>
         <Container className="themed-container" fluid="sm">
-          <Form className="form" onSubmit={handleRegister}>
+          <Form className="form">
             <Col>
               <FormGroup row>
                 <Col sm={10}>
@@ -61,7 +61,11 @@ export const GoogleSheetsConnect = (props) => {
               </FormGroup>
               <FormGroup className="">
                 <div className="">
-                  <Button variant="success" size="lg" type="submit">
+                  <Button
+                    variant="success"
+                    size="lg"
+                    onClick={handleRegister}
+                  >
                     Guardar
                   </Button>{' '}
                   {``}
@@ -69,14 +73,15 @@ export const GoogleSheetsConnect = (props) => {
               </FormGroup>
               <FormGroup className="">
                 <div className="sheetBsRePosition">
-                  <Button variant="success" size="lg" type="submit">
-                    <a
-                      href="https://sheet.best/"
-                      target="_blank"
-                      className="aLink"
-                    >
-                      Ir a Sheet.bes
-                    </a>
+                  {' '}
+                  <Button
+                    variant="success"
+                    size="lg"
+                    onClick={() =>
+                      window.open('https://sheet.best/', '_blank')
+                    }
+                  >
+                    Ir a Sheet.bes
                   </Button>{' '}
                   {``}
                 </div>
@@ -89,3 +94,22 @@ export const GoogleSheetsConnect = (props) => {
     </>
   );
 };
+
+/*
+
+   <FormGroup className="">
+                <div className="sheetBsRePosition">
+                  <a
+                    href="https://sheet.best/"
+                    target="_blank"
+                    className="aLink"
+                  >
+                    {' '}
+                    <Button variant="success" size="lg" onClick={() => window.location.href = 'https://sheet.best/'}>
+                      Ir a Sheet.bes
+                    </Button>{' '}
+                    {``}
+                  </a>
+                </div>
+              </FormGroup>
+*/

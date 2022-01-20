@@ -1,18 +1,24 @@
 // React
-import * as React from "react";
+import * as React from 'react';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import { push } from "redux-first-history";
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 
 // React Bootstrap
-import { Button } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from 'reactstrap';
 
 // Reverse counter for know the time we need to remaining
-import { ReverseCounter } from "../counter/ReverseCounter";
+import { ReverseCounter } from '../counter/ReverseCounter';
 
 // Reducers
-import { getAllOrderAction } from "../../../store/reducer";
+import { getAllOrderAction } from '../../../store/reducer';
 
 // Component List Orders
 const ListOrders = () => {
@@ -23,11 +29,27 @@ const ListOrders = () => {
 
   // Get all orders from store
   const orders = useSelector((state) => state.ui.orders);
+
+  // Component State
+  const [toggle, setToggle] = React.useState(false);
+  const [confirm, setConfirm] = React.useState(false);
+  const [cancel, setCancel] = React.useState(false);
+
+  // Handle Close
+  const handleClose = () => setToggle(!toggle);
+
+  // Handle Delete
   const handleDelete = (event) => {
     event.preventDefault();
     const data = {};
-    dispatch(deleteOrderAction(data));
-    dispatch(getAllOrderAction());
+    setToggle(!toggle);
+    setConfirm(!confirm);
+    if (confirm) {
+      dispatch(deleteOrderAction(data));
+      dispatch(getAllOrderAction());
+    } else {
+      console.log("Don't delete nothing");
+    }
   };
 
   // Update list
@@ -37,126 +59,41 @@ const ListOrders = () => {
 
   return (
     <>
-      <div style={{ height: "800px", overflowY: "scroll" }}>
+      <div style={{ height: '800px', overflowY: 'scroll' }}>
         <table className="table">
           <thead>
             <tr>
               <th scope="col">Número de Orden</th>
-              <th scope="col">Quien Ordeno?</th>
+              {user.rol === 'admin' && (
+                <th scope="col">Quien Ordeno?</th>
+              )}
               <th scope="col">Pedido</th>
               <th scope="col">Dirección Recogida</th>
               <th scope="col">Dirección Entrega</th>
               <th scope="col">Telefono</th>
               <th scope="col">Tiempo</th>
               <th scope="col">Estado</th>
-              {user.rol === "admin" && <th scope="col">State</th>}
-
-              {user.rol === "admin" && (
+              <th scope="col">Ubicación</th>
+              {user.rol === 'admin' && (
                 <>
-                  <th scope="col">Ubication</th>
                   <th scope="col">Edit</th>
-                  <th scope="col">Delete</th>
                 </>
               )}
-              {user.rol === "domiciliary" && (
-                <>
-                  <th scope="col">Aceptar</th>
-                  <th scope="col">Cancelar</th>
-                </>
-              )}
+              <th scope="col">Eliminar</th>
             </tr>
           </thead>
-          {user.rol === "admin" && (
+          {user.rol === 'admin' && (
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
                   <td>{order.orderNumber}</td>
-                  <td>{order.clientCompany}</td>
-                  <td>{order.client}</td>
-                  <td>
-                    {order.fecha} <br></br>
-                    <strong>Ordered two minutes ago</strong>
-                  </td>
-                  <td>
-                    <ReverseCounter />
-                  </td>
-                  <td>In process / Done</td>
-                  <td>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault;
-                        dispatch(push(`/admin/map/${order.id}`));
-                      }}
-                      variant="contained"
-                    >
-                      Ver en mapa{" "}
-                    </Button>
-                  </td>
-                  <td>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault;
-                        dispatch(push(`/editOrder/${order.id}`));
-                      }}
-                      variant="warning"
-                    >
-                      Editar{" "}
-                    </Button>
-                  </td>
-                  <td>
-                    <Button onClick={handleDelete} variant="danger">
-                      Borrar
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-          {user.rol === "domiciliary" && (
-            <tbody>
-              {orders.filter((order) => order.domiciliary == user.id).map((order) => (
-                <tr key={order.id}>
-                  <td>{order.orderNumber}</td>
-                  <td>{order.nameLasName}</td>
+                  <td>{order.clientName}</td>
                   <td>{order.ticket}</td>
-                  <td>{order.fistAddress}</td>
+                  <td>{order.firstAddress}</td>
                   <td>{order.lastAddress}</td>
                   <td>{order.phone}</td>
                   <td>
-                    {order.date} <br></br>
                     <strong>Ordered two minutes ago</strong>
-                    <ReverseCounter />
-                  </td>
-                  <td>{order.state}</td>
-
-                  <td>
-                    <Button variant="success">
-                      <a
-                        href={`https://www.google.com/maps/dir/6.3463,-75.5089/Cl.+78,+Bello,+Antioquia/1`}
-                      >
-                        x
-                      </a>
-                    </Button>
-                  </td>
-                  <td>
-                    <Button variant="secondary">X</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-          {user.rol === "client" && (
-            <tbody>
-              {orders.filter((order) => order.client == user.id).map((order) => (
-                <tr key={order.id}>
-                  <td>{order.orderNumber}</td>
-                  <td>{order.clientCompany}</td>
-                  <td>{order.client}</td>
-                  <td>
-                    {order.fecha} <br></br>
-                    <strong>Ordered two minutes ago</strong>
-                  </td>
-                  <td>
                     <ReverseCounter />
                   </td>
                   <td>In process / Done</td>
@@ -168,7 +105,7 @@ const ListOrders = () => {
                       }}
                       variant="contained"
                     >
-                      Ver en mapa{" "}
+                      Ver en mapa{' '}
                     </Button>
                   </td>
                   <td>
@@ -179,16 +116,65 @@ const ListOrders = () => {
                       }}
                       variant="warning"
                     >
-                      Editar{" "}
+                      Editar{' '}
                     </Button>
                   </td>
                   <td>
-                    <Button onClick={handleDelete} variant="danger">
+                    <Button variant="danger" onClick={handleDelete}>
                       Borrar
-                    </Button>
+                    </Button>{' '}
+                    {``}
+                    <MyVerticallyCenteredModal
+                      toggle={toggle}
+                      handleChange={handleDelete}
+                      handleClose={handleClose}
+                      confirm={confirm}
+                    />
                   </td>
                 </tr>
               ))}
+            </tbody>
+          )}
+          {user.rol === 'client' && (
+            <tbody>
+              {orders
+                .filter((order) => Number(order.clientId) === user.id)
+                .map((order) => (
+                  <tr key={order.id}>
+                    <td>{order.orderNumber}</td>
+                    <td>{order.ticket}</td>
+                    <td>{order.firstAddress}</td>
+                    <td>{order.lastAddress}</td>
+                    <td>{order.phone}</td>
+                    <td>
+                      <ReverseCounter />
+                    </td>
+                    <td>In process / Done</td>
+                    <td>
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault;
+                          dispatch(push(`/client/map/${order.id}`));
+                        }}
+                        variant="contained"
+                      >
+                        Ver en mapa{' '}
+                      </Button>
+                    </td>
+                    <td>
+                      <Button variant="danger" onClick={handleDelete}>
+                        Borrar
+                      </Button>{' '}
+                      {``}
+                      <MyVerticallyCenteredModal
+                        toggle={toggle}
+                        handleChange={handleDelete}
+                        handleClose={handleClose}
+                        confirm={confirm}
+                      />
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           )}
         </table>
@@ -196,4 +182,31 @@ const ListOrders = () => {
     </>
   );
 };
+
+const MyVerticallyCenteredModal = (props) => {
+  const {
+    toggle,
+    handleChange,
+    confirm,
+    handleConfirm,
+    handleClose,
+  } = props;
+  return (
+    <Modal isOpen={toggle} toggle={handleChange}>
+      <ModalHeader toggle={handleChange}>
+        <h5>Confirmar</h5>
+      </ModalHeader>
+      <ModalBody>
+        ¿Estás seguro/a de que desea eliminar la orden seleccionada?
+      </ModalBody>
+      <ModalFooter>
+        <Button confirm={handleConfirm} onClick={handleChange}>
+          Aceptar
+        </Button>
+        <Button onClick={handleClose}>Cancelar</Button>
+      </ModalFooter>
+    </Modal>
+  );
+};
+
 export default ListOrders;

@@ -69,6 +69,19 @@ import {
   deleteOrderDoneAction,
   errorDeleteOrder,
 
+  // Orders Products
+  // eslint-disable-next-line
+  getAllOrderProductAction,
+  createOrderProductAction,
+  updateOrderProductAction,
+  deleteOrderProductAction,
+  getAllOrderProductDoneAction,
+  createOrderProductDoneAction,
+  errorCreateOrderProduct,
+  updateOrderProductDoneAction,
+  deleteOrderProductDoneAction,
+  errorDeleteOrderProduct,
+  // eslint-disable-next-line
   // Clients
   getAllClientAction,
   getAllClientDoneAction,
@@ -120,6 +133,7 @@ function* loginSaga(action) {
 
 function* loginDoneSaga(action) {
   try {
+    yield put(getAllOrderProductAction());
     yield put(saveSessionStateAction());
   } catch (error) {
   } finally {
@@ -158,6 +172,9 @@ function* restoreSessionStateSaga(action) {
 function* logoutSagas(action) {
   try {
     yield put(cleanSessionStateAcion());
+    localStorage.removeItem('formURL');
+    localStorage.removeItem('authURL');
+    localStorage.removeItem('defaultRedirectURL');
   } catch (error) {
     console.error(error);
   } finally {
@@ -185,10 +202,46 @@ function* locationChangeSaga(action) {
   const user = yield select((state) => state.login.user);
   if (user) {
     const pathname = action.payload.location.pathname;
+    const formURL = localStorage.getItem('formURL');
+    const authURL = localStorage.getItem('authURL');
+    const defaultRedirectURL = localStorage.getItem(
+      'defaultRedirectURL'
+    );
+    // const orderProduct = yield select((state) =>
+    //   state.ui.ordersProduct.filter(
+    //     (order) => order.userPlatform === user.id
+    //   )
+    // );
     if (pathname === '/') {
       switch (user.rol) {
         case 'client':
-          yield put(push('/client/pedidos'));
+          yield put(push('/client/orderProducts'));
+          const defaultRedirectURL = window.location.href;
+          const previousURL = localStorage.getItem(
+            'defaultRedirectURL'
+          );
+          if (!previousURL)
+            localStorage.setItem(
+              'defaultRedirectURL',
+              defaultRedirectURL
+            );
+          if (defaultRedirectURL && authURL && formURL) {
+            yield put(push('/client/takeorder/2/5/Datodeusuario'));
+          }
+          // if (
+          //   formURL !==
+          //   `${REACT_APP_REACT_HOST}/${orderProduct[0]?.linkToOrder}`
+          // )
+          //   localStorage.removeItem('formURL');
+
+          // if (
+          //   defaultRedirectURL &&
+          //   authURL &&
+          //   formURL === orderProduct[0]?.linkToOrder
+          // ) {
+          //   yield put(push(orderProduct[0]?.linkToOrder));
+          // }
+
           break;
         case 'admin':
           yield put(push('/admin/orderslist'));
@@ -264,21 +317,21 @@ function* createPositionDealerSaga(action) {
   }
 }
 
-function* updatePositionDealerSaga(action) {
-  try {
-    const { data } = yield call(api.updatePosition, action.payload);
-    if (data.status === 200) {
-      yield put(updatePositionDealerDoneAction(data));
-    } else {
-      yield put(loginError(data.message));
-    }
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
+// function* updatePositionDealerSaga(action) {
+//   try {
+//     const { data } = yield call(api.updatePosition, action.payload);
+//     if (data.status === 200) {
+//       yield put(updatePositionDealerDoneAction(data));
+//     } else {
+//       yield put(loginError(data.message));
+//     }
+//   } catch (error) {
+//   } finally {
+//     if (yield cancelled()) {
+//       // Do nothing
+//     }
+//   }
+// }
 
 function* getFromDealerPositionSaga(action) {
   try {
@@ -327,67 +380,6 @@ function* getAllDomiciliarySaga() {
     const { data } = yield call(api.getAllDomiciliarys);
     yield put(getAllDomiciliaryDoneAction(data));
   } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-// Products
-
-function* getAllProductSaga() {
-  try {
-    const { data } = yield call(api.getAllProducts);
-    yield put(getAllProductDoneAction(data));
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-function* createProductSaga(action) {
-  try {
-    const { data } = yield call(api.createProduct, action.payload);
-    if (data.status === 200) {
-      yield put(createProductDoneAction(data));
-    } else {
-      yield put(errorCreateProduct(data.status));
-    }
-  } catch (error) {
-    yield put(errorCreateProduct('Error inesperado'));
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-function* updateProductSaga(action) {
-  try {
-    const { data } = yield call(api.updateProduct, action.payload);
-    yield put(updateProductDoneAction(data));
-  } catch (error) {
-  } finally {
-    if (yield cancelled()) {
-      // Do nothing
-    }
-  }
-}
-
-function* deleteProductSaga(action) {
-  try {
-    const data = yield call(api.deleteProduct, action.payload);
-    if (data.status === 200) {
-      yield put(deleteProductDoneAction());
-      yield put(getAllProductAction());
-    } else {
-      yield put(errorDeleteProduct(data.status));
-    }
-  } catch (error) {
-    yield put(errorDeleteProduct('Error inesperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -444,6 +436,84 @@ function* deleteOrderSaga(action) {
     }
   } catch (error) {
     yield put(errorDeleteOrder('Error inesperado'));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+/*
+ * Orders Product
+ * Get All Order Product
+ */
+function* getAllOrderProductSaga() {
+  try {
+    const { data } = yield call(api.getAllOrdersProduct);
+    yield put(getAllOrderProductDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+// Create Order Product
+function* createOrderProductSaga(action) {
+  try {
+    const { data } = yield call(
+      api.createOrderProduct,
+      action.payload
+    );
+    yield put(createOrderProductDoneAction(data));
+  } catch (error) {
+    yield put(
+      errorCreateOrderProduct(
+        'Error while try to create the orderProduct'
+      )
+    );
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+// Update Order Product
+function* updateOrderProductSaga(action) {
+  try {
+    const { data } = yield call(
+      api.updateOrderProduct,
+      action.payload
+    );
+    yield put(updateOrderProductDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+// Delete Order Product
+function* deleteOrderProductSaga(action) {
+  try {
+    const { data } = yield call(
+      api.deleteOrderProduct,
+      action.payload
+    );
+    if (data.status === 200) {
+      yield put(deleteOrderProductDoneAction(data));
+    } else {
+      yield put(errorDeleteOrderProduct(data.status));
+    }
+  } catch (error) {
+    yield put(
+      errorDeleteOrderProduct(
+        'Error while try to delete the orderProduct'
+      )
+    );
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -538,22 +608,15 @@ export function* rootSaga() {
     createPositionDealerAction.type,
     createPositionDealerSaga
   );
-  yield takeLatest(
-    updatePositionDealerAction.type,
-    updatePositionDealerSaga
-  );
+  // yield takeLatest(
+  //   updatePositionDealerAction.type,
+  //   updatePositionDealerSaga
+  // );
   yield takeLatest(
     getFromDealerPositionAction.type,
     getFromDealerPositionSaga
   );
-  //yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
   yield takeLatest(LOCATION_CHANGE, locationChangeSaga);
-
-  // Products
-  yield takeLatest(getAllProductAction.type, getAllProductSaga);
-  yield takeEvery(createProductAction.type, createProductSaga);
-  yield takeLatest(updateProductAction.type, updateProductSaga);
-  yield takeLatest(deleteProductAction.type, deleteProductSaga);
 
   // Users
   yield takeLatest(getAllUserAction.type, getAllUserSaga);
@@ -568,6 +631,24 @@ export function* rootSaga() {
   yield takeLatest(createOrderAction.type, createOrderSaga);
   yield takeLatest(updateOrderAction.type, updateOrderSaga);
   yield takeLatest(deleteOrderAction.type, deleteOrderSaga);
+
+  // Orders
+  yield takeLatest(
+    getAllOrderProductAction.type,
+    getAllOrderProductSaga
+  );
+  yield takeLatest(
+    createOrderProductAction.type,
+    createOrderProductSaga
+  );
+  yield takeLatest(
+    updateOrderProductAction.type,
+    updateOrderProductSaga
+  );
+  yield takeLatest(
+    deleteOrderProductAction.type,
+    deleteOrderProductSaga
+  );
 
   // Sheets Orders
   yield takeLatest(getSheetsOrderAction.type, getSheetsOrderSaga);
