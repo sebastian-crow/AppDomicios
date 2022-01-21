@@ -208,13 +208,12 @@ function* locationChangeSaga(action) {
       'defaultRedirectURL'
     );
     const { data } = yield call(api.getAllOrdersProduct);
-    yield localStorage.setItem('ordersProduct', JSON.stringify(data));
-    const ordersproduct = localStorage.getItem('ordersProduct');
-    const productOrders = JSON.parse(ordersproduct);
     const orderProduct = [];
-    for (let i = 0; i < productOrders.length; i++) {
-      if (productOrders[i].userPlatform === user.id) {
-        orderProduct.push(productOrders[i]);
+    if (data) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].userPlatform === user.id) {
+          orderProduct.push(data[i]);
+        }
       }
     }
     if (pathname === '/') {
@@ -233,9 +232,9 @@ function* locationChangeSaga(action) {
           if (
             defaultRedirectURL &&
             authURL &&
-            formURL.endsWith(orderProduct[0].linkToOrder)
+            formURL?.endsWith(orderProduct[0]?.linkToOrder)
           ) {
-            yield put(push(orderProduct[0].linkToOrder));
+            yield put(push(orderProduct[0]?.linkToOrder));
           }
 
           break;
