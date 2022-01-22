@@ -33,50 +33,40 @@ export const EditOrderProduct = (props) => {
 
   const currentSheet = useSelector((state) =>
     state.ui.sheetsOrder.filter(
-      (order) => order['Numero de Orden'] === orderProductNumber
+      (order) => order.NumeroDeOrden === orderProductNumber
     )
   );
 
   // Current Shet Information form handle
-  const orderNumber = useFormInput(
-    currentSheet[0]['Numero de Orden']
-  );
-  const creationDate = useFormInput(
-    currentSheet[0]['Fecha Creacion']
-  );
+  const orderNumber = useFormInput(currentSheet[0].NumeroDeOrden);
+  const creationDate = useFormInput(currentSheet[0].FechaCreacion);
   const nameLastName = useFormInput(
-    currentSheet[0]['Nombres y Apellidos']
+    currentSheet[0].NombresYApellidos
   );
-  const clientPhone = useFormInput(
-    currentSheet[0]['Telefono cliente']
-  );
+  const clientPhone = useFormInput(currentSheet[0].TelefonoCliente);
   const deliveryAddress = useFormInput(
-    currentSheet[0]['Direccion entrega']
+    currentSheet[0].DireccionEntrega
   );
-  const city = useFormInput(currentSheet[0]['Ciudad']);
-  const neighbourhood = useFormInput(currentSheet[0]['Barrio']);
+  const city = useFormInput(currentSheet[0].Ciudad);
+  const neighbourhood = useFormInput(currentSheet[0].Barrio);
   const residentialGroupName = useFormInput(
-    currentSheet[0]['Nombre Conjunto Residencial']
+    currentSheet[0].NombreConjuntoResidencial
   );
-  const houseNumber = useFormInput(
-    currentSheet[0]['Numero de Casa o apto']
-  );
-  const deliveryNote = useFormInput(currentSheet[0]['Nota entrega']);
+  const houseNumber = useFormInput(currentSheet[0].NumeroDeCasaOApto);
+  const deliveryNote = useFormInput(currentSheet[0].NotaEntrega);
   const deliveryPacket = useFormInput(
-    currentSheet[0]['Paquete a entregar']
+    currentSheet[0].PaqueteAEntregar
   );
-  const orderState = useFormInput(currentSheet[0]['Estado Pedido']);
-  const dealer = useFormInput(currentSheet[0]['Domiciliario']);
+  const orderState = useFormInput(currentSheet[0].EstadoPedido);
+  const dealer = useFormInput(currentSheet[0].Domiciliario);
   const pickUpAddress = useFormInput(
-    currentSheet[0]['Direccion Recogida']
+    currentSheet[0].DireccionRecogida
   );
-  const deliveryHour = useFormInput(currentSheet[0]['Hora entrega']);
+  const deliveryHour = useFormInput(currentSheet[0].HoraEntrega);
   const deliveryUbication = useFormInput(
-    currentSheet[0]['Ubicacion entrega']
+    currentSheet[0].UbicacionEntrega
   );
-  const deliveryPicture = useFormInput(
-    currentSheet[0]['Foto entrega']
-  );
+  const deliveryPicture = useFormInput(currentSheet[0].FotoEntrega);
 
   const [error, setError] = useState(null);
 
@@ -98,23 +88,23 @@ export const EditOrderProduct = (props) => {
     event.preventDefault();
     setError(null);
     let data = {
-      'Numero de Orden': orderNumber.value,
-      'Fecha Creacion': creationDate.value,
-      'Nombres y Apellidos': nameLastName.value,
-      'Telefono cliente': clientPhone.value,
-      'Direccion entrega': deliveryAddress.value,
+      NumeroDeOrden: orderNumber.value,
+      FechaCreacion: creationDate.value,
+      NombresYApellidos: nameLastName.value,
+      TelefonoCliente: clientPhone.value,
+      DireccionEntrega: deliveryAddress.value,
       Ciudad: city.value,
       Barrio: neighbourhood.value,
-      'Nombre Conjunto Residencial': residentialGroupName.value,
-      'Numero de Casa o apto': houseNumber.value,
-      'Nota entrega': deliveryNote.value,
-      'Paquete a entregar': deliveryPacket.value,
-      'Estado Pedido': orderState.value,
+      NombreConjuntoResidencial: residentialGroupName.value,
+      NumeroDeCasaOApto: houseNumber.value,
+      NotaEntrega: deliveryNote.value,
+      PaqueteAEntregar: deliveryPacket.value,
+      EstadoPedido: orderState.value,
       Domiciliario: dealer.value,
-      'Direccion Recogida': pickUpAddress.value,
-      'Hora entrega': deliveryHour.value,
-      'Ubicacion entrega': deliveryUbication.value,
-      'Foto entrega': deliveryPicture.value,
+      DireccionRecogida: pickUpAddress.value,
+      HoraEntrega: deliveryHour.value,
+      UbicacionEntrega: deliveryUbication.value,
+      FotoEntrega: deliveryPicture.value,
     };
     console.log('What is all this dta?', data);
 

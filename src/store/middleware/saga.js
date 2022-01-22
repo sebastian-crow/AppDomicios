@@ -229,14 +229,15 @@ function* locationChangeSaga(action) {
               'defaultRedirectURL',
               defaultRedirectURL
             );
-          if (
-            defaultRedirectURL &&
-            authURL &&
-            formURL?.endsWith(orderProduct[0]?.linkToOrder)
-          ) {
-            yield put(push(orderProduct[0]?.linkToOrder));
+          if (orderProduct.length > 0) {
+            if (
+              defaultRedirectURL &&
+              authURL &&
+              formURL?.endsWith(orderProduct[0]?.linkToOrder)
+            ) {
+              yield put(push(orderProduct[0]?.linkToOrder));
+            }
           }
-
           break;
         case 'admin':
           yield put(push('/admin/orderslist'));
