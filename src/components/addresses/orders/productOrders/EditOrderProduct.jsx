@@ -22,6 +22,7 @@ import {
 import {
   getAllOrderProductAction,
   updateOrderProductAction,
+  createOrderProductAction,
 } from '../../../../store/reducer';
 
 // Moment
@@ -31,15 +32,14 @@ import moment from 'moment';
 export const EditOrderProduct = (props) => {
   const dispatch = useDispatch();
 
-  const { orderProductNumber } = useParams();
+  const { idClientEmpresa, orderNumberSheets, nameYApellidoClient } =
+    useParams();
 
   const user = useSelector((state) => state.login.user);
 
-  const sheetsError = useSelector((state) => state.ui.sheetsError);
-
   const currentSheet = useSelector((state) =>
     state.ui.sheetsOrder.filter(
-      (order) => order.NumeroDeOrden === orderProductNumber
+      (order) => order.NumeroDeOrden === orderNumberSheets
     )
   );
 
@@ -47,8 +47,10 @@ export const EditOrderProduct = (props) => {
     (state) => state.ui.ordersProduct
   );
 
-  console.log('current sheet', currentSheet);
-  console.log('ordersProduct', ordersProduct);
+  const sheetsError = useSelector((state) => state.ui.sheetsError);
+  const ordersProductError = useSelector(
+    (state) => state.ui.sheetsError
+  );
 
   // Current Shet Information form handle
   const orderNumber = useFormInput(currentSheet[0].NumeroDeOrden);
@@ -80,6 +82,10 @@ export const EditOrderProduct = (props) => {
     currentSheet[0].UbicacionEntrega
   );
   const deliveryPicture = useFormInput(currentSheet[0].FotoEntrega);
+  const linkToOrder = useFormInput(
+    currentSheet[0].LinkTomarOrden ||
+      `/client/takeorder/${idClientEmpresa}/${orderNumberSheets}/${nameYApellidoClient}`
+  );
 
   const [error, setError] = useState(null);
 
@@ -92,19 +98,14 @@ export const EditOrderProduct = (props) => {
       }
     }
 
-    console.log('ordertoupdate', orderProductToUpdate);
-
-    fetch(
-      `${user.googleSheets}/NumeroDeOrden/${orderProductNumber}`,
-      {
-        method: 'PATCH',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }
-    )
+    fetch(`${user.googleSheets}/NumeroDeOrden/${orderNumberSheets}`, {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
       .then((r) => r.json())
       .then((r) => {
         console.log('ok', r);
@@ -142,6 +143,7 @@ export const EditOrderProduct = (props) => {
       HoraEntrega: deliveryHour.value,
       UbicacionEntrega: deliveryUbication.value,
       FotoEntrega: deliveryPicture.value,
+      LinkTomarOrden: linkToOrder.value,
     };
 
     let dataAPI = {
@@ -154,7 +156,7 @@ export const EditOrderProduct = (props) => {
       city: city.value,
       neighbourhood: neighbourhood.value,
       residentialGroupName: residentialGroupName.value,
-      houseNumber: houseNumber.value,
+      houseNumberOrApartment: houseNumber.value,
       deliveryNote: deliveryNote.value,
       deliveryPacket: deliveryPacket.value,
       orderState: orderState.value,
@@ -163,9 +165,17 @@ export const EditOrderProduct = (props) => {
       deliveryHour: deliveryHour.value,
       deliveryUbication: deliveryUbication.value,
       deliveryPicture: deliveryPicture.value,
+      linkToOrder: linkToOrder.value,
     };
-    console.log('What is all this data?', data);
-    console.log('What is all this dataAPI?', dataAPI);
+    const orderProductValidation = [];
+    if (ordersProduct) {
+      for (let i = 0; i < ordersProduct.length; i++) {
+        if (ordersProduct[i].orderNumber == dataAPI.orderNumber)
+          orderProductValidation.push(ordersProduct[i]);
+      }
+    }
+    if (!orderProductValidation.length)
+      dispatch(createOrderProductAction(dataAPI));
 
     sendInfoToSheetsBest(data, dataAPI);
     dispatch(push('/client/orderProducts'));
@@ -175,9 +185,13 @@ export const EditOrderProduct = (props) => {
   React.useEffect(() => {
     if (user.googleSheets) {
       if (!sheetsError) {
-        if (!currentSheet.length)
+        if (currentSheet.length === 0)
           dispatch(getSheetsOrderAction(user.googleSheets));
-        if (!ordersProduct?.length)
+        if (
+          ordersProduct &&
+          !ordersProductError &&
+          ordersProduct.length === 0
+        )
           dispatch(getAllOrderProductAction());
       }
     }
@@ -368,6 +382,18 @@ export const EditOrderProduct = (props) => {
                     id="deliveryPicture"
                     placeholder="Foto Entrega"
                     {...deliveryPicture}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Badge color="primary">Link Tomar Orden</Badge>
+                  <Input
+                    type="text"
+                    id="linkToOrder"
+                    placeholder="Link Orden"
+                    readOnly={true}
+                    {...linkToOrder}
                   />
                 </Col>
               </FormGroup>

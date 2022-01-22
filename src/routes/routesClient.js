@@ -30,7 +30,7 @@ var routesClient = [
     visible: true,
   },
   {
-    path: '/editOrderProduct/:orderProductNumber',
+    path: '/editOrderProduct/:idClientEmpresa/:orderNumberSheets/:nameYApellidoClient',
     rol: ['client'],
     name: 'Edit Order Product',
     icon: 'nc-icon nc-cart-simple',

@@ -32,7 +32,9 @@ const UserProductOrderList = () => {
   const user = useSelector((state) => state.login.user);
   const sheetsOrders = useSelector((state) => state.ui.sheetsOrder);
   const sheetsError = useSelector((state) => state.ui.sheetsError);
-  const ordersProductError = useSelector((state) => state.ui.sheetsError);
+  const ordersProductError = useSelector(
+    (state) => state.ui.sheetsError
+  );
   const ordersProduct = useSelector(
     (state) => state.ui.ordersProduct
   );
@@ -122,8 +124,6 @@ const UserProductOrderList = () => {
           orderProductValidation.push(ordersProduct[i]);
       }
     }
-    console.log('OrderProductValidation', orderProductValidation);
-
     if (!orderProductValidation.length)
       dispatch(createOrderProductAction(data));
   };
@@ -141,7 +141,11 @@ const UserProductOrderList = () => {
       if (!sheetsError) {
         if (sheetsOrders.length === 0)
           dispatch(getSheetsOrderAction(user.googleSheets));
-        if (ordersProduct && !ordersProductError && ordersProduct.length === 0)
+        if (
+          ordersProduct &&
+          !ordersProductError &&
+          ordersProduct.length === 0
+        )
           dispatch(getAllOrderProductAction());
       }
     }
@@ -213,7 +217,7 @@ const UserProductOrderList = () => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/client/editOrderProduct/${order.NumeroDeOrden}`
+                          `/client/editOrderProduct/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
                         )
                       );
                     }}
