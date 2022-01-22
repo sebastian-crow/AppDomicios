@@ -32,6 +32,7 @@ const UserProductOrderList = () => {
   const user = useSelector((state) => state.login.user);
   const sheetsOrders = useSelector((state) => state.ui.sheetsOrder);
   const sheetsError = useSelector((state) => state.ui.sheetsError);
+  const ordersProductError = useSelector((state) => state.ui.sheetsError);
   const ordersProduct = useSelector(
     (state) => state.ui.ordersProduct
   );
@@ -126,9 +127,9 @@ const UserProductOrderList = () => {
   React.useEffect(() => {
     if (user.googleSheets) {
       if (!sheetsError) {
-        if (!sheetsOrders.length)
+        if (sheetsOrders.length === 0)
           dispatch(getSheetsOrderAction(user.googleSheets));
-        if (!ordersProduct?.length)
+        if (ordersProduct && !ordersProductError && ordersProduct.length === 0)
           dispatch(getAllOrderProductAction());
       }
     }

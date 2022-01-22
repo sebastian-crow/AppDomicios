@@ -20,5 +20,9 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-serviceWorkerRegistration.register();
-reportWebVitals();
+if (process.env.REACT_APP_PROJECT_STATUS !== "development") {
+  serviceWorkerRegistration.register();
+  reportWebVitals();
+}
+
+

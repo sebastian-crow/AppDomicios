@@ -66,6 +66,7 @@ import {
   errorCreateOrderProduct,
   updateOrderProductDoneAction,
   deleteOrderProductDoneAction,
+  getAllOrderProductErrorAction,
   errorDeleteOrderProduct,
   // eslint-disable-next-line
   // Clients
@@ -431,8 +432,13 @@ function* deleteOrderSaga(action) {
 function* getAllOrderProductSaga() {
   try {
     const { data } = yield call(api.getAllOrdersProduct);
-    yield put(getAllOrderProductDoneAction(data));
+    if (data.length === 0) {
+      yield put(getAllOrderProductErrorAction("Error hay datos"));
+    } else {
+      yield put(getAllOrderProductDoneAction(data));
+    }
   } catch (error) {
+    yield put(getAllOrderProductErrorAction("Error no esperado"));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -507,7 +513,11 @@ function* getSheetsOrderSaga(action) {
   try {
     const { data } = yield call(api.getSheetsOrder, action.payload);
     if (data) {
-      yield put(getSheetsOrderDoneAction(data));
+      if (data.length > 0) {
+        yield put(getSheetsOrderDoneAction(data));
+      } else {
+        yield put(getSheetsOrderErrorAction('No hay datos'));
+      }
     } else {
       yield put(getSheetsOrderErrorAction('Error inesperado'));
     }
@@ -569,11 +579,11 @@ export function* rootSaga() {
   );
   yield takeLatest(registerAction.type, registerSaga);
 
-  yield takeEvery(
+  yield takeLatest(
     restoreSessionStateAction.type,
     restoreSessionStateSaga
   );
-  yield takeEvery(logoutAction.type, logoutSagas);
+  yield takeLatest(logoutAction.type, logoutSagas);
 
   // Client Location
   yield takeLatest(
