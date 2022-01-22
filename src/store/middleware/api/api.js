@@ -156,9 +156,13 @@ export function createOrderProduct(params) {
 }
 
 export function updateOrderProduct(params) {
+  console.log(
+    'Data that im gonna send to update one orderprodut',
+    params
+  );
   return callAPI({
     method: 'PATCH',
-    url: `/orderProduct` + params.id,
+    url: `/orderProduct/${params.id}`,
     data: params.data,
   });
 }
@@ -166,7 +170,7 @@ export function updateOrderProduct(params) {
 export function deleteOrderProduct(params) {
   return callAPI({
     method: 'DELETE',
-    url: `/orderProduct` + params.id,
+    url: `/orderProduct/${params.id}`,
     data: params.data,
   });
 }

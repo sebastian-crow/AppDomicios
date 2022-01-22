@@ -18,6 +18,12 @@ import {
   Badge,
 } from 'reactstrap';
 
+// Reducers
+import {
+  getAllOrderProductAction,
+  updateOrderProductAction,
+} from '../../../../store/reducer';
+
 // Moment
 import moment from 'moment';
 
@@ -27,15 +33,22 @@ export const EditOrderProduct = (props) => {
 
   const { orderProductNumber } = useParams();
 
-  const sheetsInfoUser = useSelector(
-    (state) => state.login.user.googleSheets
-  );
+  const user = useSelector((state) => state.login.user);
+
+  const sheetsError = useSelector((state) => state.ui.sheetsError);
 
   const currentSheet = useSelector((state) =>
     state.ui.sheetsOrder.filter(
       (order) => order.NumeroDeOrden === orderProductNumber
     )
   );
+
+  const ordersProduct = useSelector(
+    (state) => state.ui.ordersProduct
+  );
+
+  console.log('current sheet', currentSheet);
+  console.log('ordersProduct', ordersProduct);
 
   // Current Shet Information form handle
   const orderNumber = useFormInput(currentSheet[0].NumeroDeOrden);
@@ -70,17 +83,41 @@ export const EditOrderProduct = (props) => {
 
   const [error, setError] = useState(null);
 
-  const sendInfoToSheetsBest = (data) => {
-    fetch(`${sheetsInfoUser}/Numero de Orden/${orderProductNumber}`, {
-      method: 'PATCH',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
+  const sendInfoToSheetsBest = (data, dataAPI) => {
+    const orderProductToUpdate = [];
+    if (ordersProduct) {
+      for (let i = 0; i < ordersProduct.length; i++) {
+        if (ordersProduct[i].orderNumber == data.NumeroDeOrden)
+          orderProductToUpdate.push(ordersProduct[i]);
+      }
+    }
+
+    console.log('ordertoupdate', orderProductToUpdate);
+
+    fetch(
+      `${user.googleSheets}/NumeroDeOrden/${orderProductNumber}`,
+      {
+        method: 'PATCH',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    )
       .then((r) => r.json())
-      .then(console.log)
+      .then((r) => {
+        console.log('ok', r);
+        if (orderProductToUpdate.length > 0) {
+          console.log('Editing this orderProduct in the db as well');
+          dispatch(
+            updateOrderProductAction({
+              id: orderProductToUpdate[0].id,
+              data: dataAPI,
+            })
+          );
+        }
+      })
       .catch(console.error);
   };
 
@@ -106,11 +143,45 @@ export const EditOrderProduct = (props) => {
       UbicacionEntrega: deliveryUbication.value,
       FotoEntrega: deliveryPicture.value,
     };
-    console.log('What is all this dta?', data);
 
-    sendInfoToSheetsBest(data);
+    let dataAPI = {
+      userPlatform: user.id,
+      orderNumber: orderNumber.value,
+      creationDate: creationDate.value,
+      nameLastName: nameLastName.value,
+      clientPhone: clientPhone.value,
+      deliveryAddress: deliveryAddress.value,
+      city: city.value,
+      neighbourhood: neighbourhood.value,
+      residentialGroupName: residentialGroupName.value,
+      houseNumber: houseNumber.value,
+      deliveryNote: deliveryNote.value,
+      deliveryPacket: deliveryPacket.value,
+      orderState: orderState.value,
+      dealer: dealer.value,
+      pickUpAddress: pickUpAddress.value,
+      deliveryHour: deliveryHour.value,
+      deliveryUbication: deliveryUbication.value,
+      deliveryPicture: deliveryPicture.value,
+    };
+    console.log('What is all this data?', data);
+    console.log('What is all this dataAPI?', dataAPI);
+
+    sendInfoToSheetsBest(data, dataAPI);
     dispatch(push('/client/orderProducts'));
   };
+
+  // Update Sheets Orders and Orders Product
+  React.useEffect(() => {
+    if (user.googleSheets) {
+      if (!sheetsError) {
+        if (!currentSheet.length)
+          dispatch(getSheetsOrderAction(user.googleSheets));
+        if (!ordersProduct?.length)
+          dispatch(getAllOrderProductAction());
+      }
+    }
+  }, [dispatch, currentSheet, ordersProduct]);
 
   return (
     <>

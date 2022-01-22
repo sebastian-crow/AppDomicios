@@ -21,7 +21,7 @@ import {
   deleteSheetOrderAction,
   getAllOrderProductAction,
   createOrderProductAction,
-  updateOrderProductAction,
+  deleteOrderProductAction,
 } from '../../../../store/reducer';
 
 // Copy to Clipboard
@@ -58,13 +58,26 @@ const UserProductOrderList = () => {
     const data = {};
     setToggleDelete(!toggleDelete);
     setConfirm(!confirm);
-    console.log('OrderNumber', orderNumber);
+    const orderProductToDelete = [];
+    if (ordersProduct) {
+      for (let i = 0; i < ordersProduct.length; i++) {
+        if (ordersProduct[i].orderNumber == orderNumber)
+          orderProductToDelete.push(ordersProduct[i]);
+      }
+    }
     if (confirm) {
       fetch(`${user.googleSheets}/NumeroDeOrden/${orderNumber}`, {
         method: 'DELETE',
       })
         .then((response) => response.json())
         .then((dataRes) => {
+          if (orderProductToDelete.length > 0)
+            dispatch(
+              deleteOrderProductAction({
+                id: orderProductToDelete[0].id,
+                data: data,
+              })
+            );
           dispatch(getSheetsOrderAction(user.googleSheets));
           console.log(dataRes);
         })
@@ -89,6 +102,7 @@ const UserProductOrderList = () => {
       city: order.Ciudad,
       neighbourhood: order.Barrio,
       residentialGroupName: order.NombreConjuntoResidencial,
+      houseNumberOrApartment: order.NumeroDeCasaOApto,
       deliveryNote: order.NotaEntrega,
       deliveryPacket: order.PaqueteAEntregar,
       orderState: order.EstadoPedido,
@@ -100,21 +114,17 @@ const UserProductOrderList = () => {
       linkToOrder: `/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`,
     };
 
-    console.log('Data that i want to send', data);
+    const orderProductValidation = [];
+    if (ordersProduct) {
+      for (let i = 0; i < ordersProduct.length; i++) {
+        if (ordersProduct[i].orderNumber == order.NumeroDeOrden)
+          orderProductValidation.push(ordersProduct[i]);
+      }
+    }
+    console.log('OrderProductValidation', orderProductValidation);
 
-    // const orderProductValidation = ordersProduct?.map(
-    //   (orderProduct) => {
-    //     if (orderProduct.orderNumber === order.NumeroDeOrden)
-    //       return orderProduct;
-    //   }
-    // );
-
-    // console.log('orderProductValidation', orderProductValidation);
-
-    // if (orderProductValidation)
-    //   dispatch(updateOrderProductAction(data));
-    // if (!orderProductValidation)
-    //   dispatch(createOrderProductAction(data));
+    if (!orderProductValidation.length)
+      dispatch(createOrderProductAction(data));
   };
 
   // Handle Set Link
@@ -158,6 +168,7 @@ const UserProductOrderList = () => {
               <th scope="col">Ciudad</th>
               <th scope="col">Barrio</th>
               <th scope="col">Nombre Conjunto Residencial</th>
+              <th scope="col">Nuúmero De Cada O Apto</th>
               <th scope="col">Nota Entrega</th>
               <th scope="col">Paquete A Entregar</th>
               <th scope="col">Estado Pedido </th>
@@ -186,6 +197,7 @@ const UserProductOrderList = () => {
                 <td>{order.Ciudad}</td>
                 <td>{order.Barrio}</td>
                 <td>{order.NombreConjuntoResidencial}</td>
+                <td>{order.NumeroDeCasaOApto}</td>
                 <td>{order.NotaEntrega}</td>
                 <td>{order.PaqueteAEntregar}</td>
                 <td>{order.EstadoPedido}</td>
