@@ -66,8 +66,8 @@ export function register(params) {
 export function editUser(params) {
   return callAPI({
     method: 'PATCH',
-    url: `/user`,
-    data: params,
+    url: `/user/${params.id}`,
+    data: params.data,
   });
 }
 
@@ -126,7 +126,7 @@ export function createOrder(params) {
 export function updateOrder(params) {
   return callAPI({
     method: 'PATCH',
-    url: `/order` + params.id,
+    url: `/order/${params.id}`,
     data: params.data,
   });
 }
@@ -134,7 +134,7 @@ export function updateOrder(params) {
 export function deleteOrder(params) {
   return callAPI({
     method: 'DELETE',
-    url: `/order` + params.id,
+    url: `/order/${params.id}`,
     data: params.data,
   });
 }

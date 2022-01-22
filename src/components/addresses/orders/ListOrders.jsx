@@ -18,7 +18,10 @@ import {
 import { ReverseCounter } from '../counter/ReverseCounter';
 
 // Reducers
-import { getAllOrderAction } from '../../../store/reducer';
+import {
+  getAllOrderAction,
+  deleteOrderAction,
+} from '../../../store/reducer';
 
 // Component List Orders
 const ListOrders = () => {
@@ -39,13 +42,13 @@ const ListOrders = () => {
   const handleClose = () => setToggle(!toggle);
 
   // Handle Delete
-  const handleDelete = (event) => {
-    event.preventDefault();
+  const handleDelete = (e, orderId) => {
+    e.preventDefault();
     const data = {};
     setToggle(!toggle);
     setConfirm(!confirm);
     if (confirm) {
-      dispatch(deleteOrderAction(data));
+      dispatch(deleteOrderAction({ id: orderId, data: data }));
       dispatch(getAllOrderAction());
     } else {
       console.log("Don't delete nothing");
@@ -120,13 +123,16 @@ const ListOrders = () => {
                     </Button>
                   </td>
                   <td>
-                    <Button variant="danger" onClick={handleDelete}>
+                    <Button
+                      variant="danger"
+                      onClick={(e) => handleDelete(e, order.id)}
+                    >
                       Borrar
                     </Button>{' '}
                     {``}
-                    <MyVerticallyCenteredModal
+                    <ModalConfirmationDelete
                       toggle={toggle}
-                      handleChange={handleDelete}
+                      handleChange={(e) => handleDelete(e, order.id)}
                       handleClose={handleClose}
                       confirm={confirm}
                     />
@@ -162,13 +168,18 @@ const ListOrders = () => {
                       </Button>
                     </td>
                     <td>
-                      <Button variant="danger" onClick={handleDelete}>
+                      <Button
+                        variant="danger"
+                        onClick={(e) => handleDelete(e, order.id)}
+                      >
                         Borrar
                       </Button>{' '}
                       {``}
-                      <MyVerticallyCenteredModal
+                      <ModalConfirmationDelete
                         toggle={toggle}
-                        handleChange={handleDelete}
+                        handleChange={(e) =>
+                          handleDelete(e, order.id)
+                        }
                         handleClose={handleClose}
                         confirm={confirm}
                       />
@@ -183,7 +194,7 @@ const ListOrders = () => {
   );
 };
 
-const MyVerticallyCenteredModal = (props) => {
+const ModalConfirmationDelete = (props) => {
   const {
     toggle,
     handleChange,

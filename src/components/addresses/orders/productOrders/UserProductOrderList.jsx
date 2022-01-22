@@ -44,22 +44,34 @@ const UserProductOrderList = () => {
 
   const [copied, setCopied] = React.useState(false);
 
+  const [toggleDelete, setToggleDelete] = React.useState(false);
+  const [confirm, setConfirm] = React.useState(false);
+  const [cancel, setCancel] = React.useState(false);
+
+  // Handle Close
+  const handleClose = () => setToggleDelete(!toggleDelete);
+
   // Hanlde Delete
   const handleDelete = (event, orderNumber) => {
     event.preventDefault();
     const data = {};
-    fetch(`${user.googleSheets}/NumeroDeOrden/${orderNumber}`, {
-      method: 'DELETE',
-    })
-      .then((response) => response.json())
-      .then((dataRes) => {
-        console.log(dataRes);
-        //dispatch(deleteSheetOrderAction(data));
-        dispatch(push('/client/orderProducts'));
+    setToggleDelete(!toggleDelete);
+    setConfirm(!confirm);
+    console.log('OrderNumber', orderNumber);
+    if (confirm) {
+      fetch(`${user.googleSheets}/NumeroDeOrden/${orderNumber}`, {
+        method: 'DELETE',
       })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((response) => response.json())
+        .then((dataRes) => {
+          dispatch(getSheetsOrderAction(user.googleSheets));
+          console.log(dataRes);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      dispatch(push('/client/orderProducts'));
+    }
   };
 
   // Handle Create orderProduct
@@ -180,7 +192,7 @@ const UserProductOrderList = () => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/client/editOrderProduct/${order['NumeroDeOrden']}`
+                          `/client/editOrderProduct/${order.NumeroDeOrden}`
                         )
                       );
                     }}
@@ -191,13 +203,22 @@ const UserProductOrderList = () => {
                 </td>
                 <td>
                   <Button
-                    onClick={(event) =>
-                      handleDelete(event, order['NumeroDeOrden'])
-                    }
                     variant="danger"
+                    onClick={(e) =>
+                      handleDelete(e, order.NumeroDeOrden)
+                    }
                   >
                     Eliminar
-                  </Button>
+                  </Button>{' '}
+                  {``}
+                  <MyVerticallyCenteredModalDelete
+                    toggleDelete={toggleDelete}
+                    handleChange={(e) =>
+                      handleDelete(e, order.NumeroDeOrden)
+                    }
+                    handleClose={handleClose}
+                    confirm={confirm}
+                  />
                 </td>
                 <td>
                   <Button
@@ -242,6 +263,32 @@ const MyVerticallyCenteredModal = (props) => {
         >
           Copiar
         </Button>
+      </ModalFooter>
+    </Modal>
+  );
+};
+
+const MyVerticallyCenteredModalDelete = (props) => {
+  const {
+    toggleDelete,
+    handleChange,
+    confirm,
+    handleConfirm,
+    handleClose,
+  } = props;
+  return (
+    <Modal isOpen={toggleDelete} toggleDelete={handleChange}>
+      <ModalHeader toggleDelete={handleChange}>
+        <h5>Confirmar</h5>
+      </ModalHeader>
+      <ModalBody>
+        ¿Estás seguro/a de que desea eliminar el pedido seleccionada?
+      </ModalBody>
+      <ModalFooter>
+        <Button confirm={handleConfirm} onClick={handleChange}>
+          Aceptar
+        </Button>
+        <Button onClick={handleClose}>Cancelar</Button>
       </ModalFooter>
     </Modal>
   );

@@ -20,35 +20,67 @@ import Select from 'react-select';
 import { registerAction } from '../../../store/reducer';
 
 const SignUp = () => {
-  const error = useSelector((state) => state.login.errorRegistro);
-  const name = useFormInput('');
-  const lastName = useFormInput('');
-  const documentNumber = useFormInput('');
-  const [typeDocument, setTypeDocument] = React.useState('cc');
-  const password = useFormInput('');
-  const bornDate = useFormInput('');
-  const email = useFormInput('');
-  const [rol, setRol] = React.useState('client');
   const dispatch = useDispatch();
+  const error = useSelector((state) => state.login.errorRegistro);
+
+  // Component State
+  const [name, setName] = React.useState(null);
+  const [lastName, setLastName] = React.useState(null);
+  const [documentNumber, setDocumentNumber] = React.useState(null);
+  const [typeDocument, setTypeDocument] = React.useState('cc');
+  const [password, setPassword] = React.useState(null);
+  const [bornDate, setBorndate] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
+  const [rol, setRol] = React.useState('client');
+
+  // Handle Register
   const handleRegister = (event) => {
     event.preventDefault();
     let data = {
-      name: name.value,
-      lastName: lastName.value,
+      name: name,
+      lastName: lastName,
       typeDocument: typeDocument.value,
-      documentNumber: documentNumber.value,
-      email: email.value,
+      documentNumber: documentNumber,
+      email: email,
       rol: rol.value,
-      password: password.value,
-      bornDate: bornDate.value,
+      password: password,
+      bornDate: bornDate,
     };
+    console.log('Data register', data);
     dispatch(registerAction(data));
   };
-  const handleRol = (role) => {
-    setRol(role);
+
+  // Manejadores de eventos para intercatuar con el estado del componente
+  const handleEmailChange = (email) => {
+    setEmail(email.target.value);
   };
+
+  const handlePasswordChange = (password) => {
+    setPassword(password.target.value);
+  };
+
+  const handleNameChange = (name) => {
+    setName(name.target.value);
+  };
+
+  const handleLasNameChange = (lastName) => {
+    setLastName(lastName.target.value);
+  };
+
+  const handleDocumentNumber = (documentNumber) => {
+    setDocumentNumber(documentNumber.target.value);
+  };
+
   const handleTypeDocument = (role) => {
     setTypeDocument(role);
+  };
+
+  const handleBornDate = (bornDate) => {
+    setBorndate(bornDate.target.value);
+  };
+
+  const handleRol = (role) => {
+    setRol(role);
   };
 
   return (
@@ -63,7 +95,8 @@ const SignUp = () => {
               placeholder="Ingresa tú Correo"
               id="email"
               name="email"
-              {...email}
+              required
+              onChange={handleEmailChange}
             />
           </FormGroup>
           <FormGroup>
@@ -73,7 +106,8 @@ const SignUp = () => {
               placeholder="Contraseña"
               id="password"
               name="password"
-              {...password}
+              required
+              onChange={handlePasswordChange}
             />
           </FormGroup>
           <FormGroup>
@@ -83,8 +117,8 @@ const SignUp = () => {
               required
               id="name"
               name="name"
-              {...name}
               className="form-control"
+              onChange={handleNameChange}
             />
           </FormGroup>
           <FormGroup>
@@ -94,9 +128,9 @@ const SignUp = () => {
               required
               id="lastName"
               name="lastName"
-              {...lastName}
               autoComplete="lastName"
               className="form-control"
+              onChange={handleLasNameChange}
             />
           </FormGroup>
           <FormGroup>
@@ -106,8 +140,9 @@ const SignUp = () => {
               name="documentNumber"
               id="documentNumber"
               autoComplete="documentNumber"
-              {...documentNumber}
+              required
               className="form-control"
+              onChange={handleDocumentNumber}
             />
           </FormGroup>
           <FormGroup>
@@ -133,8 +168,8 @@ const SignUp = () => {
             <Input
               type="date"
               required
-              {...bornDate}
               className="form-control"
+              onChange={handleBornDate}
             />
           </FormGroup>
           <FormGroup>
@@ -163,18 +198,6 @@ const SignUp = () => {
       </Container>
     </>
   );
-};
-
-const useFormInput = (initialValue) => {
-  const [value, setValue] = useState(initialValue);
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
-  return {
-    value,
-    onChange: handleChange,
-  };
 };
 
 export default SignUp;

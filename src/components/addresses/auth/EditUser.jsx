@@ -49,7 +49,8 @@ const EditUser = (props) => {
       bornDate: bornDate.value,
       rol: 'client',
     };
-    dispatch(actualizarUsuarioAction(data));
+    console.log('What data im gonna send', data);
+    dispatch(actualizarUsuarioAction({ id: user.id, data: data }));
     dispatch(push('/'));
   };
 

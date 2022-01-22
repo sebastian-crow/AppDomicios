@@ -38,7 +38,7 @@ export const GoogleSheetsConnect = (props) => {
     let data = {
       googleSheets: googleSheets,
     };
-    dispatch(actualizarUsuarioAction(data));
+    dispatch(actualizarUsuarioAction({ id: user.id, data: data }));
     dispatch(push('/'));
   };
 
