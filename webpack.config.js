@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { InjectManifest } = require('workbox-webpack-plugin');
 require('dotenv').config({ path: './.env' });
 
-__webpack_base_uri__ = 'http://localhost:8080';
 module.exports = {
   entry: path.resolve(__dirname, 'src') + '/index.js',
   output: {

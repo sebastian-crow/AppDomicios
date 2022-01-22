@@ -37,21 +37,7 @@ import {
   getAllUserAction,
   getAllUserDoneAction,
 
-  // Products
-  // eslint-disable-next-line
-  errorGetProducts,
-  getAllProductAction,
-  getAllProductDoneAction,
-  createProductAction,
-  createProductDoneAction,
-  errorCreateProduct,
-  updateProductAction,
-  updateProductDoneAction,
-  // eslint-disable-next-line
-  errorUpdateProduct,
-  deleteProductAction,
-  deleteProductDoneAction,
-  errorDeleteProduct,
+  getSheetsOrderErrorAction,
   restoreSessionStateAction,
   // Orders
   // eslint-disable-next-line
@@ -384,7 +370,6 @@ function* getAllDomiciliarySaga() {
 }
 
 // Orders
-
 function* getAllOrderSaga() {
   try {
     const { data } = yield call(api.getAllOrders);
@@ -524,9 +509,10 @@ function* getSheetsOrderSaga(action) {
     if (data) {
       yield put(getSheetsOrderDoneAction(data));
     } else {
-      console.error('You have many errors');
+      yield put(getSheetsOrderErrorAction('Error inesperado'));
     }
   } catch (error) {
+    yield put(getSheetsOrderErrorAction('Error inesperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing

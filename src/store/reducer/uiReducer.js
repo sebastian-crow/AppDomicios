@@ -85,6 +85,10 @@ export const getSheetsOrderDoneAction = createAction(
   'GET_SHEETS_ORDER_DONE_ACTION'
 );
 
+export const getSheetsOrderErrorAction = createAction(
+  'GET_SHEETS_ORDER_ERROR_ACTION'
+);
+
 // Update Sheets Orders
 export const updateSheetOrderAction = createAction(
   'UPDATE_SHEET_ORDER_ACTION'
@@ -126,6 +130,7 @@ const initialState = {
   orders: [],
   ordersProduct: [],
   sheetsOrder: [],
+  sheetsError: null,
 };
 
 const uiReducer = createReducer(initialState, {
@@ -203,12 +208,14 @@ const uiReducer = createReducer(initialState, {
   [getSheetsOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;
   },
-
+  // Get All Google Sheets by User
+  [getSheetsOrderErrorAction]: (state, action) => {
+    state.sheetsError = action.payload;
+  },
   // Update Sheets Orders
   [updateSheetOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;
   },
-
   // Delete Sheets Orders
   [deleteSheesOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;
