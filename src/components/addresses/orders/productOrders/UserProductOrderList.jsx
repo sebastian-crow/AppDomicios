@@ -99,19 +99,21 @@ const UserProductOrderList = () => {
       linkToOrder: `/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`,
     };
 
-    const orderProductValidation = ordersProduct?.map(
-      (orderProduct) => {
-        if (orderProduct.orderNumber === order.NumeroDeOrden)
-          return orderProduct;
-      }
-    );
+    console.log('Data that i want to send', data);
 
-    console.log('orderProductValidation', orderProductValidation);
+    // const orderProductValidation = ordersProduct?.map(
+    //   (orderProduct) => {
+    //     if (orderProduct.orderNumber === order.NumeroDeOrden)
+    //       return orderProduct;
+    //   }
+    // );
 
-    if (orderProductValidation)
-      dispatch(updateOrderProductAction(data));
-    if (!orderProductValidation)
-      dispatch(createOrderProductAction(data));
+    // console.log('orderProductValidation', orderProductValidation);
+
+    // if (orderProductValidation)
+    //   dispatch(updateOrderProductAction(data));
+    // if (!orderProductValidation)
+    //   dispatch(createOrderProductAction(data));
   };
 
   // Handle Set Link
