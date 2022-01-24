@@ -143,8 +143,6 @@ function* restoreSessionStateSaga(action) {
         );
       }
       yield put(push(pathname));
-    } else {
-      yield put(push('/'));
     }
   } catch (error) {
     console.error(error);
@@ -158,9 +156,6 @@ function* restoreSessionStateSaga(action) {
 function* logoutSagas(action) {
   try {
     yield put(cleanSessionStateAcion());
-    localStorage.removeItem('formURL');
-    localStorage.removeItem('authURL');
-    localStorage.removeItem('defaultRedirectURL');
     localStorage.removeItem('ordersProduct');
   } catch (error) {
     console.error(error);
@@ -186,57 +181,46 @@ function* registerSaga(action) {
 }
 
 function* locationChangeSaga(action) {
-  const user = yield select((state) => state.login.user);
-  if (user) {
-    const pathname = action.payload.location.pathname;
-    const formURL = localStorage.getItem('formURL');
-    const authURL = localStorage.getItem('authURL');
-    const defaultRedirectURL = localStorage.getItem(
-      'defaultRedirectURL'
-    );
-    const { data } = yield call(api.getAllOrdersProduct);
-    const orderProduct = [];
-    if (data) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].userPlatform === user.id) {
-          orderProduct.push(data[i]);
+
+  const lastRoute = window.location.href;
+  const pathname = action.payload.location.pathname;
+  let routes = localStorage.getItem("locationLog");
+  routes = JSON.parse(routes);
+  let log = routes?.log || [];
+  if (!routes?.log) {
+    log = [];
+  }
+  log.push(lastRoute);
+  if (log.length > 3) {
+    log.shift();
+  }
+  localStorage.setItem('locationLog', JSON.stringify({ log }));
+  if (log[0].includes(`${process.env.REACT_APP_REACT_HOST}/client/takeorder/`)
+    && log[1].includes(`${process.env.REACT_APP_REACT_HOST}/login`)
+    && log[2].includes(`${process.env.REACT_APP_REACT_HOST}/`)) {
+    let index = log[0].indexOf(`/client/takeorder/`);
+    yield put(push(log[0].substr(index)));
+  } else if (!lastRoute.includes(`/client/takeorder/`)) {
+    const user = yield select((state) => state.login.user);
+    if (user) {
+      if (pathname === '/') {
+        switch (user.rol) {
+          case 'client':
+            yield put(push('/client/orderProducts'));
+            break;
+          case 'admin':
+            yield put(push('/admin/orderslist'));
+            break;
+          case 'domiciliary':
+            yield put(push('/domiciliary/orderslist'));
+            break;
+          default:
+            break;
         }
       }
     }
-    if (pathname === '/') {
-      switch (user.rol) {
-        case 'client':
-          yield put(push('/client/orderProducts'));
-          const defaultRedirectURL = window.location.href;
-          const previousURL = localStorage.getItem(
-            'defaultRedirectURL'
-          );
-          if (!previousURL)
-            localStorage.setItem(
-              'defaultRedirectURL',
-              defaultRedirectURL
-            );
-          if (orderProduct.length > 0) {
-            if (
-              defaultRedirectURL &&
-              authURL &&
-              formURL?.endsWith(orderProduct[0]?.linkToOrder)
-            ) {
-              yield put(push(orderProduct[0]?.linkToOrder));
-            }
-          }
-          break;
-        case 'admin':
-          yield put(push('/admin/orderslist'));
-          break;
-        case 'domiciliary':
-          yield put(push('/domiciliary/orderslist'));
-          break;
-        default:
-          break;
-      }
-    }
   }
+
 }
 
 function* actualizarUsuarioSaga(action) {
@@ -387,6 +371,7 @@ function* createOrderSaga(action) {
   try {
     const { data } = yield call(api.createOrder, action.payload);
     yield put(createOrderDoneAction(data));
+    yield put(push('/client/orderProducts'));
   } catch (error) {
     yield put(errorCreateOrder('Error inesperado'));
   } finally {

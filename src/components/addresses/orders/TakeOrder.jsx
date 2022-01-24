@@ -1,19 +1,11 @@
-// React
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-
-// Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { push } from 'redux-first-history';
-
-// Reducers
 import {
   getAllDomiciliaryAction,
   createOrderAction,
-  getSheetsOrderAction,
+  getAllOrderProductAction,
 } from '../../../store/reducer';
-
-// Reacstrap
 import {
   Container,
   Col,
@@ -26,23 +18,16 @@ import {
   ModalBody,
   ModalFooter,
 } from 'reactstrap';
-
-// React Select
 import Select from 'react-select';
-import makeAnimated from 'react-select/animated';
 
 // Departments And Cities JSON
 import { cities, departments } from './lib/cities';
 
-// Map to Select User's current location
-import { MapSelectUbication } from './lib/MapSelectUbication';
-import { ConsoleSqlOutlined } from '@ant-design/icons';
 import moment from 'moment';
-
-const animatedComponents = makeAnimated();
 
 // Take Order Component
 const TakeOrder = (props) => {
+  const { orderNumberSheets, idClientEmpresa } = useParams();
   // Redux Dispatch
   const dispatch = useDispatch();
 
@@ -51,71 +36,31 @@ const TakeOrder = (props) => {
 
   // Get Dealers List
   const dealers = useSelector((state) => state.ui.domiciliarys);
+  const ordersProductError = useSelector(
+    (state) => state.ui.sheetsError
+  );
 
-  // Sheets Orders
-
-  const { orderNumberSheets, idClientEmpresa } = useParams();
-
-  const currentSheetsOrder = useSelector((state) =>
-    state.ui.sheetsOrder.filter(
-      (order) => order['Numero de Orden'] === orderNumberSheets
+  const ordersProductUser = useSelector((state) =>
+    state.ui.ordersProduct.filter(
+      (orderProduct) =>
+        orderProduct.userPlatform === user.id &&
+        orderProduct.orderNumber === orderNumberSheets
     )
   );
 
-  const [orderNumber, setorderNumber] = React.useState(
-    currentSheetsOrder?.['# de Orden']
-  );
+  const [phoneNumber, setPhoneNumber] = React.useState('');
 
-  const [orderText, setOrderText] = React.useState(
-    currentSheetsOrder?.['# Paquete a entregar']
-  );
-  const [nameLastName, setNameLastName] = React.useState(
-    currentSheetsOrder?.['Nombres y Apellidos']
-  );
-  const [documentNumber, setDocumentNumber] = React.useState(null);
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    currentSheetsOrder?.['Telefono client']
-  );
   const [department, setDepartment] = React.useState([]);
   const [city, setCity] = React.useState([]);
 
-  const [firstAddress, setFirstAddress] = React.useState(
-    currentSheetsOrder?.['Direccion Recogida']
-  );
-  const [finalAddress, setFinalAddress] = React.useState(
-    currentSheetsOrder?.['"Direccion entrega "']
-  );
+  const [firstAddress, setFirstAddress] = React.useState();
+  const [finalAddress, setFinalAddress] = React.useState();
 
-  const [email, setEmail] = React.useState(null);
   const [paymentMethod, setPaymentMethod] = React.useState([]);
   const [dealerData, setDealerData] = React.useState({});
-  const [dealerDataGoogleSheets, setDealerDataGoogleSheets] =
-    React.useState({});
 
   const [toggle, setToggle] = React.useState(false);
   const [confirm, setConfirm] = React.useState(false);
-  const [cancel, setCancel] = React.useState(false);
-
-  // Handle Events OnChange
-  // Handle names and last names
-  const handleNameChange = (nameLastName) => {
-    setNameLastName(nameLastName.target.value);
-  };
-
-  // Handle the number of order
-  const handleOrderNumber = (orderNumberData) => {
-    setorderNumber(orderNumberData.target.value);
-  };
-
-  // Handle the order like text
-  const handleOrderText = (orderTextData) => {
-    setOrderText(orderTextData.target.value);
-  };
-
-  // Handle document number
-  const handleDocumentNumber = (documentNumber) => {
-    setDocumentNumber(documentNumber.target.value);
-  };
 
   // Handle names and last names
   const handlePhoneChange = (phoneNumber) => {
@@ -141,11 +86,6 @@ const TakeOrder = (props) => {
   // Handle event onChange to Final Address
   const handleFinalAddressChange = (addressData) => {
     setFinalAddress(addressData.target.value);
-  };
-
-  // Hanlde evnet onChange to Email
-  const handleEmailChange = (emailData) => {
-    setEmail(emailData.target.value);
   };
 
   // Hanlde event onChange to payMethod
@@ -180,7 +120,7 @@ const TakeOrder = (props) => {
   });
 
   let finalCitiesData = [];
-  const finalCities = getCities.map((citie) => {
+  getCities.map((citie) => {
     if (citie.length > 1) {
       finalCitiesData.push(citie);
     }
@@ -227,20 +167,11 @@ const TakeOrder = (props) => {
     },
   ];
 
-  const openWhatsapp = () => {
-    const url =
-      'https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0';
-    window.open(url, '_blank');
-  };
-
   // Handle Close
-  const handleClose = () => setToggle(!toggle);
+  const handleToggle = () => setToggle(!toggle);
 
   // Handle Save
   const handleSave = () => {
-    setToggle(!toggle);
-    setConfirm(!confirm);
-
     if (confirm) {
       console.log('Send all data');
     } else {
@@ -248,36 +179,37 @@ const TakeOrder = (props) => {
     }
 
     let data = {
-      orderNumber: orderNumber ? orderNumber : 902,
-      ticket: orderText ? orderText : 'Pedido Error',
-      phone: Number(phoneNumber),
+      orderNumber: ordersProductUser[0]?.orderNumber,
+      ticket: ordersProductUser[0]?.deliveryPacket,
+      phone: phoneNumber || ordersProductUser[0]?.clientPhone,
       departament: department.label.toString(),
       city: city.length ? city.label : 'DEFAULT',
-      firstAddress: firstAddress,
-      lastAddress: finalAddress,
+      firstAddress:
+        firstAddress || ordersProductUser[0]?.deliveryAddress,
+      lastAddress:
+        finalAddress || ordersProductUser[0]?.deliveryUbication,
       paymentMethod: paymentMethod.label.toString(),
-      domiciliary: Number(dealerData.value),
       date: moment(Date.now()).format('YYYY/MM/DD'),
+      clientCompany: Number(idClientEmpresa ? idClientEmpresa : '0'),
       clientName: user.name,
       clientLastName: user.lastName,
-      clientDocumentNumber: Number(user.documentNumber),
+      clientDocumentNumber: user.documentNumber,
       clientEmail: user.email,
       clientId: user.id,
-      clientCompany: idClientEmpresa ? idClientEmpresa : '0',
+      domiciliary: dealerData.value,
       state: 'En proceso',
     };
-
-    console.log('Data', data);
-
-    // dispatch(createOrderAction(data));
-    // dispatch(push('/client/orderslist'));
-    // openWhatsapp();
+    dispatch(createOrderAction(data));
   };
 
-  // Get Dealers Array
   React.useEffect(() => {
     dispatch(getAllDomiciliaryAction());
-    dispatch(getSheetsOrderAction(user.id));
+    if (
+      ordersProductUser &&
+      !ordersProductError &&
+      ordersProductUser.length === 0
+    )
+      dispatch(getAllOrderProductAction());
   }, [dispatch]);
 
   return (
@@ -321,9 +253,8 @@ const TakeOrder = (props) => {
                     placeholder="Dirección Recogida"
                     onChange={handleFirstAddressChange}
                     defaultValue={
-                      currentSheetsOrder?.['Direccion Recogida']
+                      ordersProductUser[0]?.deliveryAddress
                     }
-                    {...currentSheetsOrder?.['Direccion Recogida']}
                   />
                 </Col>
               </FormGroup>
@@ -335,9 +266,8 @@ const TakeOrder = (props) => {
                     placeholder="Dirección Entrega"
                     onChange={handleFinalAddressChange}
                     defaultValue={
-                      currentSheetsOrder?.['"Direccion entrega "']
+                      ordersProductUser[0]?.deliveryUbication
                     }
-                    {...currentSheetsOrder?.['"Direccion entrega "']}
                   />
                 </Col>
               </FormGroup>
@@ -348,6 +278,7 @@ const TakeOrder = (props) => {
                     id="phone"
                     placeholder="Celular"
                     onChange={handlePhoneChange}
+                    defaultValue={ordersProductUser[0]?.clientPhone}
                   />
                 </Col>
               </FormGroup>
@@ -385,15 +316,15 @@ const TakeOrder = (props) => {
                   <Button
                     variant="success"
                     size="lg"
-                    onClick={handleSave}
+                    onClick={handleToggle}
                   >
                     Crear Orden
                   </Button>{' '}
                   {``}
-                  <MyVerticallyCenteredModal
+                  <SaveOrderModal
                     toggle={toggle}
                     handleChange={handleSave}
-                    handleClose={handleClose}
+                    handleClose={handleToggle}
                     confirm={confirm}
                   />
                 </div>
@@ -401,18 +332,13 @@ const TakeOrder = (props) => {
             </Col>
             <Col></Col>
           </Form>
-          {/* 
-          <div className="mapContainerForm">
-            <MapSelectUbication />
-          </div>
-          */}
         </Container>
       </div>
     </>
   );
 };
 
-const MyVerticallyCenteredModal = (props) => {
+const SaveOrderModal = (props) => {
   const {
     toggle,
     handleChange,
@@ -421,21 +347,21 @@ const MyVerticallyCenteredModal = (props) => {
     handleClose,
   } = props;
   return (
-    <Modal isOpen={toggle} toggle={handleChange}>
-      <ModalHeader toggle={handleChange}>
-        <h5>Confirmar</h5>
-      </ModalHeader>
-      <ModalBody>
-        ¿Estás seguro/a de que los datos ingresados en el formulario
-        son correctos?
-      </ModalBody>
-      <ModalFooter>
-        <Button confirm={handleConfirm} onClick={handleChange}>
-          Aceptar
-        </Button>
-        <Button onClick={handleClose}>Cancelar</Button>
-      </ModalFooter>
-    </Modal>
+    <>
+      <Modal isOpen={toggle} toggle={handleChange}>
+        <ModalHeader toggle={handleChange}>Confirmar</ModalHeader>
+        <ModalBody>
+          ¿Estás seguro/a de que los datos ingresados en el formulario
+          son correctos?
+        </ModalBody>
+        <ModalFooter>
+          <Button confirm={handleConfirm} onClick={handleChange}>
+            Aceptar
+          </Button>
+          <Button onClick={handleClose}>Cancelar</Button>
+        </ModalFooter>
+      </Modal>
+    </>
   );
 };
 

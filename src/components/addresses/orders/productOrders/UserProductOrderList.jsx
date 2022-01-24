@@ -24,9 +24,6 @@ import {
   deleteOrderProductAction,
 } from '../../../../store/reducer';
 
-// Copy to Clipboard
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-
 const UserProductOrderList = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
@@ -256,7 +253,7 @@ const UserProductOrderList = () => {
                     Crear Link
                   </Button>
 
-                  <MyVerticallyCenteredModal
+                  <URLModal
                     toggle={toggle}
                     handleChange={handleChangeToggle}
                     url={`${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`}
@@ -271,13 +268,11 @@ const UserProductOrderList = () => {
   );
 };
 
-const MyVerticallyCenteredModal = (props) => {
+const URLModal = (props) => {
   const { toggle, handleChange, url } = props;
   return (
     <Modal isOpen={toggle} toggle={handleChange}>
-      <ModalHeader toggle={handleChange}>
-        <h5>URL de la orden</h5>
-      </ModalHeader>
+      <ModalHeader toggle={handleChange}>URL de la orden</ModalHeader>
       <ModalBody>{url}</ModalBody>
       <ModalFooter>
         <Button

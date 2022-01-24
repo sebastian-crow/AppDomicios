@@ -181,7 +181,7 @@ const MyVerticallyCenteredModal = (props) => {
   return (
     <Modal isOpen={toggle} toggle={handleChange}>
       <ModalHeader toggle={handleChange}>
-        <h5>URL de la orden</h5>
+        URL de la orden
       </ModalHeader>
       <ModalBody>{url}</ModalBody>
       <ModalFooter>
@@ -209,7 +209,7 @@ const MyVerticallyCenteredModalDelete = (props) => {
   return (
     <Modal isOpen={toogleConfirm} toogleConfirm={handleChange}>
       <ModalHeader toogleConfirm={handleChange}>
-        <h5>Confirmar</h5>
+        Confirmar
       </ModalHeader>
       <ModalBody>
         ¿Estás seguro/a de que desea eliminar el pedido seleccionada?

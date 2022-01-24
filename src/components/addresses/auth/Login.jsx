@@ -29,9 +29,6 @@ const LoginPage = () => {
   const handleLogin = (event) => {
     event.preventDefault();
     dispatch(loginAction({ email, password }));
-    const authURL = window.location.href;
-    const previousURL = localStorage.getItem('authURL');
-    if (!previousURL) localStorage.setItem('authURL', authURL);
   };
 
   const handleChangeEmail = (event) => {

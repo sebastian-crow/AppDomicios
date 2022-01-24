@@ -23,13 +23,6 @@ function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
 
-  // Primera Ruta Almacenada, ruta de formulario
-  const previousURL = window.location.href;
-  const previousURLToSave = previousURL.startsWith(
-    `${process.env.REACT_APP_REACT_HOST}/client/takeorder/`
-  );
-  if (previousURLToSave) localStorage.setItem('formURL', previousURL);
-
   React.useEffect(() => {
     if (!user) {
       const userSessionInfo = getSessionCookie();
