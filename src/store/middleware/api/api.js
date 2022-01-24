@@ -1,12 +1,11 @@
-import axios from "axios";
-import { CANCEL } from "redux-saga";
-require("dotenv").config();
+import axios from 'axios';
+import { CANCEL } from 'redux-saga';
 let client;
 
 export const getSessionToken = () => {
-  const uiStore = sessionStorage.getItem("store");
+  const uiStore = localStorage.getItem('store');
   var ui = JSON.parse(uiStore);
-  if (ui) return ui.login.usuario.token;
+  if (ui) return ui.login.user.token;
   else return null;
 };
 // axios client factory ...
@@ -14,7 +13,9 @@ export const getSessionToken = () => {
 function getClient() {
   if (!client) {
     client = axios.create({
-      baseURL: process.env.REACT_APP_BACK_END || "http://localhost:3006",
+      baseURL:
+        process.env.REACT_APP_BACK_END + '/api' ||
+        'http://localhost:3006' + '/api',
     });
   }
   return client;
@@ -32,12 +33,12 @@ const callAPI = (options) => {
   };
   if (token) {
     opts.headers = {
-      Accept: "application/json",
-      Authorization: "Bearer " + token,
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
     };
   } else {
     opts.headers = {
-      Accept: "application/json",
+      Accept: 'application/json',
     };
   }
 
@@ -48,140 +49,184 @@ const callAPI = (options) => {
 
 export function login(params) {
   return callAPI({
-    method: "POST",
-    url: `/users/authenticate`,
+    method: 'POST',
+    url: `/auth`,
     data: params,
   });
 }
 
 export function register(params) {
   return callAPI({
-    method: "POST",
-    url: `/users/register`,
+    method: 'POST',
+    url: `/register`,
     data: params,
   });
 }
 
-export function editarUsuario(params) {
+export function editUser(params) {
   return callAPI({
-    method: "PUT",
-    url: `/users/update/` + params.id,
+    method: 'PATCH',
+    url: `/user/${params.id}`,
     data: params.data,
   });
 }
 
 export function createPosition(params) {
   return callAPI({
-    method: "POST",
-    url: `/position`,
+    method: 'POST',
+    url: `/positionUser`,
     data: params,
   });
 }
 
 export function getPositionFromUser(id) {
   return callAPI({
-    method: "GET",
+    method: 'GET',
     url: `/position/user/${id}`,
-  });
-}
-
-export function updatePosition(params) {
-  return callAPI({
-    method: "PUT",
-    url: `/position/${params.positionId}`,
-    data: { position: JSON.stringify({ lat: params.lat, lng: params.lng }) },
   });
 }
 
 export function getAllUsers() {
   return callAPI({
-    method: "GET",
+    method: 'GET',
     url: `/users`,
   });
 }
 
 export function getAllClients() {
   return callAPI({
-    method: "GET",
-    url: `/users/clients`,
+    method: 'GET',
+    url: `/user/client`,
   });
 }
 
-export function getAllDomiciliarios() {
+export function getAllDomiciliarys() {
   return callAPI({
-    method: "GET",
-    url: `/users/domiciliarios`,
-  });
-}
-
-// Products
-
-export function getAllProducts() {
-  return callAPI({
-    method: "GET",
-    url: `/products`,
-  });
-}
-
-export function createProduct(params) {
-  return callAPI({
-    method: "POST",
-    url: `/products`,
-    data: params,
-  });
-}
-
-export function updateProduct(params) {
-  return callAPI({
-    method: "PUT",
-    url: `/products/` + params.id,
-    data: params.data,
-  });
-}
-
-export function deleteProduct(params) {
-  return callAPI({
-    method: "DELETE",
-    url: `/products/` + params,
+    method: 'GET',
+    url: `/user/domiciliary`,
   });
 }
 
 // Orders
+export function getAllOrdersByUserDomiciliary() {
+  return callAPI({
+    method: 'GET',
+    url: `/order/user/domiciliary`,
+  });
+}
+
+export function getAllOrdersByUser() {
+  return callAPI({
+    method: 'GET',
+    url: `/order/user`,
+  });
+}
+
 export function getAllOrders() {
   return callAPI({
-    method: "GET",
-    url: `/orders`,
+    method: 'GET',
+    url: `/order`,
+  });
+}
+
+export function getOrderById(id) {
+  return callAPI({
+    method: 'GET',
+    url: `/order/${id}`,
   });
 }
 
 export function createOrder(params) {
   return callAPI({
-    method: "POST",
-    url: `/orders/create`,
+    method: 'POST',
+    url: `/order`,
     data: params,
   });
 }
 
 export function updateOrder(params) {
   return callAPI({
-    method: "PUT",
-    url: `/orders/update/` + params.id,
+    method: 'PATCH',
+    url: `/order/${params.id}`,
     data: params.data,
   });
 }
 
 export function deleteOrder(params) {
   return callAPI({
-    method: "DELETE",
-    url: `/orders/delete/` + params.id,
+    method: 'DELETE',
+    url: `/order/${params.id}`,
     data: params.data,
   });
 }
 
-export function savePushUrl(params) {
+// Orders Product
+
+export function getAllOrdersProductByIdUser(id) {
   return callAPI({
-    method: "POST",
-    url: `/users/saveUrlPush/` + params.userId,
-    data: { urlPush: params.urlPush },
+    method: 'GET',
+    url: `/orderProduct/user/${id}`,
+  });
+}
+
+export function getAllOrdersProductByUser() {
+  return callAPI({
+    method: 'GET',
+    url: `/orderProduct/user`,
+  });
+}
+
+export function getAllOrdersProduct() {
+  return callAPI({
+    method: 'GET',
+    url: `/orderProduct`,
+  });
+}
+
+export function createOrderProduct(params) {
+  return callAPI({
+    method: 'POST',
+    url: `/orderProduct`,
+    data: params,
+  });
+}
+
+export function updateOrderProduct(params) {
+  return callAPI({
+    method: 'PATCH',
+    url: `/orderProduct/${params.id}`,
+    data: params.data,
+  });
+}
+
+export function deleteOrderProduct(params) {
+  return callAPI({
+    method: 'DELETE',
+    url: `/orderProduct/${params.id}`,
+    data: params.data,
+  });
+}
+
+// Sheets Orders
+export function getSheetsOrder(params) {
+  return callAPI({
+    method: 'GET',
+    url: params,
+  });
+}
+
+// Update Sheets Orders
+export function updateSheetsOrder(params) {
+  return callAPI({
+    method: 'GET',
+    url: params,
+  });
+}
+
+// Delete Sheets Orders
+export function deleteSheetsOrder(params) {
+  return callAPI({
+    method: 'GET',
+    url: params,
   });
 }

@@ -10,6 +10,8 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://cra.link/PWA
 
+const keyGoogle =
+  "BFEKJnP7Kfwron2qk6lMNhmXfJiIhuP_3NBLlZtwqZ7YK5bYGJvVr2G0fqMb2S6WavCZj4nKEJ0Ma69zbyN2F2s";
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
     // [::1] is the IPv6 localhost address.
@@ -32,7 +34,7 @@ export function register(config) {
     }
 
     window.addEventListener("load", () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      const swUrl = `../service-worker.js`;
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
@@ -40,11 +42,23 @@ export function register(config) {
 
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
-        navigator.serviceWorker.ready.then(() => {
+        navigator.serviceWorker.ready.then((registration) => {
           console.log(
             "This web app is being served cache-first by a service " +
               "worker. To learn more, visit https://cra.link/PWA",
           );
+          registration.pushManager
+            .subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(keyGoogle),
+            })
+            .then((subscription) => {
+              localStorage.setItem("webpush", JSON.stringify(subscription));
+            });
+          window.addEventListener("push", (event) => {
+            var user = localStorage.getItem("user");
+            var user = JSON.parse(user);
+          });
         });
       } else {
         // Is not localhost. Just register service worker
@@ -74,7 +88,6 @@ function registerValidSW(swUrl, config) {
                 "New content is available and will be used when all " +
                   "tabs for this page are closed. See https://cra.link/PWA.",
               );
-
               // Execute callback
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
@@ -139,4 +152,17 @@ export function unregister() {
         console.error(error.message);
       });
   }
+}
+
+function urlBase64ToUint8Array(base64String) {
+  var padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  var base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+
+  for (var i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
 }

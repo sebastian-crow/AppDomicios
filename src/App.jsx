@@ -1,93 +1,97 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable linebreak-style */
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom'; // Librería react-router-dom
+import { Router } from 'react-router';
+import { Switch, Route } from 'react-router-dom'; // Librería react-router-dom
 import { push } from 'redux-first-history';
-``
-// CSS
-import 'mapbox-gl/dist/mapbox-gl.css';
-import mapboxgl from '!mapbox-gl';
-import './assets/css/home.css';
-
+// Store and history
+import { history } from './store/configureStore';
+// Cookies Session
+import { getSessionCookie } from './session';
 import { useDispatch, useSelector } from 'react-redux';
-import AdminLayout from 'layouts/Admin';
-import NoAuth from 'layouts/NoAuth';
+import AdminLayout from './layouts/AdminLayout';
+import NoAuth from './layouts/NoAuth';
 import { restoreSessionStateAction } from './store/reducer';
 import Login from './components/addresses/auth/Login';
 import Register from './components/addresses/auth/Register';
-import routesCliente from './routes/routesCliente';
+import routesClient from './routes/routesClient';
 import routesAdmin from './routes/routesAdmin';
-import routesDomiciliario from './routes/routesDomiciliario';
-
+import routesDomiciliary from './routes/routesDomiciliary';
 import defaultRoutes from './routes/defaultRoutes';
 
-async function createNotificationSubscription() {
-  //wait for service worker installation to be ready
-  const serviceWorker = await navigator.serviceWorker.ready;
-  // subscribe and return the subscription
-  return await serviceWorker.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: pushServerPublicKey,
-  });
-}
 
 function App() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.login.usuario.user);
-  React.useEffect(async () => {
-    // on app start, restore state stored from local/session storage
-    dispatch(restoreSessionStateAction());
+  const user = useSelector((state) => state.login.user);
+
+  React.useEffect(() => {
     if (!user) {
-      dispatch(push('/login'));
-    } else {
-      const urlPush = await createNotificationSubscription();
-      dispatch(saveUrlPushAction({userId: user.id, urlPush}));
-      console.log(urlPush);
+      const userSessionInfo = getSessionCookie();
+      if (Object.keys(userSessionInfo).length) {
+        dispatch(restoreSessionStateAction());
+      } else {
+        dispatch(push('/login'));
+      }
     }
-  }, [dispatch, user]);
+  }, []);
 
   return (
     <>
-      <div>
-        <Switch>
-          {/**
-           * Heredas las rutas atraves de este middleware, y
-           * puedes cambiar el layout para diferentes vistas
-           * como puedes poner una plantilla para ventas y otra para administracion entre otras
-           */}
-          <Route
-            path="/admin"
-            render={(props) => <AdminLayout {...props} routes={routesAdmin} />}
-          />
-          <Route
-            path="/domiciliario"
-            render={(props) => <AdminLayout {...props} routes={routesDomiciliario} />}
-          />
-          <Route
-            path="/cliente"
-            render={(props) => <AdminLayout {...props} routes={routesCliente} />}
-          />
-          <Route
-            path="/user"
-            render={(props) => <NoAuth {...props} routes={defaultRoutes} />}
-          />
-          <Route restricted path="/login" component={Login} />
-          <Route restricted path="/register" component={Register} />
+      <Router history={history}>
+        <div>
+          <Switch>
+            {/**
+             * Heredas las rutas atraves de este middleware, y
+             * puedes cambiar el layout para diferentes vistas
+             * como puedes poner una plantilla para ventas y otra para administracion entre otras
+             */}
+            <Route
+              path="/admin"
+              render={(props) => (
+                <AdminLayout {...props} routes={routesAdmin} />
+              )}
+            />
+            <Route
+              path="/domiciliary"
+              render={(props) => (
+                <AdminLayout {...props} routes={routesDomiciliary} />
+              )}
+            />
+            <Route
+              path="/client"
+              render={(props) => (
+                <AdminLayout {...props} routes={routesClient} />
+              )}
+            />
+            <Route
+              restricted
+              path="/clientForm"
+              render={(props) => (
+                <NoAuth {...props} routes={routesClient} />
+              )}
+            />
 
-          {user?.rol === 'cliente' && (
-            <Redirect to="/cliente/dashboard" />
-          )}
-          {user?.rol === 'admin' && (
-            <Redirect to="/admin/dashboard" />
-          )}
-          {user?.rol === 'domiciliario' && (
-            <Redirect to="/domiciliario/dashboard" />
-          )}
-        </Switch>
-      </div>
+            <Route
+              path="/user"
+              render={(props) => (
+                <NoAuth {...props} routes={defaultRoutes} />
+              )}
+            />
+
+            <Route restricted path="/login" component={Login} />
+            <Route restricted path="/register" component={Register} />
+            <Route
+              path="/whatsappNotification"
+              component={() => {
+                window.location.href =
+                  'https://api.whatsapp.com/send/?phone=%2B14155238886&text=join+metal-cell&app_absent=0';
+                window.location.target = '_blank';
+                return null;
+              }}
+            />
+          </Switch>
+        </div>
+      </Router>
     </>
   );
 }
 
 export default App;
-

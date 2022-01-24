@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-function Dashboard(props) {
+function NoAuth(props) {
   return (
     <Switch>
       {props.routes.map((prop, key) => (
@@ -15,4 +15,4 @@ function Dashboard(props) {
   );
 }
 
-export default Dashboard;
+export default NoAuth;

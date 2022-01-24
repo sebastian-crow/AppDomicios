@@ -9,15 +9,12 @@ import { push } from "redux-first-history";
 // Reducers
 import {
   getAllProductAction,
-  getAllDomiciliarioAction,
+  getAllDomiciliaryAction,
   createOrderAction,
 } from "../../../store/reducer";
 
 // Reacstrap
-import { Container, Col, Form, FormGroup, Input } from "reactstrap";
-
-// React Bootstrap
-import { Button } from "react-bootstrap";
+import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
 
 // React Select
 import Select from "react-select";
@@ -28,8 +25,8 @@ const animatedComponents = makeAnimated();
 // Take Order Component
 const TakeOrder = (props) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.login.usuario.user);
-  const dealers = useSelector((state) => state.ui.domiciliarios);
+  const user = useSelector((state) => state.login.user);
+  const dealers = useSelector((state) => state.ui.domiciliarys);
   const products = useSelector((state) => state.ui.products);
   const orders = useSelector((state) => state.ui.orders);
   const order = orders.find((order) => order._id === props.match.params.id);
@@ -37,13 +34,13 @@ const TakeOrder = (props) => {
   const [orderName, setOrderName] = React.useState(order.orderName);
   const [address, setAddress] = React.useState(order.direccion.address);
   const [productsAndAmount, setProductsAndAmount] = React.useState([]);
-  let domiciliariosPreview = {};
-  dealers?.forEach((domiciliario) => {
-    if (order.domiciliario.id === domiciliario._id) {
+  let domiciliarysPreview = {};
+  dealers?.forEach((domiciliary) => {
+    if (order.domiciliary.id === domiciliary._id) {
       if (Object.values(dealerData).length === 0) {
-        domiciliariosPreview = {
-          value: domiciliario._id,
-          label: domiciliario.nombre,
+        domiciliarysPreview = {
+          value: domiciliary._id,
+          label: domiciliary.name,
         };
       }
     }
@@ -53,7 +50,7 @@ const TakeOrder = (props) => {
   order.productos?.forEach((product) => {
     productosPreview.push({
       value: product.id,
-      label: product.nombre,
+      label: product.name,
       amount: product.cantidad,
     });
     if(productsAndAmount.length === 0){
@@ -92,7 +89,7 @@ const TakeOrder = (props) => {
     const productDone = [];
     productsAndAmount.map((info) => {
       productDone.push({
-        nombre: info.label,
+        name: info.label,
         id: info.value,
         cantidad: info.amount,
       });
@@ -102,11 +99,11 @@ const TakeOrder = (props) => {
     let data = {
       orderName,
       fecha: new Date(),
-      cliente: {
-        id: user._id,
-        name: user.nombre,
+      client: {
+        id: user.id,
+        name: user.name,
       },
-      domiciliario: {
+      domiciliary: {
         id: dealerData.value,
         name: dealerData.label,
       },
@@ -117,8 +114,8 @@ const TakeOrder = (props) => {
     dispatch(createOrderAction(data));
     if (user?.rol === "admin") {
       dispatch(push("/admin/orderslist"));
-    } else if (user?.rol === "cliente") {
-      dispatch(push("/cliente/orderslist"));
+    } else if (user?.rol === "client") {
+      dispatch(push("/client/orderslist"));
     }
   };
 
@@ -150,7 +147,7 @@ const TakeOrder = (props) => {
   // Get Products Array
   React.useEffect(() => {
     dispatch(getAllProductAction());
-    dispatch(getAllDomiciliarioAction());
+    dispatch(getAllDomiciliaryAction());
   }, [dispatch]);
 
   return (
@@ -174,14 +171,14 @@ const TakeOrder = (props) => {
                 <Col sm={10}>
                   <Select
                     onChange={handleDealerChange}
-                    placeholder="Domiciliario"
+                    placeholder="Domiciliary"
                     options={dealers.map((dealer) => {
                       return {
                         value: dealer._id,
-                        label: dealer.nombre,
+                        label: dealer.name,
                       };
                     })}
-                    value={{ ...dealerData, ...domiciliariosPreview }}
+                    value={{ ...dealerData, ...domiciliarysPreview }}
                   />
                 </Col>
               </FormGroup>
@@ -218,7 +215,7 @@ const TakeOrder = (props) => {
                               options={products.map((product) => {
                                 return {
                                   value: product._id,
-                                  label: product.nombre,
+                                  label: product.name,
                                 };
                               })}
                               placeholder="Productos"
