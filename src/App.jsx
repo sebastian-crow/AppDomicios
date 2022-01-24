@@ -17,7 +17,6 @@ import routesAdmin from './routes/routesAdmin';
 import routesDomiciliary from './routes/routesDomiciliary';
 import defaultRoutes from './routes/defaultRoutes';
 
-import { useLocation } from 'react-router-dom';
 
 function App() {
   const dispatch = useDispatch();

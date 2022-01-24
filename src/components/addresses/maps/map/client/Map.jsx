@@ -15,7 +15,7 @@ import {
   updatePositionDealerAction,
   getFromDealerPositionAction,
   getAllDomiciliaryAction,
-  getAllOrderAction,
+  getAllOrdersByUser,
 } from '../../../../../store/reducer';
 
 // Mapbox GL
@@ -154,7 +154,7 @@ export const Map = (props) => {
 
   // UseEffect's
   useEffect(() => {
-    if (!currentOrder.length) dispatch(getAllOrderAction());
+    if (!currentOrder.length) dispatch(getAllOrdersByUser());
     //dispatch(getAllDomiciliaryAction());
     dispatch(getFromDealerPositionAction());
   }, [dispatch]);

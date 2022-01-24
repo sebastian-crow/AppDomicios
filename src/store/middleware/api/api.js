@@ -108,6 +108,20 @@ export function getAllDomiciliarys() {
 }
 
 // Orders
+export function getAllOrdersByUserDomiciliary() {
+  return callAPI({
+    method: 'GET',
+    url: `/order/user/domiciliary`,
+  });
+}
+
+export function getAllOrdersByUser() {
+  return callAPI({
+    method: 'GET',
+    url: `/order/user`,
+  });
+}
+
 export function getAllOrders() {
   return callAPI({
     method: 'GET',
@@ -140,6 +154,21 @@ export function deleteOrder(params) {
 }
 
 // Orders Product
+
+export function getAllOrdersProductByIdUser(id) {
+  return callAPI({
+    method: 'GET',
+    url: `/orderProduct/user/${id}`,
+  });
+}
+
+export function getAllOrdersProductByUser() {
+  return callAPI({
+    method: 'GET',
+    url: `/orderProduct/user`,
+  });
+}
+
 export function getAllOrdersProduct() {
   return callAPI({
     method: 'GET',

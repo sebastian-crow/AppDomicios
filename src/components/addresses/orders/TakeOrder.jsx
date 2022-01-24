@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllDomiciliaryAction,
   createOrderAction,
-  getAllOrderProductAction,
+  getAllOrderProductByUserAction,
 } from '../../../store/reducer';
 import {
   Container,
@@ -26,7 +26,7 @@ import { cities, departments } from './lib/cities';
 import moment from 'moment';
 
 // Take Order Component
-const TakeOrder = (props) => {
+const TakeOrder = () => {
   const { orderNumberSheets, idClientEmpresa } = useParams();
   // Redux Dispatch
   const dispatch = useDispatch();
@@ -43,7 +43,6 @@ const TakeOrder = (props) => {
   const ordersProductUser = useSelector((state) =>
     state.ui.ordersProduct.filter(
       (orderProduct) =>
-        orderProduct.userPlatform === user.id &&
         orderProduct.orderNumber === orderNumberSheets
     )
   );
@@ -194,6 +193,7 @@ const TakeOrder = (props) => {
       state: 'En proceso',
     };
     dispatch(createOrderAction(data));
+    openWhatsapp();
   };
 
   React.useEffect(() => {
@@ -203,7 +203,7 @@ const TakeOrder = (props) => {
       !ordersProductError &&
       ordersProductUser.length === 0
     )
-      dispatch(getAllOrderProductAction());
+      dispatch(getAllOrderProductByUserAction());
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -227,7 +227,10 @@ const TakeOrder = (props) => {
     paymentMethod,
     dealerData,
   ]);
-
+  const openWhatsapp = () => {
+    const url = process.env.REACT_APP_URL_WHATSAPP;
+    window.open(url, "_blank");
+  };
   return (
     <>
       <div>

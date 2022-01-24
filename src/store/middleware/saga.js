@@ -85,6 +85,10 @@ import {
   updateSheetOrderDoneAction,
   deleteSheetOrderAction,
   deleteSheesOrderDoneAction,
+  getAllOrderProductByUserAction,
+  getAllOrderProductByIdUserAction,
+  getAllOrderByUserAction,
+  getAllOrdersByUserDomiciliaryAction
 } from '../reducer';
 
 import { LOCATION_CHANGE } from 'redux-first-history';
@@ -119,7 +123,6 @@ function* loginSaga(action) {
 
 function* loginDoneSaga(action) {
   try {
-    yield put(getAllOrderProductAction());
     yield put(saveSessionStateAction());
   } catch (error) {
   } finally {
@@ -366,6 +369,32 @@ function* getAllOrderSaga() {
     }
   }
 }
+function* getAllOrderByUserSaga() {
+  try {
+    const { data } = yield call(api.getAllOrdersByUser);
+    yield put(getAllOrderDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* getAllOrdersByUserDomiciliarySaga() {
+  try {
+    const { data } = yield call(api.getAllOrdersByUserDomiciliary);
+    yield put(getAllOrderDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+
+
 
 function* createOrderSaga(action) {
   try {
@@ -417,6 +446,39 @@ function* deleteOrderSaga(action) {
 function* getAllOrderProductSaga() {
   try {
     const { data } = yield call(api.getAllOrdersProduct);
+    if (data.length === 0) {
+      yield put(getAllOrderProductErrorAction("Error hay datos"));
+    } else {
+      yield put(getAllOrderProductDoneAction(data));
+    }
+  } catch (error) {
+    yield put(getAllOrderProductErrorAction("Error no esperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* getAllOrderProductByUserSaga() {
+  try {
+    const { data } = yield call(api.getAllOrdersProductByUser);
+    if (data.length === 0) {
+      yield put(getAllOrderProductErrorAction("Error hay datos"));
+    } else {
+      yield put(getAllOrderProductDoneAction(data));
+    }
+  } catch (error) {
+    yield put(getAllOrderProductErrorAction("Error no esperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+function* getAllOrderProductByIdUserSaga(action) {
+  try {
+    const { data } = yield call(api.getAllOrdersProductByIdUser, action.payload);
     if (data.length === 0) {
       yield put(getAllOrderProductErrorAction("Error hay datos"));
     } else {
@@ -605,6 +667,8 @@ export function* rootSaga() {
 
   // Orders
   yield takeLatest(getAllOrderAction.type, getAllOrderSaga);
+  yield takeLatest(getAllOrderByUserAction.type, getAllOrderByUserSaga);
+  yield takeLatest(getAllOrdersByUserDomiciliaryAction.type, getAllOrdersByUserDomiciliarySaga);
   yield takeLatest(createOrderAction.type, createOrderSaga);
   yield takeLatest(updateOrderAction.type, updateOrderSaga);
   yield takeLatest(deleteOrderAction.type, deleteOrderSaga);
@@ -613,6 +677,14 @@ export function* rootSaga() {
   yield takeLatest(
     getAllOrderProductAction.type,
     getAllOrderProductSaga
+  );
+  yield takeLatest(
+    getAllOrderProductByUserAction.type,
+    getAllOrderProductByUserSaga
+  );
+  yield takeLatest(
+    getAllOrderProductByIdUserAction.type,
+    getAllOrderProductByIdUserSaga
   );
   yield takeLatest(
     createOrderProductAction.type,

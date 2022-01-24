@@ -3,7 +3,7 @@ import ListClientss from '../components/addresses/listUsers/ListClients';
 import EditUser from '../components/addresses/auth/EditUser';
 
 // Orders
-import OrderList from '../components/addresses/orders/ListOrders';
+import OrderList from '../components/addresses/orders/ListOrdersAdmin';
 
 // Orders Product
 import AdminProductOrderList from '../components/addresses/orders/productOrders/AdminProductOrderList';

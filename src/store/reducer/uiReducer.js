@@ -73,6 +73,10 @@ export const getAllDomiciliaryDoneAction = createAction(
 // Orders
 export const getAllOrderAction = createAction('GET_ALL_ORDER_ACTION');
 
+export const getAllOrderByUserAction = createAction('GET_ALL_ORDER_BY_USER_ACTION');
+
+export const getAllOrdersByUserDomiciliaryAction = createAction('GET_ALL_ORDER_BY_USER_DOMICILIARY_ACTION');
+
 export const getAllOrderDoneAction = createAction(
   'GET_ALL_ORDER_DONE_ACTION'
 );
@@ -111,6 +115,14 @@ export const deleteSheesOrderDoneAction = createAction(
  */
 export const getAllOrderProductAction = createAction(
   'GET_ALL__ORDER_PRODUCT_ACTION'
+);
+
+export const getAllOrderProductByUserAction = createAction(
+  'GET_ALL__ORDER_PRODUCT_BY_USER_ACTION'
+);
+
+export const getAllOrderProductByIdUserAction = createAction(
+  'GET_ALL__ORDER_PRODUCT_BY_ID_USER_ACTION'
 );
 
 export const getAllOrderProductDoneAction = createAction(

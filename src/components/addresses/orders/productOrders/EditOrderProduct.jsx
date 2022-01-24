@@ -1,7 +1,6 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,13 +19,11 @@ import {
 
 // Reducers
 import {
-  getAllOrderProductAction,
+  getAllOrderProductByUserAction,
   updateOrderProductAction,
   createOrderProductAction,
 } from '../../../../store/reducer';
 
-// Moment
-import moment from 'moment';
 
 // Take Order Component
 export const EditOrderProduct = (props) => {
@@ -192,7 +189,7 @@ export const EditOrderProduct = (props) => {
           !ordersProductError &&
           ordersProduct.length === 0
         )
-          dispatch(getAllOrderProductAction());
+          dispatch(getAllOrderProductByUserAction());
       }
     }
   }, [dispatch, currentSheet, ordersProduct]);

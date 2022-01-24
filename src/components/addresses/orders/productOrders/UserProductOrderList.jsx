@@ -4,8 +4,6 @@ import * as React from 'react';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
-import { useHistory } from 'react-router-dom';
-
 // React Bootstrap
 import {
   Button,
@@ -19,7 +17,7 @@ import {
 import {
   getSheetsOrderAction,
   deleteSheetOrderAction,
-  getAllOrderProductAction,
+  getAllOrderProductByUserAction,
   createOrderProductAction,
   deleteOrderProductAction,
 } from '../../../../store/reducer';
@@ -43,11 +41,8 @@ const UserProductOrderList = () => {
     setToggle(!toggle);
   };
 
-  const [copied, setCopied] = React.useState(false);
-
   const [toggleDelete, setToggleDelete] = React.useState(false);
   const [confirm, setConfirm] = React.useState(false);
-  const [cancel, setCancel] = React.useState(false);
 
   // Handle Close
   const handleClose = () => setToggleDelete(!toggleDelete);
@@ -142,7 +137,7 @@ const UserProductOrderList = () => {
           !ordersProductError &&
           ordersProduct.length === 0
         )
-          dispatch(getAllOrderProductAction());
+          dispatch(getAllOrderProductByUserAction());
       }
     }
   }, [dispatch, sheetsOrders, ordersProduct]);

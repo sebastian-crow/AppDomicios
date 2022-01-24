@@ -1,5 +1,5 @@
 // Orders
-import DomiciliaryOrderList from '../components/addresses/orders/DomicilaryOrderList';
+import DomiciliaryOrderList from '../components/addresses/orders/ListOrdersDomiciliary';
 import EditUser from '../components/addresses/auth/EditUser';
 
 // Maps
