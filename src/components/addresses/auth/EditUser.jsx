@@ -18,7 +18,7 @@ import {
   Input,
   Button,
 } from 'reactstrap';
-
+import Select from 'react-select';
 // Moment
 import moment from 'moment';
 
@@ -30,7 +30,10 @@ const EditUser = (props) => {
   const user = useSelector((state) => state.login.user);
   const name = useFormInput(user.name);
   const lastName = useFormInput(user.lastName);
-  const typeDocument = useFormInput(user.typeDocument);
+  const [typeDocument, setTypeDocument] = React.useState({
+    value: user.typeDocument,
+    label: user.typeDocument === "cc" ? "Cédula" : "NIT",
+  });
   const documentNumber = useFormInput(user.documentNumber);
   const bornDate = useFormInput(
     moment(user.bornDate).format('YYYY-MM-DD')
@@ -52,6 +55,10 @@ const EditUser = (props) => {
     console.log('What data im gonna send', data);
     dispatch(actualizarUsuarioAction({ id: user.id, data: data }));
     dispatch(push('/'));
+  };
+
+  const handleTypeDocument = (role) => {
+    setTypeDocument(role);
   };
 
   return (
@@ -82,11 +89,20 @@ const EditUser = (props) => {
               </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="tipo"
-                    placeholder="Tipo de Documento"
-                    {...typeDocument}
+                  <Select
+                    onChange={handleTypeDocument}
+                    value={typeDocument}
+                    placeholder="Tipo de documento"
+                    options={[
+                      {
+                        value: 'cc',
+                        label: 'Cedula',
+                      },
+                      {
+                        value: 'nit',
+                        label: 'NIT',
+                      },
+                    ]}
                   />
                 </Col>
               </FormGroup>

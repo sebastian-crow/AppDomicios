@@ -177,10 +177,14 @@ function* logoutSagas(action) {
 function* registerSaga(action) {
   try {
     const { data } = yield call(api.register, action.payload);
+    if (data.message) {
+      yield put(errorRegistro(data.message));
+      return null;
+    }
     yield put(registerDoneAction(data));
     yield put(push('/'));
   } catch (error) {
-    yield put(errorRegistro(error));
+    yield put(errorRegistro("Error al registrar"));
   } finally {
     if (yield cancelled()) {
       // Do nothing

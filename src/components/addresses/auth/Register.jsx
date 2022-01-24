@@ -22,16 +22,23 @@ import { registerAction } from '../../../store/reducer';
 const SignUp = () => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.login.errorRegistro);
+  const [formIsValid, setFormIsValid] = React.useState(false);
 
   // Component State
   const [name, setName] = React.useState(null);
   const [lastName, setLastName] = React.useState(null);
   const [documentNumber, setDocumentNumber] = React.useState(null);
-  const [typeDocument, setTypeDocument] = React.useState('cc');
+  const [typeDocument, setTypeDocument] = React.useState({
+    value: 'cc',
+    label: 'Cedula',
+  });
   const [password, setPassword] = React.useState(null);
   const [bornDate, setBorndate] = React.useState(null);
   const [email, setEmail] = React.useState(null);
-  const [rol, setRol] = React.useState('client');
+  const [rol, setRol] = React.useState({
+    value: 'client',
+    label: 'Cliente',
+  });
 
   // Handle Register
   const handleRegister = (event) => {
@@ -46,7 +53,6 @@ const SignUp = () => {
       password: password,
       bornDate: bornDate,
     };
-    console.log('Data register', data);
     dispatch(registerAction(data));
   };
 
@@ -83,6 +89,15 @@ const SignUp = () => {
     setRol(role);
   };
 
+  React.useEffect(() => {
+    if (
+      formIsValid === false &&
+      Object.keys(typeDocument).length &&
+      Object.keys(rol).length
+    ) {
+      setFormIsValid(true);
+    }
+  }, [setFormIsValid, formIsValid, typeDocument]);
   return (
     <>
       <Container>
@@ -136,7 +151,7 @@ const SignUp = () => {
           <FormGroup>
             <Label for="examplePassword">Numero de documento</Label>
             <Input
-              type="documentNumber"
+              type="number"
               name="documentNumber"
               id="documentNumber"
               autoComplete="documentNumber"
@@ -190,10 +205,14 @@ const SignUp = () => {
               ]}
             />
           </FormGroup>
-          <Button variant="secondary btn-block" type="submit">
+          <Button
+            variant="secondary btn-block"
+            type="submit"
+            disabled={!formIsValid}
+          >
             Registrar
           </Button>
-          {error && <FormFeedback tooltip>{error}</FormFeedback>}
+          {error && <Alert variant="danger" >{error}</Alert>}
         </Form>
       </Container>
     </>
