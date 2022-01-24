@@ -42,6 +42,7 @@ import {
   // Orders
   // eslint-disable-next-line
   errorGetOrders,
+  getOrderByIdAction,
   getAllOrderAction,
   getAllOrderDoneAction,
   createOrderAction,
@@ -88,7 +89,7 @@ import {
   getAllOrderProductByUserAction,
   getAllOrderProductByIdUserAction,
   getAllOrderByUserAction,
-  getAllOrdersByUserDomiciliaryAction
+  getAllOrdersByUserDomiciliaryAction,
 } from '../reducer';
 
 import { LOCATION_CHANGE } from 'redux-first-history';
@@ -373,6 +374,19 @@ function* getAllOrderSaga() {
     }
   }
 }
+
+function* getOrderByIdSaga(action) {
+  try {
+    const { data } = yield call(api.getOrderById, action.payload);
+    yield put(getAllOrderDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
 function* getAllOrderByUserSaga() {
   try {
     const { data } = yield call(api.getAllOrdersByUser);
@@ -396,9 +410,6 @@ function* getAllOrdersByUserDomiciliarySaga() {
     }
   }
 }
-
-
-
 
 function* createOrderSaga(action) {
   try {
@@ -671,6 +682,7 @@ export function* rootSaga() {
 
   // Orders
   yield takeLatest(getAllOrderAction.type, getAllOrderSaga);
+  yield takeLatest(getOrderByIdAction.type, getOrderByIdSaga);
   yield takeLatest(getAllOrderByUserAction.type, getAllOrderByUserSaga);
   yield takeLatest(getAllOrdersByUserDomiciliaryAction.type, getAllOrdersByUserDomiciliarySaga);
   yield takeLatest(createOrderAction.type, createOrderSaga);

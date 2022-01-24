@@ -6,11 +6,11 @@ import EditUser from '../components/addresses/auth/EditUser';
 import OrderList from '../components/addresses/orders/ListOrdersAdmin';
 
 // Orders Product
-import AdminProductOrderList from '../components/addresses/orders/productOrders/AdminProductOrderList';
-import { AdminEditOrderProduct } from '../components/addresses/orders/productOrders/AdminEditOrderProduct';
+import AdminProductOrderList from '../components/addresses/orders/productOrders/OrderProductListAdmin';
+import { OrderProductEdit } from '../components/addresses/orders/productOrders/OrderProductEdit';
 
 // Map
-import { Map } from '../components/addresses/maps/map/admin/Map';
+import { Map } from '../components/addresses/maps/MapBox/MapOrderDealer';
 
 var routesAdmin = [
   {
@@ -55,7 +55,7 @@ var routesAdmin = [
     rol: ['admin'],
     name: 'Edit Order Product',
     icon: 'nc-icon nc-cart-simple',
-    component: AdminEditOrderProduct,
+    component: OrderProductEdit,
     layout: '/admin',
     visible: false,
   },

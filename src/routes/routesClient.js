@@ -1,19 +1,18 @@
 import EditUser from '../components/addresses/auth/EditUser';
 
 // Product Orders
-import UserProductOrderList from '../components/addresses/orders/productOrders/UserProductOrderList';
+import UserProductOrderList from '../components/addresses/orders/productOrders/OrderProductListUser';
 import OrderList from '../components/addresses/orders/ListOrdersClient';
 
 // OrderProductEdit
-import { EditProductOrder } from '../components/addresses/orders/productOrders/EditProductOrder';
-import { EditOrderProduct } from '../components/addresses/orders/productOrders/EditOrderProduct';
+import { OrderProductEdit } from '../components/addresses/orders/productOrders/OrderProductEdit';
 
 // Delivery Orders
 import TakeOrder from '../components/addresses/orders/TakeOrder';
 import EditOrder from '../components/addresses/orders/EditOrder';
 
-// Map
-import { Map } from '../components/addresses/maps/map/client/Map';
+// MapOrderDealer
+import { MapOrderDealer } from '../components/addresses/maps/MapBox/MapOrderDealer';
 
 // Google Sheets Connection
 import { GoogleSheetsConnect } from '../components/addresses/excel/googleSheetsConnect';
@@ -34,7 +33,7 @@ var routesClient = [
     rol: ['client'],
     name: 'Edit Order Product',
     icon: 'nc-icon nc-cart-simple',
-    component: EditOrderProduct,
+    component: OrderProductEdit,
     layout: '/client',
     visible: false,
   },
@@ -70,7 +69,7 @@ var routesClient = [
     path: '/map/:id',
     name: 'Mapa del cliente',
     rol: ['client'],
-    component: Map,
+    component: MapOrderDealer,
     layout: '/client',
     visible: false,
   },

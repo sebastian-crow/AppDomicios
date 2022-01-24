@@ -22,7 +22,7 @@ import {
   deleteOrderProductAction,
 } from '../../../../store/reducer';
 
-const UserProductOrderList = () => {
+const OrderProductListUser = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
   const sheetsOrders = useSelector((state) => state.ui.sheetsOrder);
@@ -227,7 +227,7 @@ const UserProductOrderList = () => {
                     Eliminar
                   </Button>{' '}
                   {``}
-                  <MyVerticallyCenteredModalDelete
+                  <DeleteOrderProductModal
                     toggleDelete={toggleDelete}
                     handleChange={(e) =>
                       handleDelete(e, order.NumeroDeOrden)
@@ -285,7 +285,7 @@ const URLModal = (props) => {
   );
 };
 
-const MyVerticallyCenteredModalDelete = (props) => {
+const DeleteOrderProductModal = (props) => {
   const {
     toggleDelete,
     handleChange,
@@ -311,4 +311,4 @@ const MyVerticallyCenteredModalDelete = (props) => {
   );
 };
 
-export default UserProductOrderList;
+export default OrderProductListUser;

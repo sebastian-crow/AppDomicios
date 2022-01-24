@@ -72,6 +72,7 @@ export const getAllDomiciliaryDoneAction = createAction(
 
 // Orders
 export const getAllOrderAction = createAction('GET_ALL_ORDER_ACTION');
+export const getOrderByIdAction = createAction('GET_ORDER_BY_ID_ACTION');
 
 export const getAllOrderByUserAction = createAction('GET_ALL_ORDER_BY_USER_ACTION');
 
@@ -144,6 +145,7 @@ const initialState = {
   clients: [],
   domiciliarys: [],
   orders: [],
+  orderById: {},
   ordersProduct: [],
   sheetsOrder: [],
   sheetsError: null,

@@ -3,7 +3,7 @@ import DomiciliaryOrderList from '../components/addresses/orders/ListOrdersDomic
 import EditUser from '../components/addresses/auth/EditUser';
 
 // Maps
-import { Map } from '../components/addresses/maps/map/Map';
+import { MapOrderDealer } from '../components/addresses/maps/MapBox/MapOrderDealer';
 
 var routesDomiciliary = [
   {
@@ -21,7 +21,7 @@ var routesDomiciliary = [
     rol: ['domiciliary'],
     name: 'Dealer map',
     icon: 'nc-icon nc-pin-3',
-    component: Map,
+    component: MapOrderDealer,
     layout: '/domiciliary',
     visible: false,
   },

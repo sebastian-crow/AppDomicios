@@ -1,52 +1,23 @@
-// React
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 
-// Redux
 import { useDispatch, useSelector } from 'react-redux';
 
 // Actions
 import {
-  createPositionDealerAction,
-  updatePositionDealerAction,
   getFromDealerPositionAction,
-  getAllDomiciliaryAction,
-  getAllOrdersByUser,
-} from '../../../../../store/reducer';
+  getOrderByIdAction,
+} from '../../../../store/reducer';
 
 // Mapbox GL
-import ReactMapGL, {
-  Marker,
-  Popup,
-  Source,
-  Layer,
-} from 'react-map-gl';
+import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 
-import { PersonSquare, Truck, XLg } from 'react-bootstrap-icons';
+import { XLg } from 'react-bootstrap-icons';
 
 // CSS
-import '../style.css';
+import './style.css';
 
-export const Map = (props) => {
-  // Redux Dispatch
+export const MapOrderDealer = (props) => {
   const dispatch = useDispatch();
-
-  // Position, current Dealer and Order
-
-  const position = {
-    dealer: {
-      position: useSelector(
-        (state) => state.ui.position.dealer.positionDealer
-      ),
-      positionId: useSelector(
-        (state) => state.ui.position.dealer.positionDealerId
-      ),
-    },
-  };
 
   const dealerPosition = {
     lat: 6.4898312448,
@@ -55,15 +26,13 @@ export const Map = (props) => {
 
   // Orders and Current Order
   const orderId = props.match.params.id;
-  const currentOrder = useSelector((state) =>
-    state.ui.orders.filter((order) => order.id == orderId)
-  );
-
-  // Dealer
-  const dealerId = currentOrder[0].domiciliary;
+  const orderById = useSelector((state) => state.ui.orderById);
 
   // Component State
   const [currentMarkerId, setCurrentMarkerId] = useState(null);
+  const [markerState, setMarkerState] = useState([]);
+  const [recodigaMarkerState, setRecodigaMarkerState] = useState([]);
+  const [finalMarkerState, setFinalMarkerState] = useState([]);
   const [
     currentMarkerFirstAddressId,
     setCurrentMarkerFirstAddressId,
@@ -80,50 +49,6 @@ export const Map = (props) => {
     zoom: 8,
   });
 
-  // Markers
-  const markers = [
-    {
-      id: 20,
-      type: 'User',
-      numero_orden: currentOrder[0].orderNumber,
-      direccion: `${currentOrder[0].lastAddress} ${currentOrder[0].city} ${currentOrder[0].departament}`,
-      phoneNumber: currentOrder[0].phone,
-      domiciliary: currentOrder[0].domiciliary,
-      coordinates: {
-        lat: dealerPosition.lat,
-        lng: dealerPosition.lng,
-      },
-    },
-  ];
-
-  const recodigaMarker = [
-    {
-      id: 20,
-      type: 'recolección',
-      numero_orden: currentOrder[0].orderNumber,
-      direccion: currentOrder[0].firstAddress, // Use geocoding function here
-      phoneNumber: currentOrder[0].phone,
-      coordinates: {
-        lat: 6.4898312448,
-        lng: -75.1498344,
-      },
-    },
-  ];
-
-  const finalMarker = [
-    {
-      id: 20,
-      type: 'Entrega',
-      numero_orden: currentOrder[0].orderNumber,
-      direccion: currentOrder[0].lastAddress, // Use geocoding function here
-      phoneNumber: currentOrder[0].phone,
-      coordinates: {
-        lat: 6.48787842147,
-        lng: -75.94987,
-      },
-    },
-  ];
-
   // Handle Dealer Marker
   const handleMarkerClick = (id) => {
     setCurrentMarkerId(id);
@@ -139,77 +64,77 @@ export const Map = (props) => {
     setCurrentMarkerFinalAddressId(id);
   };
 
-  // Road Between both points
-  const Road = {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'LineString',
-      coordinates: [
-        [-75.56574, 6.24013],
-        [-75.512529, 6.343636],
-      ],
-    },
-  };
-
-  // UseEffect's
   useEffect(() => {
-    if (!currentOrder.length) dispatch(getAllOrdersByUser());
-    //dispatch(getAllDomiciliaryAction());
-    dispatch(getFromDealerPositionAction());
+    dispatch(getOrderByIdAction(orderId));
   }, [dispatch]);
 
-  // // Get Current Location to Dealer
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     dispatch(getFromDealerPositionAction(dealerId));
-  //     const options = {
-  //       enableHighAccuracy: true,
-  //       timeout: 5000,
-  //       maximumAge: 0,
-  //     };
+  // call dealer position
+  /*
+  useEffect(() => {
+    dispatch(getFromDealerPositionAction());
+  }, [dispatch]);
+  */
 
-  //     function success(pos) {
-  //       var crd = pos.coords;
-  //       if (position.dealer.positionId) {
-  //         dispatch(
-  //           updatePositionDealerAction({
-  //             lat: crd.latitude,
-  //             lng: crd.longitude,
-  //             positionId: position.dealer.positionId,
-  //           })
-  //         );
-  //       } else {
-  //         dispatch(
-  //           createPositionDealerAction({
-  //             position: JSON.stringify({
-  //               lat: crd.latitude,
-  //               lng: crd.longitude,
-  //             }),
-  //             user: dealerId,
-  //           })
-  //         );
-  //       }
-  //     }
-
-  //     function error(err) {
-  //       console.warn('ERROR(' + err.code + '): ' + err.message);
-  //     }
-
-  //     navigator.geolocation.getCurrentPosition(
-  //       success,
-  //       error,
-  //       options
-  //     );
-  //   }, 5000);
-
-  //   return () => clearTimeout(timer);
-  // }, [
-  //   dispatch,
-  //   position.dealer.position,
-  //   position.dealer.positionId,
-  //   dealerId,
-  // ]);
+  useEffect(() => {
+    // Markers
+    if (orderById) {
+      const markers = [
+        {
+          id: 20,
+          type: 'User',
+          numero_orden: orderById.orderNumber,
+          direccion: `${orderById.lastAddress} ${orderById.city} ${orderById.departament}`,
+          phoneNumber: orderById.phone,
+          domiciliary: orderById.domiciliary,
+          coordinates: {
+            lat: dealerPosition.lat,
+            lng: dealerPosition.lng,
+          },
+        },
+      ];
+      const recodigaMarker = [
+        {
+          id: 20,
+          type: 'recolección',
+          numero_orden: orderById.orderNumber,
+          direccion: orderById.firstAddress, // Use geocoding function here
+          phoneNumber: orderById.phone,
+          coordinates: {
+            lat: 6.4898312448,
+            lng: -75.1498344,
+          },
+        },
+      ];
+      const finalMarker = [
+        {
+          id: 20,
+          type: 'Entrega',
+          numero_orden: orderById.orderNumber,
+          direccion: orderById.lastAddress, // Use geocoding function here
+          phoneNumber: orderById.phone,
+          coordinates: {
+            lat: 6.48787842147,
+            lng: -75.94987,
+          },
+        },
+      ];
+      if (markerState.length === 0) {
+        setMarkerState(markers);
+      }
+      if (recodigaMarkerState.length === 0) {
+        setRecodigaMarkerState(recodigaMarker);
+      }
+      if (finalMarkerState.length === 0) {
+        setFinalMarkerState(finalMarker);
+      }
+    }
+  }, [
+    dispatch,
+    orderById,
+    markerState,
+    recodigaMarkerState,
+    finalMarkerState,
+  ]);
 
   return (
     <>
@@ -221,7 +146,7 @@ export const Map = (props) => {
             setViewport(nextViewport)
           }
         >
-          {markers.map((marker) => (
+          {markerState.map((marker) => (
             <>
               <Marker
                 latitude={marker.coordinates.lat}
@@ -258,7 +183,7 @@ export const Map = (props) => {
             </>
           ))}
 
-          {recodigaMarker.map((marker) => (
+          {recodigaMarkerState.map((marker) => (
             <>
               <Marker
                 latitude={marker.coordinates.lat}
@@ -306,8 +231,7 @@ export const Map = (props) => {
               )}
             </>
           ))}
-
-          {finalMarker.map((marker) => (
+          {finalMarkerState.map((marker) => (
             <>
               <Marker
                 latitude={marker.coordinates.lat}

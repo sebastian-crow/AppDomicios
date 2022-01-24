@@ -129,6 +129,13 @@ export function getAllOrders() {
   });
 }
 
+export function getOrderById(id) {
+  return callAPI({
+    method: 'GET',
+    url: `/order/${id}`,
+  });
+}
+
 export function createOrder(params) {
   return callAPI({
     method: 'POST',

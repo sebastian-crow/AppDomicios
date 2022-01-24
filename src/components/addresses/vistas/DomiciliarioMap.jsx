@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "../../assets/css/home.css";
-import MapLocal from "../maps/Map";
+import MapLocal from "../maps/MapBox/MapOrderDealer";
 import {
   getFromDomiciliaryPositionAction,
   getFromClientPositionAction,
