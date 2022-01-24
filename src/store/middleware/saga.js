@@ -97,6 +97,10 @@ function* loginSaga(action) {
   try {
     const { data } = yield call(api.login, action.payload);
     if (data) {
+      if (data.message) {
+        yield put(loginError(data.message));
+        return null;
+      }
       var webPush = localStorage.getItem('webpush');
       var webPush = JSON.parse(webPush);
       if (webPush) {
