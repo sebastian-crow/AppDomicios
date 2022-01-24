@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllDomiciliaryAction,
   createOrderAction,
-  getAllOrderProductByUserAction,
+  getAllOrderProductByIdUserAction,
 } from '../../../store/reducer';
 import {
   Container,
@@ -42,8 +42,7 @@ const TakeOrder = () => {
 
   const ordersProductUser = useSelector((state) =>
     state.ui.ordersProduct.filter(
-      (orderProduct) =>
-        orderProduct.orderNumber === orderNumberSheets
+      (orderProduct) => orderProduct.orderNumber === orderNumberSheets
     )
   );
 
@@ -203,7 +202,7 @@ const TakeOrder = () => {
       !ordersProductError &&
       ordersProductUser.length === 0
     )
-      dispatch(getAllOrderProductByUserAction());
+      dispatch(getAllOrderProductByIdUserAction(idClientEmpresa));
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -229,7 +228,7 @@ const TakeOrder = () => {
   ]);
   const openWhatsapp = () => {
     const url = process.env.REACT_APP_URL_WHATSAPP;
-    window.open(url, "_blank");
+    window.open(url, '_blank');
   };
   return (
     <>
