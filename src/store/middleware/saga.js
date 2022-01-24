@@ -371,7 +371,7 @@ function* createOrderSaga(action) {
   try {
     const { data } = yield call(api.createOrder, action.payload);
     yield put(createOrderDoneAction(data));
-    yield put(push('/client/orderProducts'));
+    yield put(push('/client/orderslist'));
   } catch (error) {
     yield put(errorCreateOrder('Error inesperado'));
   } finally {

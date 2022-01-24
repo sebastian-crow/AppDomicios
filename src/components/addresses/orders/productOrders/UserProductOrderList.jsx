@@ -128,8 +128,7 @@ const UserProductOrderList = () => {
   // Handle Set Link
   const handleSetLikn = (e, link) => {
     e.preventDefault();
-    setActiveLink(true);
-    setLink(link);
+    setActiveLink(link);
   };
 
   // Update Sheets Orders and Orders Product
@@ -247,23 +246,26 @@ const UserProductOrderList = () => {
                     variant="primary"
                     onClick={(e) => {
                       handleChangeToggle();
+                      handleSetLikn(
+                        e,
+                        `${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
+                      );
                       handleCreateOrderProduct(e, order);
                     }}
                   >
                     Crear Link
                   </Button>
-
-                  <URLModal
-                    toggle={toggle}
-                    handleChange={handleChangeToggle}
-                    url={`${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`}
-                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <URLModal
+        toggle={toggle}
+        handleChange={handleChangeToggle}
+        url={activeLink}
+      />
     </>
   );
 };

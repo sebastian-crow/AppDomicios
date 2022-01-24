@@ -48,19 +48,16 @@ const TakeOrder = (props) => {
     )
   );
 
-  const [phoneNumber, setPhoneNumber] = React.useState('');
-
-  const [department, setDepartment] = React.useState([]);
-  const [city, setCity] = React.useState([]);
-
+  const [phoneNumber, setPhoneNumber] = React.useState();
+  const [department, setDepartment] = React.useState({});
+  const [city, setCity] = React.useState({});
   const [firstAddress, setFirstAddress] = React.useState();
   const [finalAddress, setFinalAddress] = React.useState();
-
-  const [paymentMethod, setPaymentMethod] = React.useState([]);
+  const [paymentMethod, setPaymentMethod] = React.useState({});
   const [dealerData, setDealerData] = React.useState({});
 
   const [toggle, setToggle] = React.useState(false);
-  const [confirm, setConfirm] = React.useState(false);
+  const [formIsValid, setFormIsValid] = React.useState(false);
 
   // Handle names and last names
   const handlePhoneChange = (phoneNumber) => {
@@ -168,16 +165,13 @@ const TakeOrder = (props) => {
   ];
 
   // Handle Close
-  const handleToggle = () => setToggle(!toggle);
+  const handleToggle = (e) => {
+    e.preventDefault();
+    setToggle(!toggle);
+  };
 
   // Handle Save
   const handleSave = () => {
-    if (confirm) {
-      console.log('Send all data');
-    } else {
-      console.log("Don't send nothing");
-    }
-
     let data = {
       orderNumber: ordersProductUser[0]?.orderNumber,
       ticket: ordersProductUser[0]?.deliveryPacket,
@@ -212,6 +206,28 @@ const TakeOrder = (props) => {
       dispatch(getAllOrderProductAction());
   }, [dispatch]);
 
+  React.useEffect(() => {
+    if (
+      formIsValid === false &&
+      Object.keys(department).length &&
+      Object.keys(city).length &&
+      Object.keys(paymentMethod).length &&
+      Object.keys(dealerData).length
+    ) {
+      setFormIsValid(true);
+    }
+  }, [
+    setFormIsValid,
+    formIsValid,
+    phoneNumber,
+    department,
+    city,
+    firstAddress,
+    finalAddress,
+    paymentMethod,
+    dealerData,
+  ]);
+
   return (
     <>
       <div>
@@ -219,7 +235,7 @@ const TakeOrder = (props) => {
           className="themed-container containerProof"
           fluid="sm"
         >
-          <Form className="form">
+          <Form className="form" onSubmit={(e) => handleToggle(e)}>
             <h2 className="takeOrderTitle">Tomar Orden</h2>
             <Col>
               <FormGroup row>
@@ -239,6 +255,7 @@ const TakeOrder = (props) => {
               <FormGroup row>
                 <Col sm={10}>
                   <Select
+                    required
                     onChange={handleCityChange}
                     placeholder="Ciudad"
                     options={finalInfoCitiesData[0]}
@@ -248,6 +265,7 @@ const TakeOrder = (props) => {
               <FormGroup row>
                 <Col sm={10}>
                   <Input
+                    required
                     type="text"
                     id="firstAddress"
                     placeholder="Dirección Recogida"
@@ -261,6 +279,7 @@ const TakeOrder = (props) => {
               <FormGroup row>
                 <Col sm={10}>
                   <Input
+                    required
                     type="text"
                     id="finalAddress"
                     placeholder="Dirección Entrega"
@@ -274,6 +293,7 @@ const TakeOrder = (props) => {
               <FormGroup row>
                 <Col sm={10}>
                   <Input
+                    required
                     type="text"
                     id="phone"
                     placeholder="Celular"
@@ -311,22 +331,17 @@ const TakeOrder = (props) => {
                   />
                 </Col>
               </FormGroup>
-              <FormGroup className="">
+              <FormGroup>
                 <div className="positionButton">
                   <Button
                     variant="success"
                     size="lg"
-                    onClick={handleToggle}
+                    type="submit"
+                    disabled={!formIsValid}
                   >
                     Crear Orden
                   </Button>{' '}
                   {``}
-                  <SaveOrderModal
-                    toggle={toggle}
-                    handleChange={handleSave}
-                    handleClose={handleToggle}
-                    confirm={confirm}
-                  />
                 </div>
               </FormGroup>
             </Col>
@@ -334,30 +349,27 @@ const TakeOrder = (props) => {
           </Form>
         </Container>
       </div>
+      <SaveOrderModal
+        toggle={toggle}
+        handleChange={handleSave}
+        handleClose={handleToggle}
+      />
     </>
   );
 };
 
 const SaveOrderModal = (props) => {
-  const {
-    toggle,
-    handleChange,
-    confirm,
-    handleConfirm,
-    handleClose,
-  } = props;
+  const { toggle, handleChange, handleClose } = props;
   return (
     <>
       <Modal isOpen={toggle} toggle={handleChange}>
-        <ModalHeader toggle={handleChange}>Confirmar</ModalHeader>
+        <ModalHeader toggle={handleClose}>Confirmar</ModalHeader>
         <ModalBody>
           ¿Estás seguro/a de que los datos ingresados en el formulario
           son correctos?
         </ModalBody>
         <ModalFooter>
-          <Button confirm={handleConfirm} onClick={handleChange}>
-            Aceptar
-          </Button>
+          <Button onClick={handleChange}>Aceptar</Button>
           <Button onClick={handleClose}>Cancelar</Button>
         </ModalFooter>
       </Modal>
