@@ -11,7 +11,7 @@ export const registerAction = createAction("REGISTER_ACTION");
 export const registerDoneAction = createAction("REGISTER_DONE_ACTION");
 export const errorRegistro = createAction("ERROR_REGISTRO");
 
-// Acciones de edicion de usuario
+// Acciones de edicion de user
 export const actualizarUsuarioAction = createAction(
   "ACTUALIZAR_USUARIO_ACTION",
 );
@@ -21,23 +21,23 @@ export const actualizarUsuarioDoneAction = createAction(
 
 // UI state reducers
 const initialState = {
-  usuario: {},
+  user: null,
   errorInicio: "",
   errorRegistro: "",
 };
 
 const uiReducer = createReducer(initialState, {
   [loginDoneAction]: (state, action) => {
-    state.usuario = action.payload.data;
+    state.user = action.payload;
   },
   [logoutAction]: (state, action) => {
-    state.usuario = {};
+    state.user = null;
   },
   [registerDoneAction]: (state, action) => {
-    state.usuario = action.payload.data;
+    state.user = action.payload;
   },
   [actualizarUsuarioDoneAction]: (state, action) => {
-    state.usuario.user = action.payload.data;
+    state.user = action.payload;
   },
   [loginError]: (state, action) => {
     state.errorInicio = action.payload;

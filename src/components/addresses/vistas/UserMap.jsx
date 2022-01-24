@@ -1,15 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import "../../../assets/css/home.css";
-import MapLocal from "../maps/Map";
+import MapLocal from "../maps/MapBox/MapOrderDealer";
 import { getFromUserPositionAction } from "../../../store/reducer";
-//import { useSelector } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 
 const UserMap = (props) => {
   const dispatch = useDispatch();
   const userID = props.match.params.id;
   const position = useSelector((state) => state.ui.position);
-
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,7 +23,6 @@ const UserMap = (props) => {
       </div>
     </>
   );
-}
+};
 
 export default UserMap;
-

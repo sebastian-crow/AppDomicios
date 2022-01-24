@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutAction } from "../../../store/reducer";
 import { push } from "redux-first-history";
+import Cookies from 'js-cookies';
 
 const MenuBar = () => {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.login.usuario.token);
-  const user = useSelector((state) => state.login.usuario.user);
+  const token = useSelector((state) => state.login.user.token);
+  const user = useSelector((state) => state.login.user);
   const handleLogout = () => {
     dispatch(logoutAction());
+    Cookies.remove("session");
     dispatch(push("/login"));
   };
   return (
@@ -33,7 +35,7 @@ const MenuBar = () => {
         <div className="collapse navbar-collapse" id="navbarResponsive">
           {user && (
             <>
-              {user.nombre} {user.apellido} {user.rol}
+              {user.name} {user.lastName} {user.rol}
             </>
           )}
           <div style={{ display: "flex", marginLeft: "auto" }}>
@@ -46,7 +48,7 @@ const MenuBar = () => {
                 </Link>
                 &nbsp;&nbsp;
                 <Link
-                  to="/editarusuario"
+                  to="/editaruser"
                   className="btn btn-outline-secondary my-2 my-sm-0"
                 >
                   Editar perfil{" "}

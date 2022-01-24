@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import "../../assets/css/home.css";
-import MapLocal from "../maps/Map";
+import MapLocal from "../maps/MapBox/MapOrderDealer";
 import { getFromUserPositionAction } from "../../store/reducer";
 //import { useSelector } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";

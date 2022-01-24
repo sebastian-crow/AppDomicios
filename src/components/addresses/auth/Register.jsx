@@ -1,160 +1,222 @@
 // React
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useState } from 'react';
 
-// Mdbreact
-import { MDBContainer, MDBRow, MDBCol, MDBBtn } from "mdbreact";
-
-// React Bootstrap
-import { Button } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  Form,
+  Alert,
+  Label,
+  FormGroup,
+  Input,
+  FormFeedback,
+} from 'reactstrap';
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import Select from 'react-select';
 
 // Reducers
-import { registerAction } from "../../../store/reducer";
+import { registerAction } from '../../../store/reducer';
 
-const SignUp = (props) => {
-  const error = useSelector((state) => state.login.errorRegistro);
-  const nombre = useFormInput("");
-  const apellido = useFormInput("");
-  const tipoDocumento = useFormInput("Cedula");
-  const documentoIdentidad = useFormInput("");
-  const password = useFormInput("");
-  const fechaNacimiento = useFormInput("");
+const SignUp = () => {
   const dispatch = useDispatch();
+  const error = useSelector((state) => state.login.errorRegistro);
+  const [formIsValid, setFormIsValid] = React.useState(false);
+
+  // Component State
+  const [name, setName] = React.useState(null);
+  const [lastName, setLastName] = React.useState(null);
+  const [documentNumber, setDocumentNumber] = React.useState(null);
+  const [typeDocument, setTypeDocument] = React.useState({
+    value: 'cc',
+    label: 'Cedula',
+  });
+  const [password, setPassword] = React.useState(null);
+  const [bornDate, setBorndate] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
+  const [rol, setRol] = React.useState({
+    value: 'client',
+    label: 'Cliente',
+  });
+
+  // Handle Register
   const handleRegister = (event) => {
     event.preventDefault();
     let data = {
-      nombre: nombre.value,
-      apellido: apellido.value,
-      tipoDocumento: tipoDocumento.value,
-      documentoIdentidad: documentoIdentidad.value,
-      password: password.value,
-      fechaNacimiento: fechaNacimiento.value,
+      name: name,
+      lastName: lastName,
+      typeDocument: typeDocument.value,
+      documentNumber: documentNumber,
+      email: email,
+      rol: rol.value,
+      password: password,
+      bornDate: bornDate,
     };
     dispatch(registerAction(data));
   };
 
+  // Manejadores de eventos para intercatuar con el estado del componente
+  const handleEmailChange = (email) => {
+    setEmail(email.target.value);
+  };
+
+  const handlePasswordChange = (password) => {
+    setPassword(password.target.value);
+  };
+
+  const handleNameChange = (name) => {
+    setName(name.target.value);
+  };
+
+  const handleLasNameChange = (lastName) => {
+    setLastName(lastName.target.value);
+  };
+
+  const handleDocumentNumber = (documentNumber) => {
+    setDocumentNumber(documentNumber.target.value);
+  };
+
+  const handleTypeDocument = (role) => {
+    setTypeDocument(role);
+  };
+
+  const handleBornDate = (bornDate) => {
+    setBorndate(bornDate.target.value);
+  };
+
+  const handleRol = (role) => {
+    setRol(role);
+  };
+
+  React.useEffect(() => {
+    if (
+      formIsValid === false &&
+      Object.keys(typeDocument).length &&
+      Object.keys(rol).length
+    ) {
+      setFormIsValid(true);
+    }
+  }, [setFormIsValid, formIsValid, typeDocument]);
   return (
     <>
-      <div className="register-content">
-        <MDBContainer>
-          <MDBRow>
-            <MDBCol md="6">
-              <form autoComplete="off" onSubmit={handleRegister}>
-                <p className="h4 text-center mb-4">Registrarse</p>
-                <label
-                  htmlFor="defaultFormRegisterNameEx"
-                  className="grey-text"
-                >
-                  Tú nombre
-                </label>
-                <input
-                  type="text"
-                  required
-                  id="nombre"
-                  name="nombre"
-                  {...nombre}
-                  className="form-control"
-                />
-                <br />
-                <label
-                  htmlFor="defaultFormRegisterNameEx"
-                  className="grey-text"
-                >
-                  Apellido
-                </label>
-                <input
-                  type="text"
-                  required
-                  id="apellido"
-                  name="apellido"
-                  {...apellido}
-                  autoComplete="apellido"
-                  className="form-control"
-                />
-                <br />
-                <label
-                  htmlFor="defaultFormRegisterEmailEx"
-                  className="grey-text"
-                >
-                  Documento Identidad
-                </label>
-                <input
-                  type="documentoIdentidad"
-                  name="documentoIdentidad"
-                  id="documentoIdentidad"
-                  autoComplete="documentoIdentidad"
-                  {...documentoIdentidad}
-                  className="form-control"
-                />
-                <br />
-                <br />
-                <label
-                  htmlFor="defaultFormRegisterPasswordEx"
-                  className="grey-text"
-                >
-                  Contraseña
-                </label>
-                <input
-                  type="password"
-                  label="Contraseña"
-                  id="password"
-                  autoComplete="current-password"
-                  {...password}
-                  id="defaultFormRegisterPasswordEx"
-                  className="form-control"
-                />
-                <br />
-                <label
-                  htmlFor="defaultFormRegisterPasswordEx"
-                  className="grey-text"
-                >
-                  Fecha De fechaNacimiento
-                </label>
-                <input
-                  type="date"
-                  label="Fecha Nacimiento"
-                  required
-                  defaultValue="2017-05-24"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  {...fechaNacimiento}
-                  className="form-control"
-                />
-                <div className="text-center mt-4">
-                  <Button variant="secondary btn-block" type="submit">
-                    Registrarse
-                  </Button>
-                </div>
-              </form>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-      </div>
-      <style jsx>{`
-        .register-content {
-          position: absolute;
-          right: 13%;
-          width: 50%;
-        }
-      `}</style>
+      <Container>
+        <br />
+        <Form onSubmit={handleRegister}>
+          <FormGroup>
+            <Label for="exampleEmail">Correo</Label>
+            <Input
+              type="text"
+              placeholder="Ingresa tú Correo"
+              id="email"
+              name="email"
+              required
+              onChange={handleEmailChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="examplePassword">Contraseña</Label>
+            <Input
+              type="password"
+              placeholder="Contraseña"
+              id="password"
+              name="password"
+              required
+              onChange={handlePasswordChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="examplePassword">Nombre</Label>
+            <Input
+              type="text"
+              required
+              id="name"
+              name="name"
+              className="form-control"
+              onChange={handleNameChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="examplePassword">Apellido</Label>
+            <Input
+              type="text"
+              required
+              id="lastName"
+              name="lastName"
+              autoComplete="lastName"
+              className="form-control"
+              onChange={handleLasNameChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="examplePassword">Numero de documento</Label>
+            <Input
+              type="number"
+              name="documentNumber"
+              id="documentNumber"
+              autoComplete="documentNumber"
+              required
+              className="form-control"
+              onChange={handleDocumentNumber}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="examplePassword">Tipo de documento</Label>
+            <Select
+              onChange={handleTypeDocument}
+              value={typeDocument}
+              placeholder="Tipo de documento"
+              options={[
+                {
+                  value: 'cc',
+                  label: 'Cedula',
+                },
+                {
+                  value: 'nit',
+                  label: 'NIT',
+                },
+              ]}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="examplePassword">Fecha de nacimiento</Label>
+            <Input
+              type="date"
+              required
+              className="form-control"
+              onChange={handleBornDate}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="examplePassword">Tipo de usuario</Label>
+            <Select
+              onChange={handleRol}
+              value={rol}
+              placeholder="Rol"
+              options={[
+                {
+                  value: 'client',
+                  label: 'Cliente',
+                },
+                {
+                  value: 'domiciliary',
+                  label: 'Domiciliario',
+                },
+              ]}
+            />
+          </FormGroup>
+          <Button
+            variant="secondary btn-block"
+            type="submit"
+            disabled={!formIsValid}
+          >
+            Registrar
+          </Button>
+          {error && <Alert variant="danger" >{error}</Alert>}
+        </Form>
+      </Container>
     </>
   );
 };
 
-const useFormInput = (initialValue) => {
-  const [value, setValue] = useState(initialValue);
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
-  return {
-    value,
-    onChange: handleChange,
-  };
-};
-
 export default SignUp;
-

@@ -9,6 +9,7 @@ export * from "./loginReducer";
 export * from "./sessionReducer";
 export * from "./createProductReducer";
 export * from "./orderReducer";
+export * from "./orderProductReducer";
 
 export const createRootReducer = (routerReducer) => {
   // create root roducer
