@@ -90,6 +90,8 @@ import {
   getAllOrderProductByIdUserAction,
   getAllOrderByUserAction,
   getAllOrdersByUserDomiciliaryAction,
+  getOrderProductByOrderNumberDoneAction,
+  getOrderProductByOrderNumberAction,
 } from '../reducer';
 
 import { LOCATION_CHANGE } from 'redux-first-history';
@@ -498,10 +500,27 @@ function* getAllOrderProductByUserSaga() {
 function* getAllOrderProductByIdUserSaga(action) {
   try {
     const { data } = yield call(api.getAllOrdersProductByIdUser, action.payload);
-    if (data.length === 0) {
+    if (Object.keys(data).length < 1) {
       yield put(getAllOrderProductErrorAction("Error hay datos"));
     } else {
-      yield put(getAllOrderProductDoneAction(data));
+      yield put(getOrderProductByOrderNumberDoneAction(data));
+    }
+  } catch (error) {
+    yield put(getAllOrderProductErrorAction("Error no esperado"));
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* getOrderProductByOrderNumberSaga(action) {
+  try {
+    const { data } = yield call(api.getOrderProductByOrderNumber, action.payload);
+    if (!data) {
+      yield put(getAllOrderProductErrorAction("Error hay datos"));
+    } else {
+      yield put(getOrderProductByOrderNumberDoneAction(data));
     }
   } catch (error) {
     yield put(getAllOrderProductErrorAction("Error no esperado"));
@@ -600,13 +619,8 @@ function* getSheetsOrderSaga(action) {
 function* updateSheetsOrderSaga(action) {
   try {
     const { data } = yield call(action.payload);
-    console.log('What is that?', data);
     if (data) {
       //yield put(updateSheetOrderDoneAction(data));
-      console.log(
-        'this is your data when you try to update this',
-        data
-      );
     } else {
       console.error('You have many errors');
     }
@@ -624,7 +638,6 @@ function* deleteSheetsOrderSaga(action) {
     const { data } = yield call(action.payload);
     if (data) {
       yield put(deleteSheesOrderDoneAction(data));
-      console.log('This happended when you try to delete this', data);
     } else {
       console.error('You have many errors');
     }
@@ -705,6 +718,10 @@ export function* rootSaga() {
   yield takeLatest(
     getAllOrderProductByIdUserAction.type,
     getAllOrderProductByIdUserSaga
+  );
+  yield takeLatest(
+    getOrderProductByOrderNumberAction.type,
+    getOrderProductByOrderNumberSaga
   );
   yield takeLatest(
     createOrderProductAction.type,

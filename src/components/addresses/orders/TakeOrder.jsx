@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllDomiciliaryAction,
   createOrderAction,
-  getAllOrderProductByIdUserAction,
+  getOrderProductByOrderNumberAction,
 } from '../../../store/reducer';
 import {
   Container,
@@ -40,10 +40,8 @@ const TakeOrder = () => {
     (state) => state.ui.sheetsError
   );
 
-  const ordersProductUser = useSelector((state) =>
-    state.ui.ordersProduct.filter(
-      (orderProduct) => orderProduct.orderNumber === orderNumberSheets
-    )
+  const ordersProductById = useSelector(
+    (state) => state.ui.ordersProductOrderNumber
   );
 
   const [phoneNumber, setPhoneNumber] = React.useState();
@@ -171,15 +169,15 @@ const TakeOrder = () => {
   // Handle Save
   const handleSave = () => {
     let data = {
-      orderNumber: ordersProductUser[0]?.orderNumber,
-      ticket: ordersProductUser[0]?.deliveryPacket,
-      phone: phoneNumber || ordersProductUser[0]?.clientPhone,
+      orderNumber: ordersProductById?.orderNumber,
+      ticket: ordersProductById?.deliveryPacket,
+      phone: phoneNumber || ordersProductById?.clientPhone,
       departament: department.label.toString(),
       city: city.length ? city.label : 'DEFAULT',
       firstAddress:
-        firstAddress || ordersProductUser[0]?.deliveryAddress,
+        firstAddress || ordersProductById?.deliveryAddress,
       lastAddress:
-        finalAddress || ordersProductUser[0]?.deliveryUbication,
+        finalAddress || ordersProductById?.deliveryUbication,
       paymentMethod: paymentMethod.label.toString(),
       date: moment(Date.now()).format('YYYY/MM/DD'),
       clientCompany: Number(idClientEmpresa ? idClientEmpresa : '0'),
@@ -197,13 +195,14 @@ const TakeOrder = () => {
 
   React.useEffect(() => {
     dispatch(getAllDomiciliaryAction());
-    if (
-      ordersProductUser &&
-      !ordersProductError &&
-      ordersProductUser.length === 0
-    )
-      dispatch(getAllOrderProductByIdUserAction(idClientEmpresa));
-  }, [dispatch]);
+    if (!ordersProductById && !ordersProductError)
+      dispatch(getOrderProductByOrderNumberAction(orderNumberSheets));
+  }, [
+    dispatch,
+    idClientEmpresa,
+    ordersProductError,
+    ordersProductById,
+  ]);
 
   React.useEffect(() => {
     if (
@@ -272,9 +271,7 @@ const TakeOrder = () => {
                     id="firstAddress"
                     placeholder="Dirección Recogida"
                     onChange={handleFirstAddressChange}
-                    defaultValue={
-                      ordersProductUser[0]?.deliveryAddress
-                    }
+                    defaultValue={ordersProductById?.deliveryAddress}
                   />
                 </Col>
               </FormGroup>
@@ -287,7 +284,7 @@ const TakeOrder = () => {
                     placeholder="Dirección Entrega"
                     onChange={handleFinalAddressChange}
                     defaultValue={
-                      ordersProductUser[0]?.deliveryUbication
+                      ordersProductById?.deliveryUbication
                     }
                   />
                 </Col>
@@ -300,7 +297,7 @@ const TakeOrder = () => {
                     id="phone"
                     placeholder="Celular"
                     onChange={handlePhoneChange}
-                    defaultValue={ordersProductUser[0]?.clientPhone}
+                    defaultValue={ordersProductById?.clientPhone}
                   />
                 </Col>
               </FormGroup>

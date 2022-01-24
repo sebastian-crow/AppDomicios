@@ -162,6 +162,13 @@ export function deleteOrder(params) {
 
 // Orders Product
 
+export function getOrderProductByOrderNumber(number) {
+  return callAPI({
+    method: 'GET',
+    url: `/orderProduct/orderNumber/${number}`,
+  });
+}
+
 export function getAllOrdersProductByIdUser(id) {
   return callAPI({
     method: 'GET',

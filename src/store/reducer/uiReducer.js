@@ -125,9 +125,17 @@ export const getAllOrderProductByUserAction = createAction(
 export const getAllOrderProductByIdUserAction = createAction(
   'GET_ALL__ORDER_PRODUCT_BY_ID_USER_ACTION'
 );
+export const getOrderProductByOrderNumberAction = createAction(
+  'GET_ORDER_PRODUCT_BY_NUMBER_ORDER_ACTION'
+);
+
 
 export const getAllOrderProductDoneAction = createAction(
   'GET_ALL_ORDER_PRODUCT_DONE_ACTION'
+);
+
+export const getOrderProductByOrderNumberDoneAction = createAction(
+  'GET_ALL_ORDER_PRODUC0T_BY_ID_USER_DONE_ACTION'
 );
 
 export const getAllOrderProductErrorAction = createAction(
@@ -147,6 +155,7 @@ const initialState = {
   orders: [],
   orderById: {},
   ordersProduct: [],
+  ordersProductById: {},
   sheetsOrder: [],
   sheetsError: null,
   ordersProductError: null,
@@ -221,6 +230,9 @@ const uiReducer = createReducer(initialState, {
   // Get All Orders Products
   [getAllOrderProductDoneAction]: (state, action) => {
     state.ordersProduct = action.payload;
+  },
+  [getOrderProductByOrderNumberDoneAction]: (state, action) => {
+    state.ordersProductOrderNumber = action.payload;
   },
   [getAllOrderProductErrorAction]: (state, action) => {
     state.ordersProductError = action.payload;

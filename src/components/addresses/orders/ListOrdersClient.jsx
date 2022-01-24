@@ -47,7 +47,7 @@ const ListOrdersClient = () => {
 
   React.useEffect(() => {
     dispatch(getAllOrderByUserAction());
-  }, [dispatch]);
+  }, [dispatch, orders]);
 
   return (
     <>
