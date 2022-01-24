@@ -192,10 +192,6 @@ export function createOrderProduct(params) {
 }
 
 export function updateOrderProduct(params) {
-  console.log(
-    'Data that im gonna send to update one orderprodut',
-    params
-  );
   return callAPI({
     method: 'PATCH',
     url: `/orderProduct/${params.id}`,

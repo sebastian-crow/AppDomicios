@@ -24,8 +24,6 @@ function saveUiState(state) {
     ui: state.ui,
     login: state.login,
   };
-  console.log('what is this data', data);
-  console.log('What is this state', state);
   try {
     setSessionCookie(data);
     console.error(data);

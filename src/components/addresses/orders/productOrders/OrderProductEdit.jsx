@@ -105,9 +105,7 @@ export const EditOrderProduct = (props) => {
     })
       .then((r) => r.json())
       .then((r) => {
-        console.log('ok', r);
         if (orderProductToUpdate.length > 0) {
-          console.log('Editing this orderProduct in the db as well');
           dispatch(
             updateOrderProductAction({
               id: orderProductToUpdate[0].id,

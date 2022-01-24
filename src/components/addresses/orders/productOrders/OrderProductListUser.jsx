@@ -74,7 +74,6 @@ const OrderProductListUser = () => {
               })
             );
           dispatch(getSheetsOrderAction(user.googleSheets));
-          console.log(dataRes);
         })
         .catch((error) => {
           console.error(error);
