@@ -72,11 +72,21 @@ export const getAllDomiciliaryDoneAction = createAction(
 
 // Orders
 export const getAllOrderAction = createAction('GET_ALL_ORDER_ACTION');
-export const getOrderByIdAction = createAction('GET_ORDER_BY_ID_ACTION');
+export const getOrderByIdAction = createAction(
+  'GET_ORDER_BY_ID_ACTION'
+);
 
-export const getAllOrderByUserAction = createAction('GET_ALL_ORDER_BY_USER_ACTION');
+export const getOrderByIdDoneAction = createAction(
+  'GET_ORDER_BY_ID_DONE_ACTION'
+);
 
-export const getAllOrdersByUserDomiciliaryAction = createAction('GET_ALL_ORDER_BY_USER_DOMICILIARY_ACTION');
+export const getAllOrderByUserAction = createAction(
+  'GET_ALL_ORDER_BY_USER_ACTION'
+);
+
+export const getAllOrdersByUserDomiciliaryAction = createAction(
+  'GET_ALL_ORDER_BY_USER_DOMICILIARY_ACTION'
+);
 
 export const getAllOrderDoneAction = createAction(
   'GET_ALL_ORDER_DONE_ACTION'
@@ -128,7 +138,6 @@ export const getAllOrderProductByIdUserAction = createAction(
 export const getOrderProductByOrderNumberAction = createAction(
   'GET_ORDER_PRODUCT_BY_NUMBER_ORDER_ACTION'
 );
-
 
 export const getAllOrderProductDoneAction = createAction(
   'GET_ALL_ORDER_PRODUCT_DONE_ACTION'
@@ -227,6 +236,11 @@ const uiReducer = createReducer(initialState, {
     state.orders = action.payload;
   },
 
+  // Get All Orders
+  [getOrderByIdDoneAction]: (state, action) => {
+    state.orderById = action.payload;
+  },
+
   // Get All Orders Products
   [getAllOrderProductDoneAction]: (state, action) => {
     state.ordersProduct = action.payload;
@@ -241,7 +255,7 @@ const uiReducer = createReducer(initialState, {
   [getSheetsOrderDoneAction]: (state, action) => {
     state.sheetsOrder = action.payload;
   },
-  // Get All Google Sheets by User
+  // Sheets Order
   [getSheetsOrderErrorAction]: (state, action) => {
     state.sheetsError = action.payload;
   },

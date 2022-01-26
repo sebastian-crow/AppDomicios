@@ -34,12 +34,12 @@ const TakeOrder = () => {
   // Get Current User
   const user = useSelector((state) => state.login.user);
 
-  // Get Dealers List
-  const dealers = useSelector((state) => state.ui.domiciliarys);
+  // ordersProduct Error
   const ordersProductError = useSelector(
     (state) => state.ui.sheetsError
   );
 
+  // Current orderProduct
   const ordersProductById = useSelector(
     (state) => state.ui.ordersProductOrderNumber
   );
@@ -50,7 +50,6 @@ const TakeOrder = () => {
   const [firstAddress, setFirstAddress] = React.useState();
   const [finalAddress, setFinalAddress] = React.useState();
   const [paymentMethod, setPaymentMethod] = React.useState({});
-  const [dealerData, setDealerData] = React.useState({});
 
   const [toggle, setToggle] = React.useState(false);
   const [formIsValid, setFormIsValid] = React.useState(false);
@@ -87,11 +86,7 @@ const TakeOrder = () => {
     setPaymentMethod(paymentData);
   };
 
-  // Handle event onChange to dealer multii select
-  const handleDealerChange = (dealerData) => {
-    setDealerData(dealerData);
-  };
-
+  // Get departments simple info
   const departmentSimpleInfo = [];
   let number = 0;
   Object.keys(department).forEach((key) => {
@@ -99,6 +94,14 @@ const TakeOrder = () => {
     number++;
   });
 
+  // Get id of department
+  const idDepartment = [];
+  for (let i = 0; i < departments.length; i++) {
+    if (departments[i].departamento === department.label)
+      idDepartment.push(departments[i].id);
+  }
+
+  // Get cities data
   const getCities = cities.map((city) => {
     let citie = {};
     if (city.id == departmentSimpleInfo[0]) {
@@ -166,13 +169,20 @@ const TakeOrder = () => {
     setToggle(!toggle);
   };
 
+  // Register WhatsApp
+  const openWhatsapp = () => {
+    const url = process.env.REACT_APP_URL_WHATSAPP;
+    window.open(url, '_blank');
+  };
+
   // Handle Save
   const handleSave = () => {
     let data = {
-      orderNumber: ordersProductById?.orderNumber,
+      orderNumber: Number(ordersProductById?.orderNumber),
       ticket: ordersProductById?.deliveryPacket,
       phone: phoneNumber || ordersProductById?.clientPhone,
-      departament: department.label.toString(),
+      department: department.label.toString(),
+      departmentId: idDepartment[0],
       city: city.length ? city.label : 'DEFAULT',
       firstAddress:
         firstAddress || ordersProductById?.deliveryAddress,
@@ -183,18 +193,16 @@ const TakeOrder = () => {
       clientCompany: Number(idClientEmpresa ? idClientEmpresa : '0'),
       clientName: user.name,
       clientLastName: user.lastName,
-      clientDocumentNumber: user.documentNumber,
+      clientDocumentNumber: Number(user.documentNumber),
       clientEmail: user.email,
       clientId: user.id,
-      domiciliary: dealerData.value,
-      state: 'En proceso',
+      state: 'waiting',
     };
     dispatch(createOrderAction(data));
-    openWhatsapp();
+    console.log('What data im gonna send', data);
   };
 
   React.useEffect(() => {
-    dispatch(getAllDomiciliaryAction());
     if (!ordersProductById && !ordersProductError)
       dispatch(getOrderProductByOrderNumberAction(orderNumberSheets));
   }, [
@@ -209,8 +217,7 @@ const TakeOrder = () => {
       formIsValid === false &&
       Object.keys(department).length &&
       Object.keys(city).length &&
-      Object.keys(paymentMethod).length &&
-      Object.keys(dealerData).length
+      Object.keys(paymentMethod).length
     ) {
       setFormIsValid(true);
     }
@@ -223,12 +230,8 @@ const TakeOrder = () => {
     firstAddress,
     finalAddress,
     paymentMethod,
-    dealerData,
   ]);
-  const openWhatsapp = () => {
-    const url = process.env.REACT_APP_URL_WHATSAPP;
-    window.open(url, '_blank');
-  };
+
   return (
     <>
       <div>
@@ -236,8 +239,21 @@ const TakeOrder = () => {
           className="themed-container containerProof"
           fluid="sm"
         >
+          <FormGroup>
+            <div className="positionButton">
+              <Button
+                variant="success"
+                size="sm"
+                onClick={openWhatsapp}
+              >
+                Registrar WhatsApp
+              </Button>{' '}
+              {``}
+            </div>
+          </FormGroup>
           <Form className="form" onSubmit={(e) => handleToggle(e)}>
             <h2 className="takeOrderTitle">Tomar Orden</h2>
+
             <Col>
               <FormGroup row>
                 <Col sm={10}>
@@ -311,20 +327,6 @@ const TakeOrder = () => {
                       return {
                         value: method.id,
                         label: method.method,
-                      };
-                    })}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Col sm={10}>
-                  <Select
-                    onChange={handleDealerChange}
-                    placeholder="Domiciliario"
-                    options={dealers.map((dealer) => {
-                      return {
-                        value: dealer.id,
-                        label: dealer.name,
                       };
                     })}
                   />

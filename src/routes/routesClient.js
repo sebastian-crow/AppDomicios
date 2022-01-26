@@ -5,7 +5,7 @@ import UserProductOrderList from '../components/addresses/orders/productOrders/O
 import OrderList from '../components/addresses/orders/ListOrdersClient';
 
 // OrderProductEdit
-import { OrderProductEdit } from '../components/addresses/orders/productOrders/OrderProductEdit';
+import { EditOrderProduct } from '../components/addresses/orders/productOrders/OrderProductEdit';
 
 // Delivery Orders
 import TakeOrder from '../components/addresses/orders/TakeOrder';
@@ -33,7 +33,7 @@ var routesClient = [
     rol: ['client'],
     name: 'Edit Order Product',
     icon: 'nc-icon nc-cart-simple',
-    component: OrderProductEdit,
+    component: EditOrderProduct,
     layout: '/client',
     visible: false,
   },

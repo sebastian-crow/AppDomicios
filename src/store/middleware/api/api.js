@@ -137,6 +137,7 @@ export function getOrderById(id) {
 }
 
 export function createOrder(params) {
+  console.log('Params create order', params);
   return callAPI({
     method: 'POST',
     url: `/order`,
@@ -145,9 +146,10 @@ export function createOrder(params) {
 }
 
 export function updateOrder(params) {
+  console.log('Update order data', params);
   return callAPI({
     method: 'PATCH',
-    url: `/order/${params.id}`,
+    url: `/order/${Number(params.id)}`,
     data: params.data,
   });
 }

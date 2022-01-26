@@ -27,8 +27,11 @@ import {
 const ListOrdersClient = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.ui.orders);
+  const user = useSelector((state) => state.login.user);
+  const dealers = useSelector((state) => state.ui.domiciliarys);
   const [toggle, setToggle] = React.useState(false);
   const [confirm, setConfirm] = React.useState(false);
+  const [wait, setWait] = React.useState(true);
 
   const handleClose = () => setToggle(!toggle);
 
@@ -46,25 +49,36 @@ const ListOrdersClient = () => {
   };
 
   React.useEffect(() => {
-    dispatch(getAllOrderByUserAction());
+    if (!orders.length) {
+      dispatch(getAllOrderByUserAction());
+    }
+    if (orders.length > 0) setWait(false);
   }, [dispatch, orders]);
 
   return (
     <>
       <div style={{ height: '800px', overflowY: 'scroll' }}>
         <table className="table">
+          {wait && <h2>Aún no hay ordenes</h2>}
           <thead>
-            <tr>
-              <th scope="col">Número de Orden</th>
-              <th scope="col">Pedido</th>
-              <th scope="col">Dirección Recogida</th>
-              <th scope="col">Dirección Entrega</th>
-              <th scope="col">Telefono</th>
-              <th scope="col">Tiempo</th>
-              <th scope="col">Estado</th>
-              <th scope="col">Ubicación</th>
-              <th scope="col">Eliminar</th>
-            </tr>
+            {orders?.map((order) => (
+              <tr>
+                <th scope="col">Número de Orden</th>
+                <th scope="col">Pedido</th>
+                <th scope="col">Dirección Recogida</th>
+                <th scope="col">Dirección Entrega</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Tiempo</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Ubicación</th>
+                {order.clientCompany === user.id &&
+                  order.state !== 'initiated' && (
+                    <th scope="col">Editar</th>
+                  )}
+
+                <th scope="col">Eliminar</th>
+              </tr>
+            ))}
           </thead>
           <tbody>
             {orders?.map((order) => (
@@ -77,7 +91,7 @@ const ListOrdersClient = () => {
                 <td>
                   <ReverseCounter />
                 </td>
-                <td>In process / Done</td>
+                <td>{order.state}</td>
                 <td>
                   <Button
                     onClick={(e) => {
@@ -89,6 +103,21 @@ const ListOrdersClient = () => {
                     Ver en mapa{' '}
                   </Button>
                 </td>
+                {order.clientCompany === user.id && (
+                  <td>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault;
+                        dispatch(
+                          push(`/client/editorder/${order.id}`)
+                        );
+                      }}
+                      variant="warning"
+                    >
+                      Editar{' '}
+                    </Button>
+                  </td>
+                )}
                 <td>
                   <Button
                     variant="danger"

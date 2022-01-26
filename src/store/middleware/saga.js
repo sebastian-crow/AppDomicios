@@ -36,13 +36,13 @@ import {
   getFromDealerPositionDoneAction,
   getAllUserAction,
   getAllUserDoneAction,
-
   getSheetsOrderErrorAction,
   restoreSessionStateAction,
   // Orders
   // eslint-disable-next-line
   errorGetOrders,
   getOrderByIdAction,
+  getOrderByIdDoneAction,
   getAllOrderAction,
   getAllOrderDoneAction,
   createOrderAction,
@@ -95,6 +95,7 @@ import {
 } from '../reducer';
 
 import { LOCATION_CHANGE } from 'redux-first-history';
+import Cookies from 'js-cookie';
 
 function* loginSaga(action) {
   try {
@@ -167,6 +168,7 @@ function* logoutSagas(action) {
   try {
     yield put(cleanSessionStateAcion());
     localStorage.removeItem('ordersProduct');
+    Cookies.remove('session');
   } catch (error) {
     console.error(error);
   } finally {
@@ -186,7 +188,7 @@ function* registerSaga(action) {
     yield put(registerDoneAction(data));
     yield put(push('/'));
   } catch (error) {
-    yield put(errorRegistro("Error al registrar"));
+    yield put(errorRegistro('Error al registrar'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -195,10 +197,9 @@ function* registerSaga(action) {
 }
 
 function* locationChangeSaga(action) {
-
   const lastRoute = window.location.href;
   const pathname = action.payload.location.pathname;
-  let routes = localStorage.getItem("locationLog");
+  let routes = localStorage.getItem('locationLog');
   routes = JSON.parse(routes);
   let log = routes?.log || [];
   if (!routes?.log) {
@@ -209,9 +210,13 @@ function* locationChangeSaga(action) {
     log.shift();
   }
   localStorage.setItem('locationLog', JSON.stringify({ log }));
-  if (log[0].includes(`${process.env.REACT_APP_REACT_HOST}/client/takeorder/`)
-    && log[1].includes(`${process.env.REACT_APP_REACT_HOST}/login`)
-    && log[2].includes(`${process.env.REACT_APP_REACT_HOST}/`)) {
+  if (
+    log[0].includes(
+      `${process.env.REACT_APP_REACT_HOST}/client/takeorder/`
+    ) &&
+    log[1].includes(`${process.env.REACT_APP_REACT_HOST}/login`) &&
+    log[2].includes(`${process.env.REACT_APP_REACT_HOST}/`)
+  ) {
     let index = log[0].indexOf(`/client/takeorder/`);
     yield put(push(log[0].substr(index)));
   } else if (!lastRoute.includes(`/client/takeorder/`)) {
@@ -234,7 +239,6 @@ function* locationChangeSaga(action) {
       }
     }
   }
-
 }
 
 function* actualizarUsuarioSaga(action) {
@@ -384,7 +388,7 @@ function* getAllOrderSaga() {
 function* getOrderByIdSaga(action) {
   try {
     const { data } = yield call(api.getOrderById, action.payload);
-    yield put(getAllOrderDoneAction(data));
+    yield put(getOrderByIdDoneAction(data));
   } catch (error) {
   } finally {
     if (yield cancelled()) {
@@ -468,12 +472,12 @@ function* getAllOrderProductSaga() {
   try {
     const { data } = yield call(api.getAllOrdersProduct);
     if (data.length === 0) {
-      yield put(getAllOrderProductErrorAction("Error hay datos"));
+      yield put(getAllOrderProductErrorAction('Error hay datos'));
     } else {
       yield put(getAllOrderProductDoneAction(data));
     }
   } catch (error) {
-    yield put(getAllOrderProductErrorAction("Error no esperado"));
+    yield put(getAllOrderProductErrorAction('Error no esperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -485,12 +489,12 @@ function* getAllOrderProductByUserSaga() {
   try {
     const { data } = yield call(api.getAllOrdersProductByUser);
     if (data.length === 0) {
-      yield put(getAllOrderProductErrorAction("Error hay datos"));
+      yield put(getAllOrderProductErrorAction('Error hay datos'));
     } else {
       yield put(getAllOrderProductDoneAction(data));
     }
   } catch (error) {
-    yield put(getAllOrderProductErrorAction("Error no esperado"));
+    yield put(getAllOrderProductErrorAction('Error no esperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -499,14 +503,17 @@ function* getAllOrderProductByUserSaga() {
 }
 function* getAllOrderProductByIdUserSaga(action) {
   try {
-    const { data } = yield call(api.getAllOrdersProductByIdUser, action.payload);
+    const { data } = yield call(
+      api.getAllOrdersProductByIdUser,
+      action.payload
+    );
     if (Object.keys(data).length < 1) {
-      yield put(getAllOrderProductErrorAction("Error hay datos"));
+      yield put(getAllOrderProductErrorAction('Error hay datos'));
     } else {
       yield put(getOrderProductByOrderNumberDoneAction(data));
     }
   } catch (error) {
-    yield put(getAllOrderProductErrorAction("Error no esperado"));
+    yield put(getAllOrderProductErrorAction('Error no esperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -516,14 +523,17 @@ function* getAllOrderProductByIdUserSaga(action) {
 
 function* getOrderProductByOrderNumberSaga(action) {
   try {
-    const { data } = yield call(api.getOrderProductByOrderNumber, action.payload);
+    const { data } = yield call(
+      api.getOrderProductByOrderNumber,
+      action.payload
+    );
     if (!data) {
-      yield put(getAllOrderProductErrorAction("Error hay datos"));
+      yield put(getAllOrderProductErrorAction('Error hay datos'));
     } else {
       yield put(getOrderProductByOrderNumberDoneAction(data));
     }
   } catch (error) {
-    yield put(getAllOrderProductErrorAction("Error no esperado"));
+    yield put(getAllOrderProductErrorAction('Error no esperado'));
   } finally {
     if (yield cancelled()) {
       // Do nothing
@@ -700,8 +710,14 @@ export function* rootSaga() {
   // Orders
   yield takeLatest(getAllOrderAction.type, getAllOrderSaga);
   yield takeLatest(getOrderByIdAction.type, getOrderByIdSaga);
-  yield takeLatest(getAllOrderByUserAction.type, getAllOrderByUserSaga);
-  yield takeLatest(getAllOrdersByUserDomiciliaryAction.type, getAllOrdersByUserDomiciliarySaga);
+  yield takeLatest(
+    getAllOrderByUserAction.type,
+    getAllOrderByUserSaga
+  );
+  yield takeLatest(
+    getAllOrdersByUserDomiciliaryAction.type,
+    getAllOrdersByUserDomiciliarySaga
+  );
   yield takeLatest(createOrderAction.type, createOrderSaga);
   yield takeLatest(updateOrderAction.type, updateOrderSaga);
   yield takeLatest(deleteOrderAction.type, deleteOrderSaga);

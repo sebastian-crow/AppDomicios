@@ -1,72 +1,117 @@
-// React
-import * as React from "react";
-
-// Redux
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { push } from "redux-first-history";
-
-// Reducers
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  getAllProductAction,
   getAllDomiciliaryAction,
   createOrderAction,
-} from "../../../store/reducer";
+  updateOrderAction,
+  getOrderByIdAction,
+} from '../../../store/reducer';
+import {
+  Container,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from 'reactstrap';
+import Select from 'react-select';
 
-// Reacstrap
-import { Container, Col, Form, FormGroup, Input, Button } from "reactstrap";
+// Departments And Cities JSON
+import { cities, departments } from './lib/cities';
 
-// React Select
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
-
-const animatedComponents = makeAnimated();
+import moment from 'moment';
 
 // Take Order Component
-const TakeOrder = (props) => {
+const EditOrder = () => {
+  // order id
+  const { id } = useParams();
+
+  // Redux Dispatch
   const dispatch = useDispatch();
+
+  // Get Current User
   const user = useSelector((state) => state.login.user);
+
+  // Get Dealers
   const dealers = useSelector((state) => state.ui.domiciliarys);
-  const products = useSelector((state) => state.ui.products);
-  const orders = useSelector((state) => state.ui.orders);
-  const order = orders.find((order) => order._id === props.match.params.id);
-  const [dealerData, setDealerData] = React.useState({});
-  const [orderName, setOrderName] = React.useState(order.orderName);
-  const [address, setAddress] = React.useState(order.direccion.address);
-  const [productsAndAmount, setProductsAndAmount] = React.useState([]);
-  let domiciliarysPreview = {};
-  dealers?.forEach((domiciliary) => {
-    if (order.domiciliary.id === domiciliary._id) {
-      if (Object.values(dealerData).length === 0) {
-        domiciliarysPreview = {
-          value: domiciliary._id,
-          label: domiciliary.name,
-        };
-      }
-    }
+
+  // Get Order
+  const currentOrder = useSelector((state) => state.ui.orderById);
+
+  // ordersProduct Error
+  const ordersProductError = useSelector(
+    (state) => state.ui.sheetsError
+  );
+
+  // Current orderProduct
+  const ordersProductById = useSelector(
+    (state) => state.ui.ordersProductOrderNumber
+  );
+
+  const [phoneNumber, setPhoneNumber] = React.useState(
+    currentOrder?.phone
+  );
+  const [department, setDepartment] = React.useState({
+    value: currentOrder?.departmentId,
+    label: currentOrder?.department,
+  });
+  const [city, setCity] = React.useState({
+    value: currentOrder?.departmentId,
+    label: currentOrder?.city,
   });
 
-  let productosPreview = [];
-  order.productos?.forEach((product) => {
-    productosPreview.push({
-      value: product.id,
-      label: product.name,
-      amount: product.cantidad,
-    });
-    if(productsAndAmount.length === 0){
-      setProductsAndAmount(productosPreview);
-    }
+  const [firstAddress, setFirstAddress] = React.useState(
+    currentOrder?.firstAddress
+  );
+  const [finalAddress, setFinalAddress] = React.useState(
+    currentOrder?.lastAddress
+  );
+  const [paymentMethod, setPaymentMethod] = React.useState({
+    method: currentOrder?.paymentMethod,
+    id: Math.floor(Math.random() * 100),
   });
-  // Handle event onChange amount
-  const handleAmountChange = (amount, index) => {
-    productsAndAmount[index].amount = amount.target.value;
-    setProductData(productsAndAmount);
+  const [dealerData, setDealerData] = React.useState({});
+
+  console.log('Dealer data', dealerData);
+
+  const [toggle, setToggle] = React.useState(false);
+  const [formIsValid, setFormIsValid] = React.useState(false);
+
+  // Handle names and last names
+  const handlePhoneChange = (phoneNumber) => {
+    setPhoneNumber(phoneNumber.target.value);
   };
 
-  // Hanlde the event onChange to the Product multi select
-  const handleProductChange = (productData, index) => {
-    productsAndAmount[index] = productData;
-    setProductData(productsAndAmount);
+  // Hanlde the event onChange to multi select department
+  const handleDepartmentChange = (departmentData, index) => {
+    department[index] = departmentData;
+    setDepartment(departmentData);
+  };
+
+  const handleCityChange = (cityData, index) => {
+    city[index] = cityData;
+    setCity(city);
+  };
+
+  // Handle event onChange to Frist Address
+  const handleFirstAddressChange = (addressData) => {
+    setFirstAddress(addressData.target.value);
+  };
+
+  // Handle event onChange to Final Address
+  const handleFinalAddressChange = (addressData) => {
+    setFinalAddress(addressData.target.value);
+  };
+
+  // Hanlde event onChange to payMethod
+  const handePayMethodChange = (paymentData, index) => {
+    paymentMethod[index] = paymentData;
+    setPaymentMethod(paymentData);
   };
 
   // Handle event onChange to dealer multii select
@@ -74,198 +119,288 @@ const TakeOrder = (props) => {
     setDealerData(dealerData);
   };
 
-  // Handle event onChange to orderName
-  const handleOrderNameChange = (orderName) => {
-    setOrderName(orderName.target.value);
-  };
+  const departmentSimpleInfo = [];
+  let number = 0;
+  Object.keys(department).forEach((key) => {
+    departmentSimpleInfo[number] = department[key];
+    number++;
+  });
 
-  // Handle event onChange to Address
-  const handleAddressChange = (address) => {
-    setAddress(address.target.value);
-  };
+  // Get id of department
+  const idDepartment = [];
+  for (let i = 0; i < departments.length; i++) {
+    if (departments[i].departamento === department.label)
+      idDepartment.push(departments[i].id);
+  }
 
-  // Handle  Update
-  const handleSave = () => {
-    const productDone = [];
-    productsAndAmount.map((info) => {
-      productDone.push({
-        name: info.label,
-        id: info.value,
-        cantidad: info.amount,
+  const getCities = cities.map((city) => {
+    let citie = {};
+    if (city.id == departmentSimpleInfo[0]) {
+      citie = city.ciudades.map((citi) => {
+        return {
+          value: city.id,
+          label: citi,
+        };
       });
-    });
-    const remaining = 180000; // Time remaining since the order was created.
-
-    let data = {
-      orderName,
-      fecha: new Date(),
-      client: {
-        id: user.id,
-        name: user.name,
-      },
-      domiciliary: {
-        id: dealerData.value,
-        name: dealerData.label,
-      },
-      productos: productDone,
-      direccion: address,
-      remaining,
-    };
-    dispatch(createOrderAction(data));
-    if (user?.rol === "admin") {
-      dispatch(push("/admin/orderslist"));
-    } else if (user?.rol === "client") {
-      dispatch(push("/client/orderslist"));
     }
-  };
+    return citie;
+  });
 
-  const addListProduct = () => {
-    const listProducs = [];
-    if (productsAndAmount.length) {
-      for (let index = 0; index <= productsAndAmount.length - 1; index++) {
-        const element = productsAndAmount[index];
-        listProducs.push(element);
-      }
-      listProducs.push({});
-    } else {
-      listProducs.push({});
+  let finalCitiesData = [];
+  getCities.map((citie) => {
+    if (citie.length > 1) {
+      finalCitiesData.push(citie);
     }
-    setProductsAndAmount(listProducs);
-  };
+  });
 
-  const deleteProducto = (e, index) => {
+  let finalInfoCitiesData = [
+    {
+      value: 3,
+      label: 'Medellín',
+    },
+    {
+      value: 4,
+      label: 'Bello',
+    },
+  ];
+
+  let temporalfinalInfoCitiesData = finalCitiesData.map(
+    (finalData) => {
+      let object = finalData.map((final) => {
+        return {
+          value: Math.floor(Math.random() * 100),
+          label: final.label,
+        };
+      });
+      return object.map((obj) => {
+        return obj;
+      });
+    }
+  );
+
+  if (temporalfinalInfoCitiesData.length > 0) {
+    finalInfoCitiesData = temporalfinalInfoCitiesData;
+  }
+
+  // Payment Methods
+  const paymentMethods = [
+    {
+      method: 'Efectivo',
+      id: Math.floor(Math.random() * 100),
+    },
+    {
+      method: 'Transferencia Bancaria',
+      id: Math.floor(Math.random() * 100),
+    },
+  ];
+
+  // Handle Close
+  const handleToggle = (e) => {
     e.preventDefault();
-    const listProducs = [];
-    productsAndAmount.forEach((indexProducto, key) => {
-      if (index !== key) {
-        listProducs.push(indexProducto);
-      }
-    });
-    setProductsAndAmount(listProducs);
+    setToggle(!toggle);
+    console.log('Department', department);
   };
 
-  // Get Products Array
+  // Register WhatsApp
+  const openWhatsapp = () => {
+    const url = process.env.REACT_APP_URL_WHATSAPP;
+    window.open(url, '_blank');
+  };
+
+  // Handle Save
+  const handleSave = () => {
+    let data = {
+      orderNumber: currentOrder.orderNumber,
+      ticket: currentOrder.ticket,
+      phone: phoneNumber
+        ? Number(phoneNumber)
+        : Number(currentOrder.phone),
+      department: department.label
+        ? department.label?.toString()
+        : currentOrder.department,
+      departmentId: idDepartment[0]
+        ? idDepartment[0]
+        : currentOrder.departmentId,
+      city: city.length ? city.label : currentOrder.city,
+      firstAddress: firstAddress
+        ? firstAddress
+        : currentOrder.firstAddress,
+      lastAddress: finalAddress
+        ? finalAddress
+        : currentOrder.lastAddress,
+      paymentMethod: paymentMethod.label
+        ? paymentMethod.label.toString()
+        : currentOrder.paymentMethod,
+      date: moment(Date.now()).format('YYYY/MM/DD'),
+      clientCompany: currentOrder.clientCompany,
+      clientName: user.name,
+      clientLastName: user.lastName,
+      clientDocumentNumber: Number(user.documentNumber),
+      clientEmail: user.email,
+      clientId: user.id,
+      domiciliary: dealerData.value,
+      state: 'initialized',
+    };
+    dispatch(updateOrderAction({ id: Number(id), data: data }));
+  };
+
   React.useEffect(() => {
-    dispatch(getAllProductAction());
-    dispatch(getAllDomiciliaryAction());
-  }, [dispatch]);
+    if (!dealers.length) dispatch(getAllDomiciliaryAction());
+    if (!currentOrder.clientCompany) dispatch(getOrderByIdAction(id));
+  }, [
+    dispatch,
+    currentOrder,
+    ordersProductError,
+    ordersProductById,
+    dealers,
+  ]);
+
+  React.useEffect(() => {
+    if (
+      (formIsValid === false &&
+        Object.keys(department).length &&
+        Object.keys(city).length &&
+        Object.keys(paymentMethod).length,
+      Object.keys(dealerData).length)
+    ) {
+      setFormIsValid(true);
+    }
+  }, [
+    setFormIsValid,
+    formIsValid,
+    phoneNumber,
+    department,
+    city,
+    firstAddress,
+    finalAddress,
+    paymentMethod,
+    dealerData,
+  ]);
 
   return (
     <>
       <div>
-        <Container className="themed-container" fluid="sm">
-          <Form className="form">
+        <Container
+          className="themed-container containerProof"
+          fluid="sm"
+        >
+          <Form className="form" onSubmit={(e) => handleToggle(e)}>
+            <h2 className="takeOrderTitle">Editar Orden</h2>
+
             <Col>
               <FormGroup row>
                 <Col sm={10}>
-                  <Input
-                    type="text"
-                    id="orderName"
-                    placeholder="Titulo del pedido"
-                    onChange={handleOrderNameChange}
-                    defaultValue={order.orderName}
+                  <Select
+                    value={{
+                      value: currentOrder.departmentId,
+                      label: currentOrder.department,
+                    }}
+                    onChange={handleDepartmentChange}
+                    placeholder="Departamento"
+                    options={departments.map((department) => {
+                      return {
+                        value: department.id,
+                        label: department.departamento,
+                      };
+                    })}
                   />
                 </Col>
               </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
                   <Select
-                    onChange={handleDealerChange}
-                    placeholder="Domiciliary"
-                    options={dealers.map((dealer) => {
-                      return {
-                        value: dealer._id,
-                        label: dealer.name,
-                      };
-                    })}
-                    value={{ ...dealerData, ...domiciliarysPreview }}
+                    required
+                    onChange={handleCityChange}
+                    placeholder="Ciudad"
+                    options={finalInfoCitiesData[0]}
+                    value={{
+                      value: currentOrder.departmentId,
+                      label: currentOrder.city,
+                    }}
                   />
                 </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Button size="sm" variant="primary" onClick={addListProduct}>
-                  Añadir producto
-                </Button>{" "}
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th width="60%" scope="col">
-                        Producto
-                      </th>
-                      <th width="30%" scope="col">
-                        Cantidad
-                      </th>
-                      <th width="10%" scope="col">
-                        Borrar
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {productsAndAmount.map((productsAndAmountElement, key) => (
-                      <tr key={key}>
-                        <td>
-                          {" "}
-                          <Col sm={12}>
-                            <Select
-                              onChange={(data) =>
-                                handleProductChange(data, key)
-                              }
-                              closeMenuOnSelect={false}
-                              components={animatedComponents}
-                              options={products.map((product) => {
-                                return {
-                                  value: product._id,
-                                  label: product.name,
-                                };
-                              })}
-                              placeholder="Productos"
-                              value={{label: productsAndAmountElement.label, value: productsAndAmountElement.value}}
-                            />
-                          </Col>
-                        </td>
-                        <td>
-                          <Col sm={12}>
-                            <Input
-                              type="number"
-                              id="counter"
-                              placeholder="Cantidad"
-                              onChange={(data) => handleAmountChange(data, key)}
-                              defaultValue={productsAndAmountElement.amount}
-                            />
-                          </Col>
-                        </td>
-                        <td>
-                          <Col sm={12}>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={(e) => deleteProducto(e, key)}
-                            >
-                              Borrar
-                            </Button>
-                          </Col>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
               </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
                   <Input
+                    required
                     type="text"
-                    id="address"
-                    placeholder="Dirección"
-                    onChange={handleAddressChange}
-                    defaultValue={order.direccion}
+                    id="firstAddress"
+                    placeholder="Dirección Recogida"
+                    onChange={handleFirstAddressChange}
+                    defaultValue={currentOrder.firstAddress}
                   />
                 </Col>
               </FormGroup>
-              <FormGroup className="">
-                <div className="">
-                  <Button variant="success" size="lg" onClick={handleSave}>
-                    Guardar
-                  </Button>{" "}
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    required
+                    type="text"
+                    id="finalAddress"
+                    placeholder="Dirección Entrega"
+                    onChange={handleFinalAddressChange}
+                    defaultValue={currentOrder.lastAddress}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    required
+                    type="text"
+                    id="phone"
+                    placeholder="Celular"
+                    onChange={handlePhoneChange}
+                    defaultValue={currentOrder.phone}
+                  />
+                </Col>
+              </FormGroup>
+
+              <FormGroup row>
+                <Col sm={10}>
+                  <Select
+                    value={{
+                      value: Math.floor(Math.random() * 100),
+                      label: currentOrder.paymentMethod,
+                    }}
+                    onChange={handePayMethodChange}
+                    placeholder="Método De Pago"
+                    options={paymentMethods.map((method) => {
+                      return {
+                        value: method.id,
+                        label: method.method,
+                      };
+                    })}
+                  />
+                </Col>
+              </FormGroup>
+
+              <FormGroup row>
+                <Col sm={10}>
+                  <Select
+                    onChange={handleDealerChange}
+                    placeholder="Domiciliario"
+                    options={dealers.map((dealer) => {
+                      return {
+                        value: dealer.id,
+                        label: dealer.name,
+                      };
+                    })}
+                  />
+                </Col>
+              </FormGroup>
+
+              <FormGroup>
+                <div className="positionButton">
+                  <Button
+                    variant="success"
+                    size="lg"
+                    type="submit"
+                    disabled={!formIsValid}
+                  >
+                    Actualizar Orden
+                  </Button>{' '}
                   {``}
                 </div>
               </FormGroup>
@@ -274,8 +409,32 @@ const TakeOrder = (props) => {
           </Form>
         </Container>
       </div>
+      <SaveOrderModal
+        toggle={toggle}
+        handleChange={handleSave}
+        handleClose={handleToggle}
+      />
     </>
   );
 };
 
-export default TakeOrder;
+const SaveOrderModal = (props) => {
+  const { toggle, handleChange, handleClose } = props;
+  return (
+    <>
+      <Modal isOpen={toggle} toggle={handleChange}>
+        <ModalHeader toggle={handleClose}>Confirmar</ModalHeader>
+        <ModalBody>
+          ¿Estás seguro/a de que los datos ingresados en el formulario
+          son correctos?
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={handleChange}>Aceptar</Button>
+          <Button onClick={handleClose}>Cancelar</Button>
+        </ModalFooter>
+      </Modal>
+    </>
+  );
+};
+
+export default EditOrder;

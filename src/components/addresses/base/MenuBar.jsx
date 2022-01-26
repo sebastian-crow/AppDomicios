@@ -1,9 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logoutAction } from "../../../store/reducer";
-import { push } from "redux-first-history";
-import Cookies from 'js-cookies';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutAction } from '../../../store/reducer';
+import { push } from 'redux-first-history';
 
 const MenuBar = () => {
   const dispatch = useDispatch();
@@ -11,14 +10,13 @@ const MenuBar = () => {
   const user = useSelector((state) => state.login.user);
   const handleLogout = () => {
     dispatch(logoutAction());
-    Cookies.remove("session");
-    dispatch(push("/login"));
+    dispatch(push('/login'));
   };
   return (
     <>
       <nav
         className="navbar navbar-expand-lg navbar-light fixed-top"
-        style={{ background: "#EEEEEE" }}
+        style={{ background: '#EEEEEE' }}
         id="mainNav"
       >
         <button
@@ -32,26 +30,32 @@ const MenuBar = () => {
         >
           Menu
         </button>
-        <div className="collapse navbar-collapse" id="navbarResponsive">
+        <div
+          className="collapse navbar-collapse"
+          id="navbarResponsive"
+        >
           {user && (
             <>
               {user.name} {user.lastName} {user.rol}
             </>
           )}
-          <div style={{ display: "flex", marginLeft: "auto" }}>
+          <div style={{ display: 'flex', marginLeft: 'auto' }}>
             &nbsp;&nbsp;
             {token ? (
               <>
                 &nbsp;&nbsp;
-                <Link to="/" className="btn btn-outline-secondary my-2 my-sm-0">
-                  Inicio{" "}
+                <Link
+                  to="/"
+                  className="btn btn-outline-secondary my-2 my-sm-0"
+                >
+                  Inicio{' '}
                 </Link>
                 &nbsp;&nbsp;
                 <Link
                   to="/editaruser"
                   className="btn btn-outline-secondary my-2 my-sm-0"
                 >
-                  Editar perfil{" "}
+                  Editar perfil{' '}
                 </Link>
                 &nbsp;&nbsp;
                 <button
@@ -59,7 +63,7 @@ const MenuBar = () => {
                   onClick={handleLogout}
                   type="submit"
                 >
-                  Cerrar sesión{" "}
+                  Cerrar sesión{' '}
                 </button>
               </>
             ) : (
@@ -68,14 +72,14 @@ const MenuBar = () => {
                   to="/login"
                   className="btn btn-outline-primary my-2 my-sm-0"
                 >
-                  Iniciar sesión{" "}
+                  Iniciar sesión{' '}
                 </Link>
                 &nbsp;&nbsp;
                 <Link
                   to="/register"
                   className="btn btn-outline-info my-2 my-sm-0"
                 >
-                  Registrarse{" "}
+                  Registrarse{' '}
                 </Link>
               </>
             )}
