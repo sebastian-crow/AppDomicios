@@ -235,21 +235,23 @@ const OrderProductListUser = () => {
                     confirm={confirm}
                   />
                 </td>
-                <td>
-                  <Button
-                    variant="primary"
-                    onClick={(e) => {
-                      handleChangeToggle();
-                      handleSetLikn(
-                        e,
-                        `${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
-                      );
-                      handleCreateOrderProduct(e, order);
-                    }}
-                  >
-                    Crear Link
-                  </Button>
-                </td>
+                {order.state !== 'finished' && (
+                  <td>
+                    <Button
+                      variant="primary"
+                      onClick={(e) => {
+                        handleChangeToggle();
+                        handleSetLikn(
+                          e,
+                          `${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
+                        );
+                        handleCreateOrderProduct(e, order);
+                      }}
+                    >
+                      Crear Link
+                    </Button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
