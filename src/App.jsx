@@ -17,10 +17,11 @@ import routesAdmin from './routes/routesAdmin';
 import routesDomiciliary from './routes/routesDomiciliary';
 import defaultRoutes from './routes/defaultRoutes';
 
-
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
+  const cookie = getSessionCookie();
+  console.log('Cookie', cookie);
 
   React.useEffect(() => {
     if (!user) {

@@ -35,6 +35,7 @@ const SignUp = () => {
   const [password, setPassword] = React.useState(null);
   const [bornDate, setBorndate] = React.useState(null);
   const [email, setEmail] = React.useState(null);
+  const [address, setAddress] = React.useState(null);
   const [rol, setRol] = React.useState({
     value: 'client',
     label: 'Cliente',
@@ -52,6 +53,7 @@ const SignUp = () => {
       rol: rol.value,
       password: password,
       bornDate: bornDate,
+      address: address,
     };
     dispatch(registerAction(data));
   };
@@ -89,6 +91,10 @@ const SignUp = () => {
     setRol(role);
   };
 
+  const handleAddressChange = (address) => {
+    setAddress(address.target.value);
+  };
+
   React.useEffect(() => {
     if (
       formIsValid === false &&
@@ -104,28 +110,6 @@ const SignUp = () => {
         <br />
         <Form onSubmit={handleRegister}>
           <FormGroup>
-            <Label for="exampleEmail">Correo</Label>
-            <Input
-              type="text"
-              placeholder="Ingresa tú Correo"
-              id="email"
-              name="email"
-              required
-              onChange={handleEmailChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="examplePassword">Contraseña</Label>
-            <Input
-              type="password"
-              placeholder="Contraseña"
-              id="password"
-              name="password"
-              required
-              onChange={handlePasswordChange}
-            />
-          </FormGroup>
-          <FormGroup>
             <Label for="examplePassword">Nombre</Label>
             <Input
               type="text"
@@ -136,6 +120,7 @@ const SignUp = () => {
               onChange={handleNameChange}
             />
           </FormGroup>
+
           <FormGroup>
             <Label for="examplePassword">Apellido</Label>
             <Input
@@ -148,18 +133,19 @@ const SignUp = () => {
               onChange={handleLasNameChange}
             />
           </FormGroup>
+
           <FormGroup>
-            <Label for="examplePassword">Numero de documento</Label>
+            <Label for="exampleEmail">Correo</Label>
             <Input
-              type="number"
-              name="documentNumber"
-              id="documentNumber"
-              autoComplete="documentNumber"
+              type="text"
+              placeholder="Ingresa tú Correo"
+              id="email"
+              name="email"
               required
-              className="form-control"
-              onChange={handleDocumentNumber}
+              onChange={handleEmailChange}
             />
           </FormGroup>
+
           <FormGroup>
             <Label for="examplePassword">Tipo de documento</Label>
             <Select
@@ -178,6 +164,20 @@ const SignUp = () => {
               ]}
             />
           </FormGroup>
+
+          <FormGroup>
+            <Label for="examplePassword">Numero de documento</Label>
+            <Input
+              type="number"
+              name="documentNumber"
+              id="documentNumber"
+              autoComplete="documentNumber"
+              required
+              className="form-control"
+              onChange={handleDocumentNumber}
+            />
+          </FormGroup>
+
           <FormGroup>
             <Label for="examplePassword">Fecha de nacimiento</Label>
             <Input
@@ -187,6 +187,31 @@ const SignUp = () => {
               onChange={handleBornDate}
             />
           </FormGroup>
+
+          <FormGroup>
+            <Label for="examplePassword">Contraseña</Label>
+            <Input
+              type="password"
+              placeholder="Contraseña"
+              id="password"
+              name="password"
+              required
+              onChange={handlePasswordChange}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="examplePassword">Dirección</Label>
+            <Input
+              type="address"
+              placeholder="Dirección"
+              id="address"
+              name="address"
+              required
+              onChange={handleAddressChange}
+            />
+          </FormGroup>
+
           <FormGroup>
             <Label for="examplePassword">Tipo de usuario</Label>
             <Select
@@ -212,7 +237,7 @@ const SignUp = () => {
           >
             Registrar
           </Button>
-          {error && <Alert variant="danger" >{error}</Alert>}
+          {error && <Alert variant="danger">{error}</Alert>}
         </Form>
       </Container>
     </>

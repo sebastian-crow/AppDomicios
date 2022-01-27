@@ -32,12 +32,13 @@ const EditUser = (props) => {
   const lastName = useFormInput(user.lastName);
   const [typeDocument, setTypeDocument] = React.useState({
     value: user.typeDocument,
-    label: user.typeDocument === "cc" ? "Cédula" : "NIT",
+    label: user.typeDocument === 'cc' ? 'Cédula' : 'NIT',
   });
   const documentNumber = useFormInput(user.documentNumber);
   const bornDate = useFormInput(
     moment(user.bornDate).format('YYYY-MM-DD')
   );
+  const address = useFormInput(user.address);
   const [error, setError] = useState(null);
 
   const handleRegister = (event) => {
@@ -50,6 +51,7 @@ const EditUser = (props) => {
       documentNumber: documentNumber.value,
       password: password.value,
       bornDate: bornDate.value,
+      address: address.value,
       rol: 'client',
     };
     dispatch(actualizarUsuarioAction({ id: user.id, data: data }));
@@ -119,20 +121,30 @@ const EditUser = (props) => {
               <FormGroup row>
                 <Col sm={10}>
                   <Input
-                    type="password"
-                    id="password"
-                    placeholder="Contraseña"
-                    {...password}
+                    type="date"
+                    id="date"
+                    placeholder="Fecha Nacimiento"
+                    {...bornDate}
                   />
                 </Col>
               </FormGroup>
               <FormGroup row>
                 <Col sm={10}>
                   <Input
-                    type="date"
-                    id="date"
-                    placeholder="Fecha Nacimiento"
-                    {...bornDate}
+                    type="text"
+                    id="address"
+                    placeholder="Dirección"
+                    {...address}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col sm={10}>
+                  <Input
+                    type="password"
+                    id="password"
+                    placeholder="Contraseña"
+                    {...password}
                   />
                 </Col>
               </FormGroup>
