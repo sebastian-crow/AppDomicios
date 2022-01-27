@@ -55,30 +55,32 @@ const ListOrdersClient = () => {
     if (orders.length > 0) setWait(false);
   }, [dispatch, orders]);
 
+  /*
+   * Esta validación es para determinar si el usuario actual es una empresa,
+   * validando el campo clientCompany en las ordenes.
+   */
+  const validateClientCompany = orders.map((order) => {
+    if (order.clientCompany === user.id) return order;
+  })[0];
+
   return (
     <>
       <div style={{ height: '800px', overflowY: 'scroll' }}>
         <table className="table">
           {wait && <h2>Aún no hay ordenes</h2>}
           <thead>
-            {orders?.map((order) => (
-              <tr>
-                <th scope="col">Número de Orden</th>
-                <th scope="col">Pedido</th>
-                <th scope="col">Dirección Recogida</th>
-                <th scope="col">Dirección Entrega</th>
-                <th scope="col">Telefono</th>
-                <th scope="col">Tiempo</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Ubicación</th>
-                {order.clientCompany === user.id &&
-                  order.state !== 'initiated' && (
-                    <th scope="col">Editar</th>
-                  )}
-
-                <th scope="col">Eliminar</th>
-              </tr>
-            ))}
+            <tr>
+              <th scope="col">Número de Orden</th>
+              <th scope="col">Pedido</th>
+              <th scope="col">Dirección Recogida</th>
+              <th scope="col">Dirección Entrega</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Tiempo</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Ubicación</th>
+              {validateClientCompany && <th scope="col">Editar</th>}
+              <th scope="col">Eliminar</th>
+            </tr>
           </thead>
           <tbody>
             {orders?.map((order) => (
@@ -103,21 +105,22 @@ const ListOrdersClient = () => {
                     Ver en mapa{' '}
                   </Button>
                 </td>
-                {order.clientCompany === user.id && (
-                  <td>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault;
-                        dispatch(
-                          push(`/client/editorder/${order.id}`)
-                        );
-                      }}
-                      variant="warning"
-                    >
-                      Editar{' '}
-                    </Button>
-                  </td>
-                )}
+                {order.clientCompany === user.id &&
+                  order.state !== 'initialized' && (
+                    <td>
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault;
+                          dispatch(
+                            push(`/client/editorder/${order.id}`)
+                          );
+                        }}
+                        variant="warning"
+                      >
+                        Editar{' '}
+                      </Button>
+                    </td>
+                  )}
                 <td>
                   <Button
                     variant="danger"

@@ -48,6 +48,7 @@ function loadUiState(state) {
 function cleanUiState(state) {
   try {
     RemoveSessionCookie();
+    localStorage.removeItem('store');
   } catch (err) {
     console.error('Unable to restore state', err);
   }
