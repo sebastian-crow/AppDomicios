@@ -47,7 +47,9 @@ const TakeOrder = () => {
   const [phoneNumber, setPhoneNumber] = React.useState();
   const [department, setDepartment] = React.useState({});
   const [city, setCity] = React.useState({});
-  const [firstAddress, setFirstAddress] = React.useState();
+  const [firstAddress, setFirstAddress] = React.useState(
+    user.address
+  );
   const [finalAddress, setFinalAddress] = React.useState();
   const [paymentMethod, setPaymentMethod] = React.useState({});
 
@@ -287,7 +289,8 @@ const TakeOrder = () => {
                     id="firstAddress"
                     placeholder="Dirección Recogida"
                     onChange={handleFirstAddressChange}
-                    defaultValue={ordersProductById?.deliveryAddress}
+                    //defaultValue={ordersProductById?.deliveryAddress}
+                    defaultValue={firstAddress}
                   />
                 </Col>
               </FormGroup>
