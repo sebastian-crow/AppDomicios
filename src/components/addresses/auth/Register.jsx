@@ -227,6 +227,10 @@ const SignUp = () => {
                   value: 'domiciliary',
                   label: 'Domiciliario',
                 },
+                {
+                  value: 'company',
+                  label: 'Empresa',
+                },
               ]}
             />
           </FormGroup>

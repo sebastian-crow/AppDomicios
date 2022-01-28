@@ -199,9 +199,11 @@ function* registerSaga(action) {
 function* locationChangeSaga(action) {
   const lastRoute = window.location.href;
   const pathname = action.payload.location.pathname;
+  console.log('Pathname', pathname);
   let routes = localStorage.getItem('locationLog');
   routes = JSON.parse(routes);
   let log = routes?.log || [];
+  console.log('What is that log', log);
   if (!routes?.log) {
     log = [];
   }
@@ -219,11 +221,17 @@ function* locationChangeSaga(action) {
   ) {
     let index = log[0].indexOf(`/client/takeorder/`);
     yield put(push(log[0].substr(index)));
-  } else if (!lastRoute.includes(`/client/takeorder/`)) {
+  } else if (
+    !lastRoute.includes(`/client/takeorder/`) &&
+    !lastRoute.includes(`/register`)
+  ) {
     const user = yield select((state) => state.login.user);
     if (user) {
       if (pathname === '/') {
         switch (user.rol) {
+          case 'clientCompany':
+            yield put(push('/clientCompany/orderProducts'));
+            break;
           case 'client':
             yield put(push('/client/orderProducts'));
             break;

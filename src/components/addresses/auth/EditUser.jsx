@@ -40,6 +40,7 @@ const EditUser = (props) => {
   );
   const address = useFormInput(user.address);
   const [error, setError] = useState(null);
+  const [rol, setRol] = React.useState('');
 
   const handleRegister = (event) => {
     event.preventDefault();
@@ -52,7 +53,7 @@ const EditUser = (props) => {
       password: password.value,
       bornDate: bornDate.value,
       address: address.value,
-      rol: 'client',
+      rol: rol,
     };
     dispatch(actualizarUsuarioAction({ id: user.id, data: data }));
     dispatch(push('/'));
@@ -61,6 +62,25 @@ const EditUser = (props) => {
   const handleTypeDocument = (role) => {
     setTypeDocument(role);
   };
+
+  React.useEffect(() => {
+    switch (user.rol) {
+      case 'company':
+        setRol('company');
+        break;
+      case 'client':
+        setRol('client');
+        break;
+      case 'admin':
+        setRol('admin');
+        break;
+      case 'domiciliary':
+        setRol('domiciliary');
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   return (
     <>

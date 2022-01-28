@@ -13,6 +13,7 @@ import { restoreSessionStateAction } from './store/reducer';
 import Login from './components/addresses/auth/Login';
 import Register from './components/addresses/auth/Register';
 import routesClient from './routes/routesClient';
+import routesCompany from './routes/routesCompany';
 import routesAdmin from './routes/routesAdmin';
 import routesDomiciliary from './routes/routesDomiciliary';
 import defaultRoutes from './routes/defaultRoutes';
@@ -63,10 +64,9 @@ function App() {
               )}
             />
             <Route
-              restricted
-              path="/clientForm"
+              path="/company"
               render={(props) => (
-                <NoAuth {...props} routes={routesClient} />
+                <AdminLayout {...props} routes={routesCompany} />
               )}
             />
 

@@ -17,7 +17,7 @@ import { MapOrderDealer } from '../components/addresses/maps/MapBox/MapOrderDeal
 // Google Sheets Connection
 import { GoogleSheetsConnect } from '../components/addresses/excel/googleSheetsConnect';
 
-var routesClient = [
+var routesCompany = [
   // OrdersProduct
   {
     path: '/orderProducts',
@@ -25,8 +25,8 @@ var routesClient = [
     name: 'Listar pedidos',
     icon: 'nc-icon nc-cart-simple',
     component: UserProductOrderList,
-    layout: '/client',
-    visible: false,
+    layout: '/clientCompany',
+    visible: true,
   },
   {
     path: '/editOrderProduct/:idClientEmpresa/:orderNumberSheets/:nameYApellidoClient',
@@ -34,7 +34,7 @@ var routesClient = [
     name: 'Edit Order Product',
     icon: 'nc-icon nc-cart-simple',
     component: EditOrderProduct,
-    layout: '/client',
+    layout: '/clientCompany',
     visible: false,
   },
   {
@@ -43,7 +43,7 @@ var routesClient = [
     icon: 'nc-icon nc-spaceship',
     rol: ['client'],
     component: OrderList,
-    layout: '/client',
+    layout: '/clientCompany',
     visible: true,
   },
   {
@@ -52,7 +52,7 @@ var routesClient = [
     icon: 'nc-icon nc-cart-simple',
     rol: ['client'],
     component: TakeOrder,
-    layout: '/client',
+    layout: '/clientCompany',
     visible: false,
   },
   {
@@ -61,7 +61,7 @@ var routesClient = [
     icon: 'nc-icon nc-bank',
     rol: ['client'],
     component: EditOrder,
-    layout: '/client',
+    layout: '/clientCompany',
     visible: false,
   },
   // Maps
@@ -70,7 +70,7 @@ var routesClient = [
     name: 'Mapa del cliente',
     rol: ['client'],
     component: MapOrderDealer,
-    layout: '/client',
+    layout: '/clientCompany',
     visible: false,
   },
   // User's Pages
@@ -80,7 +80,7 @@ var routesClient = [
     name: 'Editar usuario',
     icon: 'nc-icon nc-single-02',
     component: EditUser,
-    layout: '/client',
+    layout: '/clientCompany',
     visible: true,
   },
   {
@@ -89,8 +89,8 @@ var routesClient = [
     name: 'Google Sheets',
     icon: 'nc-icon nc-single-02',
     component: GoogleSheetsConnect,
-    layout: '/client',
-    visible: false,
+    layout: '/clientCompany',
+    visible: true,
   },
 ];
-export default routesClient;
+export default routesCompany;
