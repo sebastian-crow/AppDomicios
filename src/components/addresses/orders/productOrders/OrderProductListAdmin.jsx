@@ -74,7 +74,7 @@ const AdminProductOrderList = () => {
 
   return (
     <>
-      {user.rol === 'admin' && (
+      {user.role === 'admin' && (
         <div style={{ height: '800px', overflowY: 'scroll' }}>
           <table className="table">
             <thead>
@@ -180,9 +180,7 @@ const MyVerticallyCenteredModal = (props) => {
   const { toggle, handleChange, url } = props;
   return (
     <Modal isOpen={toggle} toggle={handleChange}>
-      <ModalHeader toggle={handleChange}>
-        URL de la orden
-      </ModalHeader>
+      <ModalHeader toggle={handleChange}>URL de la orden</ModalHeader>
       <ModalBody>{url}</ModalBody>
       <ModalFooter>
         <Button

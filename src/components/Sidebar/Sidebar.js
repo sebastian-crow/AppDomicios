@@ -1,10 +1,10 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { Nav } from "reactstrap";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { Nav } from 'reactstrap';
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
-import { useSelector } from "react-redux";
-import addresses_red from "../../assets/img/logo.svg";
+import PerfectScrollbar from 'perfect-scrollbar';
+import { useSelector } from 'react-redux';
+import addresses_red from '../../assets/img/logo.svg';
 var ps;
 
 function Sidebar(props) {
@@ -12,17 +12,19 @@ function Sidebar(props) {
   const sidebar = React.useRef();
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
-    return props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
+    return props.location.pathname.indexOf(routeName) > -1
+      ? 'active'
+      : '';
   };
   React.useEffect(() => {
-    if (navigator.platform.indexOf("Win") > -1) {
+    if (navigator.platform.indexOf('Win') > -1) {
       ps = new PerfectScrollbar(sidebar.current, {
         suppressScrollX: true,
         suppressScrollY: false,
       });
     }
     return function cleanup() {
-      if (navigator.platform.indexOf("Win") > -1) {
+      if (navigator.platform.indexOf('Win') > -1) {
         ps.destroy();
       }
     };
@@ -35,9 +37,7 @@ function Sidebar(props) {
     >
       <div className="logo">
         <a href="#" className="simple-text logo-mini">
-          <div className="logo-img">
-            
-          </div>
+          <div className="logo-img"></div>
         </a>
         <a href="#" className="simple-text logo-normal">
           Addresses
@@ -48,7 +48,7 @@ function Sidebar(props) {
           {props.routes.map((prop, key) => {
             let validateRol = false;
             prop.rol.forEach((rol) => {
-              if (rol === user?.rol) {
+              if (rol === user?.role) {
                 validateRol = true;
               }
             });
@@ -56,7 +56,8 @@ function Sidebar(props) {
               return (
                 <li
                   className={
-                    activeRoute(prop.path) + (prop.pro ? " active-pro" : "")
+                    activeRoute(prop.path) +
+                    (prop.pro ? ' active-pro' : '')
                   }
                   key={key}
                 >

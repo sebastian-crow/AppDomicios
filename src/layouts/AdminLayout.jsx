@@ -9,13 +9,14 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import FixedPlugin from '../components/FixedPlugin/FixedPlugin';
 import DemoNavbar from '../components/Navbars/DemoNavbar';
 // CSS
-import "../assets/css/home.css";
+import '../assets/css/home.css';
 
 let ps;
 
 function AdminLayout(props) {
   const user = useSelector((state) => state.login.user);
-  const [backgroundColor, setBackgroundColor] = React.useState('black');
+  const [backgroundColor, setBackgroundColor] =
+    React.useState('black');
   const [activeColor, setActiveColor] = React.useState('info');
   const mainPanel = React.useRef();
   const location = useLocation();
@@ -56,7 +57,7 @@ function AdminLayout(props) {
             {props.routes.map((prop, key) => {
               let validateRol = false;
               prop.rol.forEach((rol) => {
-                if (rol === user?.rol) {
+                if (rol === user?.role) {
                   validateRol = true;
                 }
               });

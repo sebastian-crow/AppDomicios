@@ -36,7 +36,7 @@ const SignUp = () => {
   const [bornDate, setBorndate] = React.useState(null);
   const [email, setEmail] = React.useState(null);
   const [address, setAddress] = React.useState(null);
-  const [rol, setRol] = React.useState({
+  const [role, setRole] = React.useState({
     value: 'client',
     label: 'Cliente',
   });
@@ -50,7 +50,7 @@ const SignUp = () => {
       typeDocument: typeDocument.value,
       documentNumber: documentNumber,
       email: email,
-      rol: rol.value,
+      role: role.value,
       password: password,
       bornDate: bornDate,
       address: address,
@@ -87,8 +87,8 @@ const SignUp = () => {
     setBorndate(bornDate.target.value);
   };
 
-  const handleRol = (role) => {
-    setRol(role);
+  const handleRole = (role) => {
+    setRole(role);
   };
 
   const handleAddressChange = (address) => {
@@ -99,7 +99,7 @@ const SignUp = () => {
     if (
       formIsValid === false &&
       Object.keys(typeDocument).length &&
-      Object.keys(rol).length
+      Object.keys(role).length
     ) {
       setFormIsValid(true);
     }
@@ -148,6 +148,15 @@ const SignUp = () => {
 
           <FormGroup>
             <Label for="examplePassword">Tipo de documento</Label>
+            {role.value === 'company' && (
+              <>
+                <br />
+                <Label for="examplePassword">
+                  El tipo de documento para el registro como empresa
+                  debe ser NIT
+                </Label>
+              </>
+            )}
             <Select
               onChange={handleTypeDocument}
               value={typeDocument}
@@ -215,8 +224,8 @@ const SignUp = () => {
           <FormGroup>
             <Label for="examplePassword">Tipo de usuario</Label>
             <Select
-              onChange={handleRol}
-              value={rol}
+              onChange={handleRole}
+              value={role}
               placeholder="Rol"
               options={[
                 {

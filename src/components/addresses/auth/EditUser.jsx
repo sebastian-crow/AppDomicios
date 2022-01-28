@@ -64,7 +64,7 @@ const EditUser = (props) => {
   };
 
   React.useEffect(() => {
-    switch (user.rol) {
+    switch (user.role) {
       case 'company':
         setRol('company');
         break;

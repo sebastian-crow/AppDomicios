@@ -228,12 +228,12 @@ function* locationChangeSaga(action) {
     const user = yield select((state) => state.login.user);
     if (user) {
       if (pathname === '/') {
-        switch (user.rol) {
-          case 'clientCompany':
-            yield put(push('/clientCompany/orderProducts'));
+        switch (user.role) {
+          case 'company':
+            yield put(push('/company/orderProducts'));
             break;
           case 'client':
-            yield put(push('/client/orderProducts'));
+            yield put(push('/client/orderslist'));
             break;
           case 'admin':
             yield put(push('/admin/orderslist'));

@@ -36,7 +36,7 @@ const MenuBar = () => {
         >
           {user && (
             <>
-              {user.name} {user.lastName} {user.rol}
+              {user.name} {user.lastName} {user.role}
             </>
           )}
           <div style={{ display: 'flex', marginLeft: 'auto' }}>
