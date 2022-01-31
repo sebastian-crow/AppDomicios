@@ -24,7 +24,6 @@ import {
   createOrderProductAction,
 } from '../../../../store/reducer';
 
-
 // Take Order Component
 export const EditOrderProduct = (props) => {
   const dispatch = useDispatch();
@@ -173,7 +172,7 @@ export const EditOrderProduct = (props) => {
       dispatch(createOrderProductAction(dataAPI));
 
     sendInfoToSheetsBest(data, dataAPI);
-    dispatch(push('/client/orderProducts'));
+    dispatch(push('/company/orderProducts'));
   };
 
   // Update Sheets Orders and Orders Product
