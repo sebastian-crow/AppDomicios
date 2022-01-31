@@ -2,7 +2,7 @@ import EditUser from '../components/addresses/auth/EditUser';
 
 // Product Orders
 import UserProductOrderList from '../components/addresses/orders/productOrders/OrderProductListUser';
-import OrderList from '../components/addresses/orders/ListOrdersClient';
+import OrderList from '../components/addresses/orders/ListOrdersCompany';
 
 // OrderProductEdit
 import { EditOrderProduct } from '../components/addresses/orders/productOrders/OrderProductEdit';
