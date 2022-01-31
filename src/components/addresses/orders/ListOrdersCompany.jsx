@@ -26,10 +26,10 @@ import {
 // Component List Orders
 const ListOrdersCompany = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.login.user);
   const orders = useSelector((state) =>
     state.ui.orders.filter((order) => order.clientCompany === user.id)
   );
-  const user = useSelector((state) => state.login.user);
   const ordersError = useSelector((state) => state.ui.ordersError);
   const dealers = useSelector((state) => state.ui.domiciliarys);
   const [toggle, setToggle] = React.useState(false);
@@ -101,7 +101,7 @@ const ListOrdersCompany = () => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault;
-                      dispatch(push(`/client/map/${order.id}`));
+                      dispatch(push(`/company/map/${order.id}`));
                     }}
                     variant="contained"
                   >
@@ -115,7 +115,7 @@ const ListOrdersCompany = () => {
                         onClick={(e) => {
                           e.preventDefault;
                           dispatch(
-                            push(`/client/editorder/${order.id}`)
+                            push(`/company/editorder/${order.id}`)
                           );
                         }}
                         variant="warning"
