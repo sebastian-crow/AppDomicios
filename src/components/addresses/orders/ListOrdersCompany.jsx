@@ -107,6 +107,11 @@ const ListOrdersCompany = () => {
                     Ver en mapa{' '}
                   </Button>
                 </td>
+                {order.state === 'initialized' && (
+                  <td>
+                    La orden ya fue iniciada. No se puede editar
+                  </td>
+                )}
                 {!order.state === 'initialized' && (
                   <td>
                     <Button
