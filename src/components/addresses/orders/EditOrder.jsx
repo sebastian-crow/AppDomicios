@@ -212,9 +212,7 @@ const EditOrder = () => {
     let data = {
       orderNumber: currentOrder.orderNumber,
       ticket: currentOrder.ticket,
-      phone: phoneNumber
-        ? Number(phoneNumber)
-        : Number(currentOrder.phone),
+      phone: phoneNumber ? phoneNumber : currentOrder.phone,
       department: department.label
         ? department.label?.toString()
         : currentOrder.department,
