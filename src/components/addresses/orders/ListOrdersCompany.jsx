@@ -107,22 +107,21 @@ const ListOrdersCompany = () => {
                     Ver en mapa{' '}
                   </Button>
                 </td>
-                {order.clientCompany === user.id &&
-                  order.state !== 'initialized' && (
-                    <td>
-                      <Button
-                        onClick={(e) => {
-                          e.preventDefault;
-                          dispatch(
-                            push(`/company/editorder/${order.id}`)
-                          );
-                        }}
-                        variant="warning"
-                      >
-                        Editar{' '}
-                      </Button>
-                    </td>
-                  )}
+                {!order.state === 'initialized' && (
+                  <td>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault;
+                        dispatch(
+                          push(`/company/editorder/${order.id}`)
+                        );
+                      }}
+                      variant="warning"
+                    >
+                      Editar{' '}
+                    </Button>
+                  </td>
+                )}
                 <td>
                   <Button
                     variant="danger"
