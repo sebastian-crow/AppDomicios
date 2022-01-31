@@ -70,7 +70,7 @@ const ListOrdersCompany = () => {
     <>
       <div style={{ height: '800px', overflowY: 'scroll' }}>
         <table className="table">
-          {wait && <h2>Aún no hay ordenes</h2>}
+          {wait && <p>Aún no hay ordenes</p>}
           <thead>
             <tr>
               <th scope="col">Número de Orden</th>
