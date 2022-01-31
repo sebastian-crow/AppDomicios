@@ -207,7 +207,7 @@ const OrderProductListUser = () => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/client/editOrderProduct/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
+                          `/company/editOrderProduct/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
                         )
                       );
                     }}
