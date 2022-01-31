@@ -92,6 +92,7 @@ import {
   getAllOrdersByUserDomiciliaryAction,
   getOrderProductByOrderNumberDoneAction,
   getOrderProductByOrderNumberAction,
+  getAllOrderErrorAction,
 } from '../reducer';
 
 import { LOCATION_CHANGE } from 'redux-first-history';
@@ -408,6 +409,11 @@ function* getOrderByIdSaga(action) {
 function* getAllOrderByUserSaga() {
   try {
     const { data } = yield call(api.getAllOrdersByUser);
+    if (data.length === 0) {
+      yield put(
+        getAllOrderErrorAction('Error, no se encontraron datos')
+      );
+    }
     yield put(getAllOrderDoneAction(data));
   } catch (error) {
   } finally {

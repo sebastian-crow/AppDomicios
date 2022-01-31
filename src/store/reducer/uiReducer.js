@@ -151,6 +151,10 @@ export const getAllOrderProductErrorAction = createAction(
   'GET_ALL_ORDER_PRODUCT_ERROR_ACTION'
 );
 
+export const getAllOrderErrorAction = createAction(
+  'GET_ALL_ORDER_ERROR_ACTION'
+);
+
 // UI state reducers
 const initialState = {
   position: {
@@ -168,6 +172,7 @@ const initialState = {
   sheetsOrder: [],
   sheetsError: null,
   ordersProductError: null,
+  ordersError: null,
 };
 
 const uiReducer = createReducer(initialState, {
@@ -250,6 +255,10 @@ const uiReducer = createReducer(initialState, {
   },
   [getAllOrderProductErrorAction]: (state, action) => {
     state.ordersProductError = action.payload;
+  },
+
+  [getAllOrderErrorAction]: (state, action) => {
+    state.ordersError = action.payload;
   },
   // Get All Google Sheets by User
   [getSheetsOrderDoneAction]: (state, action) => {

@@ -28,6 +28,7 @@ const ListOrdersClient = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.ui.orders);
   const user = useSelector((state) => state.login.user);
+  const ordersError = useSelector((state) => state.ui.ordersError);
   const dealers = useSelector((state) => state.ui.domiciliarys);
   const [toggle, setToggle] = React.useState(false);
   const [confirm, setConfirm] = React.useState(false);
@@ -49,9 +50,9 @@ const ListOrdersClient = () => {
   };
 
   React.useEffect(() => {
-    if (!orders.length) {
+    if (!orders.length && !ordersError)
       dispatch(getAllOrderByUserAction());
-    }
+
     if (orders.length > 0) setWait(false);
   }, [dispatch, orders]);
 
