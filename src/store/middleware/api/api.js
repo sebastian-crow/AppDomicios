@@ -122,6 +122,14 @@ export function getAllOrdersByUser() {
   });
 }
 
+export function getAllOrdersByCompany(id) {
+  console.log('Yes. you call me haha', id);
+  return callAPI({
+    method: 'GET',
+    url: `/order/company/${id}`,
+  });
+}
+
 export function getAllOrders() {
   return callAPI({
     method: 'GET',

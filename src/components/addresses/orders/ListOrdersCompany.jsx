@@ -19,7 +19,7 @@ import { ReverseCounter } from '../counter/ReverseCounter';
 
 // Reducers
 import {
-  getAllOrderByUserAction,
+  getAllOrderByCompanyAction,
   deleteOrderAction,
 } from '../../../store/reducer';
 
@@ -27,9 +27,8 @@ import {
 const ListOrdersCompany = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
-  const orders = useSelector((state) =>
-    state.ui.orders.filter((order) => order.clientCompany === user.id)
-  );
+  const orders = useSelector((state) => state.ui.orders);
+  console.log('What are these orders', orders);
   const ordersError = useSelector((state) => state.ui.ordersError);
   const dealers = useSelector((state) => state.ui.domiciliarys);
   const [toggle, setToggle] = React.useState(false);
@@ -45,7 +44,7 @@ const ListOrdersCompany = () => {
     setConfirm(!confirm);
     if (confirm) {
       dispatch(deleteOrderAction({ id: orderId, data: data }));
-      dispatch(getAllOrderByUserAction());
+      dispatch(getAllOrderByCompanyAction());
     } else {
       console.log("Don't delete nothing");
     }
@@ -53,7 +52,7 @@ const ListOrdersCompany = () => {
 
   React.useEffect(() => {
     if (!orders.length && !ordersError)
-      dispatch(getAllOrderByUserAction());
+      dispatch(getAllOrderByCompanyAction(user.id));
 
     if (orders.length > 0) setWait(false);
   }, [dispatch, orders]);

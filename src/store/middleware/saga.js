@@ -89,6 +89,7 @@ import {
   getAllOrderProductByUserAction,
   getAllOrderProductByIdUserAction,
   getAllOrderByUserAction,
+  getAllOrderByCompanyAction,
   getAllOrdersByUserDomiciliaryAction,
   getOrderProductByOrderNumberDoneAction,
   getOrderProductByOrderNumberAction,
@@ -311,22 +312,6 @@ function* createPositionDealerSaga(action) {
   }
 }
 
-// function* updatePositionDealerSaga(action) {
-//   try {
-//     const { data } = yield call(api.updatePosition, action.payload);
-//     if (data.status === 200) {
-//       yield put(updatePositionDealerDoneAction(data));
-//     } else {
-//       yield put(loginError(data.message));
-//     }
-//   } catch (error) {
-//   } finally {
-//     if (yield cancelled()) {
-//       // Do nothing
-//     }
-//   }
-// }
-
 function* getFromDealerPositionSaga(action) {
   try {
     const { data } = yield call(
@@ -409,6 +394,26 @@ function* getOrderByIdSaga(action) {
 function* getAllOrderByUserSaga() {
   try {
     const { data } = yield call(api.getAllOrdersByUser);
+    if (data.length === 0) {
+      yield put(
+        getAllOrderErrorAction('Error, no se encontraron datos')
+      );
+    }
+    yield put(getAllOrderDoneAction(data));
+  } catch (error) {
+  } finally {
+    if (yield cancelled()) {
+      // Do nothing
+    }
+  }
+}
+
+function* getAllOrderByCompanySaga(action) {
+  try {
+    const { data } = yield call(
+      api.getAllOrdersByCompany,
+      action.payload
+    );
     if (data.length === 0) {
       yield put(
         getAllOrderErrorAction('Error, no se encontraron datos')
@@ -728,6 +733,11 @@ export function* rootSaga() {
     getAllOrderByUserAction.type,
     getAllOrderByUserSaga
   );
+  yield takeLatest(
+    getAllOrderByCompanyAction.type,
+    getAllOrderByCompanySaga
+  );
+
   yield takeLatest(
     getAllOrdersByUserDomiciliaryAction.type,
     getAllOrdersByUserDomiciliarySaga

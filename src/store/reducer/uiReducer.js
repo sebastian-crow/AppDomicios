@@ -84,6 +84,10 @@ export const getAllOrderByUserAction = createAction(
   'GET_ALL_ORDER_BY_USER_ACTION'
 );
 
+export const getAllOrderByCompanyAction = createAction(
+  'GET_ALL_ORDER_BY_COMPANY_ACTION'
+);
+
 export const getAllOrdersByUserDomiciliaryAction = createAction(
   'GET_ALL_ORDER_BY_USER_DOMICILIARY_ACTION'
 );
