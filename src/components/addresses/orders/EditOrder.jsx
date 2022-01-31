@@ -208,7 +208,7 @@ const EditOrder = () => {
   };
 
   // Handle Save
-  const handleSave = () => {
+  const handleSave = (e) => {
     let data = {
       orderNumber: currentOrder.orderNumber,
       ticket: currentOrder.ticket,
@@ -240,6 +240,7 @@ const EditOrder = () => {
       state: 'initialized',
     };
     dispatch(updateOrderAction({ id: Number(id), data: data }));
+    handleToggle(e);
   };
 
   React.useEffect(() => {
@@ -409,7 +410,7 @@ const EditOrder = () => {
       </div>
       <SaveOrderModal
         toggle={toggle}
-        handleChange={handleSave}
+        handleChange={(e) => handleSave(e)}
         handleClose={handleToggle}
       />
     </>
