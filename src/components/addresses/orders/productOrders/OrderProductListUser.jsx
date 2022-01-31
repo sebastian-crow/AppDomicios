@@ -78,7 +78,7 @@ const OrderProductListUser = () => {
         .catch((error) => {
           console.error(error);
         });
-      dispatch(push('/client/orderProducts'));
+      dispatch(push('/company/orderProducts'));
     }
   };
 
