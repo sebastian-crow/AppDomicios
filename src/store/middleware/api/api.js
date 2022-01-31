@@ -166,7 +166,6 @@ export function deleteOrder(params) {
   return callAPI({
     method: 'DELETE',
     url: `/order/${params.id}`,
-    data: params.data,
   });
 }
 

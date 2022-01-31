@@ -235,7 +235,13 @@ const OrderProductListUser = () => {
                     confirm={confirm}
                   />
                 </td>
-                {order.state !== 'finished' && (
+                {order.EstadoPedido === 'entregado' && (
+                  <td>
+                    La orden ya fue entregada. No puedes generar un
+                    nuevo link para está orden
+                  </td>
+                )}
+                {order.EstadoPedido !== 'entregado' && (
                   <td>
                     <Button
                       variant="primary"
