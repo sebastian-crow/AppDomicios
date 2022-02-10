@@ -27,12 +27,6 @@ const OrderProductListUser = () => {
   const user = useSelector((state) => state.login.user);
   const sheetsOrders = useSelector((state) => state.ui.sheetsOrder);
   const sheetsError = useSelector((state) => state.ui.sheetsError);
-  const ordersProductError = useSelector(
-    (state) => state.ui.sheetsError
-  );
-  const ordersProduct = useSelector(
-    (state) => state.ui.ordersProduct
-  );
 
   const [activeLink, setActiveLink] = React.useState(false);
 
@@ -48,7 +42,7 @@ const OrderProductListUser = () => {
   const handleClose = () => setToggleDelete(!toggleDelete);
 
   // Hanlde Delete
-  const handleDelete = (event, orderNumber) => {
+  const handleDelete = (event, NumeroDeEntrega) => {
     event.preventDefault();
     const data = {};
     setToggleDelete(!toggleDelete);
@@ -56,14 +50,17 @@ const OrderProductListUser = () => {
     const orderProductToDelete = [];
     if (ordersProduct) {
       for (let i = 0; i < ordersProduct.length; i++) {
-        if (ordersProduct[i].orderNumber == orderNumber)
+        if (ordersProduct[i].NumeroDeEntrega == NumeroDeEntrega)
           orderProductToDelete.push(ordersProduct[i]);
       }
     }
     if (confirm) {
-      fetch(`${user.googleSheets}/NumeroDeOrden/${orderNumber}`, {
-        method: 'DELETE',
-      })
+      fetch(
+        `${user.googleSheets}/NumeroDeEntrega/${NumeroDeEntrega}`,
+        {
+          method: 'DELETE',
+        }
+      )
         .then((response) => response.json())
         .then((dataRes) => {
           if (orderProductToDelete.length > 0)
@@ -88,11 +85,15 @@ const OrderProductListUser = () => {
 
     let data = {
       userPlatform: user.id,
-      orderNumber: order.NumeroDeOrden,
+      deliveryNumber: order.NumeroDeEntrega,
+      purchaseNumber: order.NumeroDeCompra,
       creationDate: order.FechaCreacion,
       nameLastName: order.NombresYApellidos,
       clientPhone: order.TelefonoCliente,
+      pickupAddress: order.DireccionRecogida,
+      pickupLocation: order.UbicacionRecogida,
       deliveryAddress: order.DireccionEntrega,
+      deliveryLocation: order.UbicacionEntrega,
       city: order.Ciudad,
       neighbourhood: order.Barrio,
       residentialGroupName: order.NombreConjuntoResidencial,
@@ -101,17 +102,18 @@ const OrderProductListUser = () => {
       deliveryPacket: order.PaqueteAEntregar,
       orderState: order.EstadoPedido,
       dealer: order.Domiciliario,
-      pickUpAddress: order.DireccionRecogida,
+      dealerLocation: order.UbicacionDomiciliario,
       deliveryHour: order.HoraEntrega,
       deliveryUbication: order.UbicacionEntrega,
       deliveryPicture: order.FotoEntrega,
-      linkToOrder: `/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`,
+      dealerNote: order.NotaDomiciliario,
+      linkToOrder: `/tomarorden/${user.name}}/${user.id}/${order.NumeroEntrega}/${order.NumeroCompra}`,
     };
 
     const orderProductValidation = [];
     if (ordersProduct) {
       for (let i = 0; i < ordersProduct.length; i++) {
-        if (ordersProduct[i].orderNumber == order.NumeroDeOrden)
+        if (ordersProduct[i].deliveryNumber == order.NumeroDeEntrega)
           orderProductValidation.push(ordersProduct[i]);
       }
     }
@@ -131,15 +133,9 @@ const OrderProductListUser = () => {
       if (!sheetsError) {
         if (sheetsOrders.length === 0)
           dispatch(getSheetsOrderAction(user.googleSheets));
-        if (
-          ordersProduct &&
-          !ordersProductError &&
-          ordersProduct.length === 0
-        )
-          dispatch(getAllOrderProductByUserAction());
       }
     }
-  }, [dispatch, sheetsOrders, ordersProduct]);
+  }, [dispatch, sheetsOrders]);
 
   return (
     <>
@@ -155,23 +151,28 @@ const OrderProductListUser = () => {
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">Número Entrega</th>
+              <th scope="col">Número Compra</th>
               <th scope="col">Fecha Creación</th>
               <th scope="col">Nombres y Apellidos</th>
-              <th scope="col">Telefono Client</th>
+              <th scope="col">Telefono Cliente</th>
+              <th scope="col">Dirección Recogida</th>
+              <th scope="col">Ubicación Recogida</th>
               <th scope="col">Dirección Entrega</th>
+              <th scope="col">Ubicación Entrega</th>
               <th scope="col">Ciudad</th>
               <th scope="col">Barrio</th>
               <th scope="col">Nombre Conjunto Residencial</th>
-              <th scope="col">Nuúmero De Cada O Apto</th>
+              <th scope="col">Nuúmero De Casa O Apto</th>
               <th scope="col">Nota Entrega</th>
               <th scope="col">Paquete A Entregar</th>
               <th scope="col">Estado Pedido </th>
               <th scope="col">Domiciliario</th>
-              <th scope="col">Dirección Recogida</th>
+              <th scope="col">Ubicación Domiciliario</th>
               <th scope="col">Hora Entrega</th>
               <th scope="col">Ubicación Entrega</th>
               <th scope="col">Foto Entrega</th>
+              <th scope="col">Nota Domiciliario</th>
               <th scope="col">Editar</th>
               <th scope="col">Eliminar</th>
               {activeLink ? (
@@ -183,12 +184,16 @@ const OrderProductListUser = () => {
           </thead>
           <tbody>
             {sheetsOrders.map((order) => (
-              <tr key={order.NumeroDeOrden}>
-                <td>{order.NumeroDeOrden}</td>
+              <tr key={order.NumeroDeEntrega}>
+                <td>{order.NumeroDeEntrega}</td>
+                <td>{order.NumeroDeCompra}</td>
                 <td>{order.FechaCreacion}</td>
                 <td>{order.NombresYApellidos}</td>
                 <td>{order.TelefonoCliente}</td>
+                <td>{order.DireccionRecogida}</td>
+                <td>{order.UbicacionRecogida}</td>
                 <td>{order.DireccionEntrega}</td>
+                <td>{order.UbicacionEntrega}</td>
                 <td>{order.Ciudad}</td>
                 <td>{order.Barrio}</td>
                 <td>{order.NombreConjuntoResidencial}</td>
@@ -197,17 +202,18 @@ const OrderProductListUser = () => {
                 <td>{order.PaqueteAEntregar}</td>
                 <td>{order.EstadoPedido}</td>
                 <td>{order.Domiciliario}</td>
-                <td>{order.DireccionRecogida}</td>
+                <td>{order.UbicacionDomiciliario}</td>
                 <td>{order.HoraEntrega}</td>
                 <td>{order.UbicacionEntrega}</td>
                 <td>{order.FotoEntrega}</td>
+                <td>{order.NotaDomiciliario}</td>
                 <td>
                   <Button
                     onClick={(e) => {
                       e.preventDefault;
                       dispatch(
                         push(
-                          `/company/editOrderProduct/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
+                          `/company/editOrderProduct/${user.id}/${order.NumeroDeEntrega}/${order.NombresYApellidos}`
                         )
                       );
                     }}
@@ -220,7 +226,7 @@ const OrderProductListUser = () => {
                   <Button
                     variant="danger"
                     onClick={(e) =>
-                      handleDelete(e, order.NumeroDeOrden)
+                      handleDelete(e, order.NumeroDeEntrega)
                     }
                   >
                     Eliminar
@@ -229,7 +235,7 @@ const OrderProductListUser = () => {
                   <DeleteOrderProductModal
                     toggleDelete={toggleDelete}
                     handleChange={(e) =>
-                      handleDelete(e, order.NumeroDeOrden)
+                      handleDelete(e, order.NumeroDeEntrega)
                     }
                     handleClose={handleClose}
                     confirm={confirm}
@@ -249,7 +255,7 @@ const OrderProductListUser = () => {
                         handleChangeToggle();
                         handleSetLikn(
                           e,
-                          `${process.env.REACT_APP_REACT_HOST}/client/takeorder/${user.id}/${order.NumeroDeOrden}/${order.NombresYApellidos}`
+                          `${process.env.REACT_APP_REACT_HOST}/tomarorden/${user.name}}/${user.id}/${order.NumeroEntrega}/${order.NumeroCompra}`
                         );
                         handleCreateOrderProduct(e, order);
                       }}

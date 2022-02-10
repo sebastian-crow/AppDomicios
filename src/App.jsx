@@ -18,6 +18,9 @@ import routesAdmin from './routes/routesAdmin';
 import routesDomiciliary from './routes/routesDomiciliary';
 import defaultRoutes from './routes/defaultRoutes';
 
+// Take Order
+import TakeOrder from './components/addresses/orders/TakeOrder';
+
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
@@ -69,14 +72,19 @@ function App() {
                 <AdminLayout {...props} routes={routesCompany} />
               )}
             />
-
             <Route
               path="/user"
               render={(props) => (
                 <NoAuth {...props} routes={defaultRoutes} />
               )}
             />
-
+            /* Public route form */
+            <Route
+              //path="/tomarorden/:companyName/:idCompnay/:deliveryNumber/:purchaseNumber"
+              path="/tomarorden"
+            >
+              <TakeOrder />
+            </Route>
             <Route restricted path="/login" component={Login} />
             <Route restricted path="/register" component={Register} />
             <Route
